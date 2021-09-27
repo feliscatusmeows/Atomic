@@ -257,13 +257,15 @@ public class NbtEditScreen extends Screen implements FastTickable {
                     lines.add(cursorY, reassembled.toString());
                     cursorX--;
                 } else {
-                    String backup = lines.get(cursorY);
-                    lines.remove(cursorY);
-                    cursorY--;
-                    String current = lines.get(cursorY);
-                    lines.remove(cursorY);
-                    lines.add(cursorY, current + backup);
-                    cursorX = current.length();
+                    if (cursorY > 0) {
+                        String backup = lines.get(cursorY);
+                        lines.remove(cursorY);
+                        cursorY--;
+                        String current = lines.get(cursorY);
+                        lines.remove(cursorY);
+                        lines.add(cursorY, current + backup);
+                        cursorX = current.length();
+                    }
                 }
             }
             case 261 -> {
