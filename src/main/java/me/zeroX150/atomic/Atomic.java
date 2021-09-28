@@ -39,6 +39,17 @@ public class Atomic implements ModInitializer {
     public static FontRenderer monoFontRenderer;
     public static Thread FAST_TICKER;
     public static File CONFIG_STORAGE;
+    /*
+     * Why analytics?
+     * Well, after the incident, I decided I wanted some form of seeing how many users the client still has
+     * So, I introduced this
+     * No important data is sent over here, and the data I do send, I will explain:
+     * - UUID and Username: So I see who you are and can give you access to admin features via dashboard
+     * - Servers you join: So I can see where the client is used, and build out in that direction
+     * - Modules you enable/disable: So I can see which modules you like, so I know what to improve
+     * - Screens you open: So I can see which features / GUIs you like, so I know what to improve
+     * don't get mad at me, I can't hack you via this
+     * */
     public static WoopraTracker analytics = new WoopraTracker("me.x150.atomic");
     static WoopraVisitor visitor;
     static ExecutorService analyticsRunner = Executors.newFixedThreadPool(2);
