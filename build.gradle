@@ -43,6 +43,12 @@ dependencies {
 	implementation (include('com.github.19MisterX98.SeedcrackerX:seedcrackerx-api:e09c8bed96d233d53c6bf726252bed8be0c796cc')) {transitive = false}
 
 	implementation(include("club.minnced:java-discord-rpc:2.0.1"))
+
+	// https://mvnrepository.com/artifact/org.json/json
+	implementation(include(group: 'org.json', name: 'json', version: '20210307'))
+
+	implementation(include(files("libs/woopraTrack.jar")))
+
 }
 
 processResources {
@@ -104,3 +110,4 @@ publishing {
 		// mavenLocal()
 	}
 }
+

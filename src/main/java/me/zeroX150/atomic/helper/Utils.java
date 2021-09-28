@@ -163,7 +163,7 @@ public class Utils {
         public static boolean auth(String username, String password) {
             if (password.isEmpty()) {
                 Session crackedSession = new Session(username, UUID.randomUUID().toString(), "cum_and_fard", "mojang");
-                ((IMinecraftClientAccessor) Atomic.client).setSession(crackedSession);
+                Atomic.setSession(crackedSession);
                 return true;
             }
             YggdrasilUserAuthentication auth = (YggdrasilUserAuthentication) new YggdrasilAuthenticationService(
@@ -174,7 +174,7 @@ public class Utils {
                 auth.logIn();
                 Session ns = new Session(auth.getSelectedProfile().getName(), auth.getSelectedProfile().getId().toString(),
                         auth.getAuthenticatedToken(), "mojang");
-                ((IMinecraftClientAccessor) Atomic.client).setSession(ns);
+                Atomic.setSession(ns);
                 return true;
             } catch (Exception ec) {
                 Atomic.log(Level.ERROR, "Failed to log in: ");

@@ -1,5 +1,8 @@
 package me.zeroX150.atomic;
 
+import com.woopra.java.sdk.WoopraEvent;
+import com.woopra.java.sdk.WoopraTracker;
+import com.woopra.java.sdk.WoopraVisitor;
 import me.zeroX150.atomic.feature.gui.notifications.NotificationRenderer;
 import me.zeroX150.atomic.feature.gui.screen.FastTickable;
 import me.zeroX150.atomic.feature.module.Module;
@@ -9,9 +12,11 @@ import me.zeroX150.atomic.helper.Rotations;
 import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.font.FontRenderer;
 import me.zeroX150.atomic.helper.keybind.KeybindManager;
+import me.zeroX150.atomic.mixin.game.IMinecraftClientAccessor;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
+import net.minecraft.client.util.Session;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Atomic implements ModInitializer {
 
@@ -32,13 +39,29 @@ public class Atomic implements ModInitializer {
     public static FontRenderer monoFontRenderer;
     public static Thread FAST_TICKER;
     public static File CONFIG_STORAGE;
+    public static WoopraTracker analytics = new WoopraTracker("me.x150.atomic");
+    static WoopraVisitor visitor;
+    static ExecutorService analyticsRunner = Executors.newFixedThreadPool(2);
 
     public static void log(Level level, String message) {
         LOGGER.log(level, "[" + MOD_NAME + "] " + message);
     }
 
+    public static void sendAnalyticsMessage(WoopraEvent e) {
+        e.withTimestamp(System.currentTimeMillis());
+        analyticsRunner.execute(() -> analytics.track(visitor, e));
+    }
+
+    public static void setSession(Session s) {
+        visitor.setProperty("uuid", s.getProfile().getId().toString());
+        visitor.setProperty("Name", s.getProfile().getName());
+        ((IMinecraftClientAccessor) client).setSession(s);
+    }
+
     @Override
     public void onInitialize() {
+        visitor = new WoopraVisitor("uniqueId", client.getSession().getProfile().getName()).withProperty("uuid", client.getSession().getProfile().getId().toString());
+        analytics.identify(visitor);
         log(Level.INFO, "Initializing");
         CONFIG_STORAGE = new File(Atomic.client.runDirectory + "/atomicConfigs");
         fontRenderer = new FontRenderer(Atomic.class.getClassLoader().getResourceAsStream("Font.ttf"));

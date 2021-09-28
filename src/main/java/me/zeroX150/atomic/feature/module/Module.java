@@ -1,5 +1,7 @@
 package me.zeroX150.atomic.feature.module;
 
+import com.woopra.java.sdk.WoopraEvent;
+import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.notifications.Notification;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.feature.module.config.ModuleConfig;
@@ -68,6 +70,10 @@ public abstract class Module {
             Notification.create(1000, "Module toggle", (this.enabled ? "§aEn" : "§cDis") + "abled §r" + this.getName());
         if (this.enabled) this.enable();
         else this.disable();
+        Atomic.sendAnalyticsMessage(new WoopraEvent("moduleToggle", new Object[][]{
+                {"action", (this.enabled ? "enabled" : "disabled")},
+                {"name", this.getName()}
+        }));
     }
 
 }
