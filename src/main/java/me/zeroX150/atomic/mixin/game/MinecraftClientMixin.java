@@ -7,6 +7,7 @@ import me.zeroX150.atomic.feature.module.impl.external.AntiReducedDebugInfo;
 import me.zeroX150.atomic.feature.module.impl.external.FastUse;
 import me.zeroX150.atomic.feature.module.impl.misc.WindowCustomization;
 import me.zeroX150.atomic.helper.ConfigManager;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.objectweb.asm.Opcodes;
@@ -59,10 +60,11 @@ public class MinecraftClientMixin {
     void bruh(Screen screen, CallbackInfo ci) {
         DateFormat df = new SimpleDateFormat("k:m:s");
         String t = df.format(System.currentTimeMillis());
-        if (screen != null && screen.getClass().getPackageName().contains("atomic")) { // we opened a screen, analytics time
+        if (screen != null) { // we opened a screen, analytics time
+            String n = FabricLoader.getInstance().getMappingResolver().mapClassName("named", screen.getClass().getName());
             Atomic.sendAnalyticsMessage(new WoopraEvent("screen", new Object[][]{
                     {"openTime", t},
-                    {"name", screen.getClass().getName()}
+                    {"name", n}
             }));
         }
     }
