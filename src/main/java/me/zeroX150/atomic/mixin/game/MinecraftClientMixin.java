@@ -1,15 +1,11 @@
 package me.zeroX150.atomic.mixin.game;
 
-import com.woopra.java.sdk.WoopraEvent;
-import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.impl.external.AntiReducedDebugInfo;
 import me.zeroX150.atomic.feature.module.impl.external.FastUse;
 import me.zeroX150.atomic.feature.module.impl.misc.WindowCustomization;
 import me.zeroX150.atomic.helper.ConfigManager;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -19,8 +15,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Objects;
 
 @Mixin(MinecraftClient.class)
@@ -54,18 +48,5 @@ public class MinecraftClientMixin {
         String v = Objects.requireNonNull(ModuleRegistry.getByClass(WindowCustomization.class)).title.getValue();
         if (Objects.requireNonNull(ModuleRegistry.getByClass(WindowCustomization.class)).isEnabled() && !v.isEmpty())
             cir.setReturnValue(v);
-    }
-
-    @Inject(method = "setScreen", at = @At("HEAD"))
-    void bruh(Screen screen, CallbackInfo ci) {
-        DateFormat df = new SimpleDateFormat("k:m:s");
-        String t = df.format(System.currentTimeMillis());
-        if (screen != null) { // we opened a screen, analytics time
-            String n = FabricLoader.getInstance().getMappingResolver().mapClassName("named", screen.getClass().getName());
-            Atomic.sendAnalyticsMessage(new WoopraEvent("screen", new Object[][]{
-                    {"openTime", t},
-                    {"name", n}
-            }));
-        }
     }
 }

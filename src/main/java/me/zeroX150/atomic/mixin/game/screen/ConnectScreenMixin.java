@@ -1,7 +1,5 @@
 package me.zeroX150.atomic.mixin.game.screen;
 
-import com.woopra.java.sdk.WoopraEvent;
-import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.helper.Utils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConnectScreen;
@@ -18,9 +16,5 @@ public class ConnectScreenMixin {
     @Inject(method = "connect(Lnet/minecraft/client/gui/screen/Screen;Lnet/minecraft/client/MinecraftClient;Lnet/minecraft/client/network/ServerAddress;Lnet/minecraft/client/network/ServerInfo;)V", at = @At("HEAD"))
     private static void connect(Screen screen, MinecraftClient client, ServerAddress address, ServerInfo info, CallbackInfo ci) {
         Utils.latestServerInfo = new ServerInfo(info.name, address.getAddress(), info.isLocal());
-        // to see audience of this client, who uses it where
-        Atomic.sendAnalyticsMessage(new WoopraEvent("serverConnect", new Object[][]{
-                {"server", address.getAddress()}
-        }));
     }
 }
