@@ -1,7 +1,10 @@
 plugins {
 	id 'fabric-loom' version '0.9-SNAPSHOT'
 	id 'maven-publish'
+	id "com.github.johnrengelman.shadow" version "7.0.0"
 }
+
+import net.fabricmc.loom.task.RemapJarTask
 sourceCompatibility = JavaVersion.VERSION_16
 targetCompatibility = JavaVersion.VERSION_16
 
@@ -45,12 +48,23 @@ dependencies {
 	implementation(include("club.minnced:java-discord-rpc:2.0.1"))
 
 	// https://mvnrepository.com/artifact/org.json/json
-	implementation(include(group: 'org.json', name: 'json', version: '20210307'))
+	implementation(group: 'org.json', name: 'json', version: '20210307')
 
-	implementation(include(files("libs/woopraTrack.jar")))
+	implementation(files("libs/woopraTrack.jar"))
 
 }
+shadowJar {
+	dependencies {
+		include(dependency(group: 'org.json', name: 'json', version: '20210307'))
+		include(dependency(files("libs/woopraTrack.jar")))
+	}
+}
 
+task remapShadow(type: RemapJarTask, dependsOn: shadowJar) {
+	setInput(shadowJar.archiveFile)
+	remapAccessWidener.set(true)
+	addNestedDependencies.set(remapJar.addNestedDependencies)
+}
 processResources {
 	inputs.property "version", project.version
 
@@ -74,7 +88,7 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 	from sourceSets.main.allSource
 }
 
-task execBuild(dependsOn: build) {
+task execBuild(dependsOn: remapShadow) {
 	doLast {
 		file("./build/libs/atomic-1.0.0.jar").renameTo(file("./builds/latest.jar"))
 	}
