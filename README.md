@@ -9,10 +9,6 @@ on certian Minecraft servers.
 This is the sequel to [cornos](https://cornos.cf), but ported to 1.17, with a new look and functionality. Cornos became
 a bit stale, so I decided to start this.
 
-## Support
-
-[discor](https://discord.gg/V2KSkrDVQy)
-
 ## Downloading
 
 You can download this from the `builds` folder. The latest jarfile will always be called "latest.jar". Download and drag
