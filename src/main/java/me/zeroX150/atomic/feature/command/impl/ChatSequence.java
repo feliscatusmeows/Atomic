@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.command.impl;
 
 import me.zeroX150.atomic.feature.command.Command;
@@ -63,7 +68,7 @@ public class ChatSequence extends Command {
                             Utils.Client.sendMessage("Removed message \"" + m + "\"");
                             me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.messages.remove(v);
                         }
-                        case "list" -> onExecute(new String[]{"messages"});
+                        case "list" -> onExecute(new String[]{ "messages" });
                         default -> Utils.Client.sendMessage("chatSequence:messages subcommands: add, remove, list");
                     }
                 }

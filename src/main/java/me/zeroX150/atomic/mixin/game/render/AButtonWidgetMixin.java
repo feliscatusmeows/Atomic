@@ -1,9 +1,14 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.screen.FastTickable;
-import me.zeroX150.atomic.feature.module.impl.external.ClientConfig;
+import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
 import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -19,7 +24,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.awt.*;
+import java.awt.Color;
 
 @SuppressWarnings("ConstantConditions")
 @Mixin(ClickableWidget.class)
@@ -80,15 +85,15 @@ public abstract class AButtonWidgetMixin implements FastTickable {
         double interpolatedAProg = ease(this.animProg);
         boolean isSlider = ((Object) this) instanceof SliderWidget;
         if (!isSlider) {
-            double rw = Renderer.lerp(width, 0, interpolatedAProg) / 2d;
+            double rw = Renderer.Util.lerp(width, 0, interpolatedAProg) / 2d;
             if (rw != 0)
-                Renderer.fill(matrices, new Color(0, 194, 111, 255), x + (width / 2d) - rw, y + height - 1, x + (width / 2d) + rw, y + height);
+                Renderer.R2D.fill(matrices, new Color(0, 194, 111, 255), x + (width / 2d) - rw, y + height - 1, x + (width / 2d) + rw, y + height);
         } else {
             DrawableHelper.fill(matrices, dxStart, dyStart, dxStart + dWidth, dyStart + dHeight, new Color(0, 194, 111, 255).getRGB());
         }
-        DrawableHelper.fill(matrices, x, y, x + width, y + height, this.active ? Renderer.lerp(new Color(38, 83, 92, 100), unselectedColor, interpolatedAProg).getRGB() : disabledColor.getRGB());
-        DrawableHelper.drawCenteredText(matrices, Atomic.client.textRenderer, this.getMessage(), this.x + this.width / 2,
-                this.y + (this.height - 8) / 2, Color.white.getRGB());
+        DrawableHelper.fill(matrices, x, y, x + width, y + height, this.active ? Renderer.Util.lerp(new Color(38, 83, 92, 100), unselectedColor, interpolatedAProg).getRGB() : disabledColor.getRGB());
+        //CustomFont.INSTANCE.drawString(this.getMessage().getString(),this.x+this.width/2,this.y+(this.height-9)/2,0xFFFFFF);
+        Atomic.fontRenderer.drawCenteredString(matrices, this.getMessage().getString(), this.x + this.width / 2f, this.y + (this.height - 9) / 2f, 0xFFFFFF);
     }
 
     double ease(double x) {

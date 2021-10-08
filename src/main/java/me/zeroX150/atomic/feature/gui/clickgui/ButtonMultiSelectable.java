@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.clickgui;
 
 import me.zeroX150.atomic.Atomic;
@@ -8,12 +13,10 @@ import net.minecraft.text.Text;
 
 public class ButtonMultiSelectable extends ButtonWidget {
     final MultiValue parent;
-    final int currentIndex;
 
     public ButtonMultiSelectable(int x, int y, int width, MultiValue parent) {
         super(x, y, width, 12, Text.of(parent.getValue()), button -> {
         });
-        currentIndex = parent.getIndex();
         this.parent = parent;
     }
 

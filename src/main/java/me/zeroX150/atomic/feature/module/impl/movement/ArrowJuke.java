@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.movement;
 
 import me.zeroX150.atomic.Atomic;
@@ -11,7 +16,7 @@ import net.minecraft.entity.projectile.ArrowEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +86,7 @@ public class ArrowJuke extends Module {
     @Override
     public void onWorldRender(MatrixStack matrices) {
         for (Vec3d bruhMoment : bruhMoments) {
-            Renderer.renderOutline(bruhMoment, new Vec3d(0.1, 0.1, 0.1), Color.RED, matrices);
+            Renderer.R3D.renderOutline(bruhMoment, new Vec3d(0.1, 0.1, 0.1), Color.RED, matrices);
         }
     }
 

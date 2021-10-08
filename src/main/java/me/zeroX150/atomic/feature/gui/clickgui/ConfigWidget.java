@@ -1,18 +1,30 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.clickgui;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.widget.SimpleCustomTextFieldWidget;
 import me.zeroX150.atomic.feature.module.Module;
-import me.zeroX150.atomic.feature.module.config.*;
+import me.zeroX150.atomic.feature.module.config.BooleanValue;
+import me.zeroX150.atomic.feature.module.config.ColorValue;
+import me.zeroX150.atomic.feature.module.config.DynamicValue;
+import me.zeroX150.atomic.feature.module.config.MultiValue;
+import me.zeroX150.atomic.feature.module.config.SliderValue;
 import me.zeroX150.atomic.helper.Transitions;
 import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
 
 public class ConfigWidget {
     public final Module parent;
@@ -127,7 +139,7 @@ public class ConfigWidget {
     }
 
     public void render(MatrixStack ms, int mx, int my, float delta) {
-        Renderer.fill(ms, ClickGUI.currentActiveTheme.h_exp(), lastRenderX - 10, lastRenderY - margin, lastRenderX + width + 10, lastRenderY + 9 + margin);
+        Renderer.R2D.fill(ms, ClickGUI.currentActiveTheme.h_exp(), lastRenderX - 10, lastRenderY - margin, lastRenderX + width + 10, lastRenderY + 9 + margin);
         int maxOffset = (int) Math.ceil(9 + (margin * 2));
         for (DynamicValue<?> dynamicValue : children.keySet()) {
             if (!dynamicValue.shouldShow()) continue;
@@ -136,8 +148,8 @@ public class ConfigWidget {
         }
         this.posY = Atomic.client.getWindow().getScaledHeight() - maxOffset - 30;
         if (this.lastRenderY == -1) this.lastRenderY = posY;
-        Renderer.fill(ms, new Color(238, 37, 37, 255), lastRenderX - 9, lastRenderY - margin + 1, lastRenderX - 9 + 3, lastRenderY + 9 + margin - 1);
-        Renderer.fill(ms, ClickGUI.currentActiveTheme.h_ret(), lastRenderX - 10, lastRenderY + 9 + margin, lastRenderX + width + 10, lastRenderY + maxOffset + 3);
+        Renderer.R2D.fill(ms, new Color(238, 37, 37, 255), lastRenderX - 9, lastRenderY - margin + 1, lastRenderX - 9 + 3, lastRenderY + 9 + margin - 1);
+        Renderer.R2D.fill(ms, ClickGUI.currentActiveTheme.h_ret(), lastRenderX - 10, lastRenderY + 9 + margin, lastRenderX + width + 10, lastRenderY + maxOffset + 3);
         Atomic.fontRenderer.drawCenteredString(ms, parent.getName() + " config", lastRenderX + (width / 2f), lastRenderY, ClickGUI.currentActiveTheme.fontColor().getRGB());
         int yOffset = (int) Math.ceil(9 + (margin * 2)) - 1;
         List<DynamicValue<?>> dvL = new ArrayList<>(children.keySet());

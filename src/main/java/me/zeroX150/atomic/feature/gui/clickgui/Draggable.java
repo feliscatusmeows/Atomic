@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.clickgui;
 
 import me.zeroX150.atomic.Atomic;
@@ -10,7 +15,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Quaternion;
 import net.minecraft.util.math.Vec3f;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -26,7 +31,6 @@ public class Draggable {
     double lastRenderX = -1;
     double lastRenderY = -1;
     double trackedLastRenderX = -1;
-    double trackedLastRenderY = -1;
     boolean expanded;
     boolean dragged = false;
     long lastRender = System.currentTimeMillis();
@@ -73,7 +77,6 @@ public class Draggable {
         if (trackedLastRenderX == -1) trackedLastRenderX = lastRenderX;
         lrXDiff = lastRenderX - trackedLastRenderX;
         trackedLastRenderX = lastRenderX;
-        trackedLastRenderY = lastRenderY;
     }
 
     double easeOutBounce(double x) {
@@ -142,17 +145,19 @@ public class Draggable {
         if (me.zeroX150.atomic.feature.module.impl.render.ClickGUI.enableTails.getValue())
             for (PositionD recordedPosition : recordedPositions) {
                 if (recordedPosition == null) continue;
-                MatrixStack ms = new MatrixStack();
+                MatrixStack ms = Renderer.R3D.getEmptyMatrixStack();
+                ms.push();
                 ms.translate(recordedPosition.x(), recordedPosition.y(), -100);
                 ms.translate(aProgI * Atomic.client.getWindow().getScaledWidth(), 0, 0);
                 ms.multiply(new Quaternion(new Vec3f(0, 0, 1), (float) (recordedPosition.rot()), true));
-                Color c = Renderer.modify(new Color(Color.HSBtoRGB((float) val, 0.6f, 0.6f)), -1, -1, -1, 30);
-                Renderer.fill(ms, c, -getPaddingX() * 2, 0, width + getMargin() + getPaddingX() * 2 + 4, ClickGUI.currentActiveTheme.titleHeight() + getMargin() * 2);
+                Color c = Renderer.Util.modify(new Color(Color.HSBtoRGB((float) val, 0.6f, 0.6f)), -1, -1, -1, 30);
+                Renderer.R2D.fill(ms, c, -getPaddingX() * 2, 0, width + getMargin() + getPaddingX() * 2 + 4, ClickGUI.currentActiveTheme.titleHeight() + getMargin() * 2);
                 val += incr;
+                ms.pop();
             }
         if (this.openAnimation != 0) {
             double p = -aProgI * Atomic.client.getWindow().getScaledWidth();
-            Renderer.scissor(p + (lastRenderX - getMargin() - getPaddingX() * 3) - 1, (lastRenderY + ClickGUI.currentActiveTheme.titleHeight() + getMargin() - 1), (width + getMargin() + 4 + getPaddingX() * 2) + 2, (Math.min(200, (getMargin() * 2 + 9) * children.size()) * openAnimationInter));
+            Renderer.R2D.scissor(p + (lastRenderX - getMargin() - getPaddingX() * 3) - 1, (lastRenderY + ClickGUI.currentActiveTheme.titleHeight() + getMargin() - 1), (width + getMargin() + 4 + getPaddingX() * 2) + 2, (Math.min(200, (getMargin() * 2 + 9) * children.size()) * openAnimationInter));
             double yOffset = ClickGUI.currentActiveTheme.titleHeight() + getMargin() * 2;
             stack.push();
             //stack.scale(1, (float) openAnimationInter, 1);
@@ -161,13 +166,13 @@ public class Draggable {
             for (ContainerMember child : children) {
                 double px = this.dragged || openAnimationInter != 1 ? -1 : lastRenderX;
                 double py = this.dragged || openAnimationInter != 1 ? -1 : lastRenderY + (yOffset * openAnimationInter);
-                child.render(getMargin(), getMargin() + yOffset, stack, 1, px, py + yOff - actualScroll, delta, actualScroll, lastRenderY + ClickGUI.currentActiveTheme.titleHeight() + getMargin() - 1);
+                child.render(getMargin(), getMargin() + yOffset, stack, px, py + yOff - actualScroll, delta, lastRenderY + ClickGUI.currentActiveTheme.titleHeight() + getMargin() - 1);
                 yOffset += 9 + getMargin() * 2;
             }
             stack.pop();
-            Renderer.unscissor();
+            Renderer.R2D.unscissor();
         }
-        Renderer.fill(stack, Renderer.lerp(ClickGUI.currentActiveTheme.h_exp(), ClickGUI.currentActiveTheme.h_ret(), openAnimationInter), -(getPaddingX() * 2), 0, width + getMargin() + 4 + getPaddingX() * 2, ClickGUI.currentActiveTheme.titleHeight() + getMargin() * 2);
+        Renderer.R2D.fill(stack, Renderer.Util.lerp(ClickGUI.currentActiveTheme.h_exp(), ClickGUI.currentActiveTheme.h_ret(), openAnimationInter), -(getPaddingX() * 2), 0, width + getMargin() + 4 + getPaddingX() * 2, ClickGUI.currentActiveTheme.titleHeight() + getMargin() * 2);
         //DrawableHelper.fill(stack, (int) -(getPaddingX() * 2), 0, (int) (width + getMargin() + 4 + getPaddingX() * 2), (int) (ClickGUI.currentActiveTheme.titleHeight() + getMargin() * 2), Renderer.lerp(ClickGUI.currentActiveTheme.h_exp(), ClickGUI.currentActiveTheme.h_ret(), openAnimationInter).getRGB());
         FontRenderer.FontType ft = FontRenderer.FontType.SHADOW_THIN;
         if (me.zeroX150.atomic.feature.module.impl.render.ClickGUI.theme.getValue().equalsIgnoreCase("walmart sigma"))

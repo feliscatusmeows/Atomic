@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.screen;
 
 import me.zeroX150.atomic.Atomic;
@@ -23,7 +28,7 @@ public class CreativeInventoryScreenMixin extends Screen {
     }
 
     @Inject(method = "init", at = @At("RETURN"))
-    void a(CallbackInfo ci) {
+    void init(CallbackInfo ci) {
         ButtonWidget nbtEditor = new ButtonWidget(5, 5, 100, 20, Text.of("NBT editor"), button -> {
             ItemStack hand = Objects.requireNonNull(Atomic.client.player).getInventory().getMainHandStack();
             if (hand.isEmpty()) {

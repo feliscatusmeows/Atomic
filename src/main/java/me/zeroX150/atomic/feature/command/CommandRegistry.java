@@ -1,6 +1,33 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.command;
 
-import me.zeroX150.atomic.feature.command.impl.*;
+import me.zeroX150.atomic.feature.command.impl.Baritone;
+import me.zeroX150.atomic.feature.command.impl.BaritoneOreSim;
+import me.zeroX150.atomic.feature.command.impl.ChatSequence;
+import me.zeroX150.atomic.feature.command.impl.Config;
+import me.zeroX150.atomic.feature.command.impl.DecodeUUID;
+import me.zeroX150.atomic.feature.command.impl.Drop;
+import me.zeroX150.atomic.feature.command.impl.Effect;
+import me.zeroX150.atomic.feature.command.impl.ForEach;
+import me.zeroX150.atomic.feature.command.impl.Gamemode;
+import me.zeroX150.atomic.feature.command.impl.Help;
+import me.zeroX150.atomic.feature.command.impl.Hologram;
+import me.zeroX150.atomic.feature.command.impl.InventoryCleaner;
+import me.zeroX150.atomic.feature.command.impl.Invsee;
+import me.zeroX150.atomic.feature.command.impl.ItemStorage;
+import me.zeroX150.atomic.feature.command.impl.LoadConfig;
+import me.zeroX150.atomic.feature.command.impl.Panic;
+import me.zeroX150.atomic.feature.command.impl.Rename;
+import me.zeroX150.atomic.feature.command.impl.Say;
+import me.zeroX150.atomic.feature.command.impl.Socket;
+import me.zeroX150.atomic.feature.command.impl.Test;
+import me.zeroX150.atomic.feature.command.impl.Toggle;
+import me.zeroX150.atomic.feature.command.impl.ViewNbt;
+import me.zeroX150.atomic.feature.command.impl.WaypointManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,17 +58,11 @@ public class CommandRegistry {
         commands.add(new WaypointManager());
         commands.add(new ItemStorage());
         commands.add(new LoadConfig());
+        commands.add(new Invsee());
     }
 
     public static List<Command> getCommands() {
         return commands;
-    }
-
-    public static Command getByClass(Class<? extends Command> clazz) {
-        for (Command command : getCommands()) {
-            if (command.getClass() == clazz) return command;
-        }
-        return null;
     }
 
     public static Command getByAlias(String n) {

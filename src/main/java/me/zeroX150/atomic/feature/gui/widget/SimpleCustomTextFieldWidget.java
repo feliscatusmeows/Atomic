@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.widget;
 
 import com.google.common.collect.Lists;
@@ -15,7 +20,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +104,7 @@ public class SimpleCustomTextFieldWidget extends ClickableWidget implements Draw
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Atomic.client.keyboard.setRepeatEvents(true);
         cursorIndex = MathHelper.clamp(cursorIndex, 0, text.isEmpty() ? 0 : (text.length()));
-        Renderer.fill(matrices, ClickGUI.currentActiveTheme.inactive(), x, y, x + width, y + height);
+        Renderer.R2D.fill(matrices, ClickGUI.currentActiveTheme.inactive(), x, y, x + width, y + height);
         while (rStartIndex > cursorIndex) {
             rStartIndex--;
         }
@@ -122,7 +127,7 @@ public class SimpleCustomTextFieldWidget extends ClickableWidget implements Draw
             rStartIndex++;
         }
         if (selected) {
-            Renderer.fill(matrices, Renderer.modify(c1, -1, -1, -1, (int) Math.floor(opacity * 255)), x + w + 1, y + 1, x + w + 2, y + height - 1);
+            Renderer.R2D.fill(matrices, Renderer.Util.modify(c1, -1, -1, -1, (int) Math.floor(opacity * 255)), x + w + 1, y + 1, x + w + 2, y + height - 1);
         }
     }
 

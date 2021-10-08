@@ -1,6 +1,11 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class Transitions {
     /**
@@ -34,5 +39,10 @@ public class Transitions {
         double c3 = c1 + 1;
 
         return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2);
+    }
+
+    public static double easeOutExpo(double x) {
+        return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
+
     }
 }

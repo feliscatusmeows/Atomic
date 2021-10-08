@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.network;
 
 import net.minecraft.network.PacketByteBuf;
@@ -11,10 +16,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 public interface ICustomPayloadC2SPacketAccessor {
     @Accessor("channel")
     Identifier getChannel();
-
-    @Mutable
-    @Accessor("channel")
-    void setChannel(Identifier newValue);
 
     @Accessor("data")
     PacketByteBuf getData();

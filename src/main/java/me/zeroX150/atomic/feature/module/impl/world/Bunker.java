@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.world;
 
 import me.zeroX150.atomic.Atomic;
@@ -13,7 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Objects;
 
 public class Bunker extends Module {
@@ -70,7 +75,7 @@ public class Bunker extends Module {
 
     @Override
     public void onWorldRender(MatrixStack matrices) {
-        if (current != null) Renderer.renderFilled(current, new Vec3d(1, 1, 1), Color.RED, matrices);
+        if (current != null) Renderer.R3D.renderFilled(current, new Vec3d(1, 1, 1), Color.RED, matrices);
     }
 
     boolean incr() {

@@ -1,7 +1,12 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.network;
 
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.InfChatLength;
+import me.zeroX150.atomic.feature.module.impl.misc.InfChatLength;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -16,8 +21,6 @@ public class ChatMessageC2SPacketMixin {
             target = "Ljava/lang/String;length()I"
     ))
     public int redirectLength(String s) {
-        // tell the packet the message length is 1 if the module is enabled,
-        // tell it the actual length when not
         return Objects.requireNonNull(ModuleRegistry.getByClass(InfChatLength.class)).isEnabled() ? 1 : s.length();
     }
 }

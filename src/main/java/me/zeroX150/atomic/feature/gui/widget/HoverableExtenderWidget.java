@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.widget;
 
 import me.zeroX150.atomic.feature.gui.screen.FastTickable;
@@ -9,14 +14,19 @@ import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.util.math.MatrixStack;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HoverableExtenderWidget implements Drawable, Element, FastTickable, Selectable {
-    List<Drawable> renders = new ArrayList<>();
-    List<Element> children = new ArrayList<>();
-    double sourceX, sourceY, width, height, extend, x;
+    final List<Drawable> renders = new ArrayList<>();
+    final List<Element> children = new ArrayList<>();
+    final double sourceX;
+    final double sourceY;
+    final double width;
+    final double height;
+    final double extend;
+    double x;
     double renderX;
     boolean isHovered = false;
 
@@ -45,11 +55,10 @@ public class HoverableExtenderWidget implements Drawable, Element, FastTickable,
         if (isHovered) {
             this.x = sourceX - width + extend;
         } else this.x = sourceX;
-        Renderer.fill(matrices, new Color(17, 17, 17, 200), renderX, sourceY, renderX + width, sourceY + height);
+        Renderer.R2D.fill(matrices, new Color(17, 17, 17, 200), renderX, sourceY, renderX + width, sourceY + height);
         matrices.translate(renderX, sourceY, 0);
         int mx = (int) (mouseX - renderX);
         int my = (int) (mouseY - sourceY);
-        //Atomic.monoFontRenderer.drawString(new MatrixStack(),mx+" "+my, 1, 1, 0xFFFFFF);
         for (Drawable child : renders) {
             child.render(matrices, mx, my, delta);
         }

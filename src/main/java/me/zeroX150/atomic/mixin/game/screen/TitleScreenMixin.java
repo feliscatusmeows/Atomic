@@ -1,9 +1,14 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.screen;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.screen.AltManager;
 import me.zeroX150.atomic.feature.gui.screen.HomeScreen;
-import me.zeroX150.atomic.feature.module.impl.external.ClientConfig;
+import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;

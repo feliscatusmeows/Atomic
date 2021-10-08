@@ -3,7 +3,6 @@
   "package": "me.zeroX150.atomic.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "game.BlockHitResultMixin",
     "game.ClientPlayerEntityMixin",
     "game.DimensionTypeMixin",
     "game.IClientPlayerInteractionManagerAccessor",
@@ -17,6 +16,7 @@
     "game.NamespaceResourceManagerMixin",
     "game.PlayerListEntryMixin",
     "game.SchemasMixin",
+    "game.SharedConstantsMixin",
     "game.entity.ClientPlayerEntityMixin",
     "game.entity.ClientPlayerInteractionManagerMixin",
     "game.entity.EntityMixin",
@@ -61,7 +61,8 @@
     "network.IEntityVelocityUpdateS2CPacketMixin",
     "network.IMultiplayerServerListPingerAccessor",
     "network.IPlayerMoveC2SPacketAccessor",
-    "network.IReasonAccessor"
+    "network.IReasonAccessor",
+    "network.PlayerInteractEntityC2SPacketAccessor"
   ],
   "client": [],
   "server": [],

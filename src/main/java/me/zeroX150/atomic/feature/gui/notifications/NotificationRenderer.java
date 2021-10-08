@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.notifications;
 
 import me.zeroX150.atomic.Atomic;
@@ -8,7 +13,7 @@ import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -38,7 +43,7 @@ public class NotificationRenderer {
     }
 
     public static void renderTop() {
-        MatrixStack ms = new MatrixStack();
+        MatrixStack ms = Renderer.R3D.getEmptyMatrixStack();
         if (!Objects.requireNonNull(ModuleRegistry.getByClass(Hud.class)).isEnabled()) return;
         int baseX = Atomic.client.getWindow().getScaledWidth() / 2;
         int height = 16;
@@ -78,8 +83,8 @@ public class NotificationRenderer {
             width = Math.max(minWidth, width);
             float pad = 1;
             width += pad;
-            Renderer.fill(ms, new Color(28, 28, 28, 200), notification.renderPosX - width, notification.renderPosY, notification.renderPosX - width + pad + (width * 2 * notification.animationProgress), notification.renderPosY + height);
-            Renderer.scissor(notification.renderPosX - width + pad, notification.renderPosY, (width * 2 * notification.animationProgress), height + 1);
+            Renderer.R2D.fill(ms, new Color(28, 28, 28, 200), notification.renderPosX - width, notification.renderPosY, notification.renderPosX - width + pad + (width * 2 * notification.animationProgress), notification.renderPosY + height);
+            Renderer.R2D.scissor(notification.renderPosX - width + pad, notification.renderPosY, (width * 2 * notification.animationProgress), height + 1);
             Atomic.fontRenderer.drawCenteredString(ms, contents, notification.renderPosX, notification.renderPosY + 3, 0xFFFFFF);
             Color GREEN = new Color(100, 255, 20);
             Color RED = new Color(255, 50, 20);
@@ -87,21 +92,21 @@ public class NotificationRenderer {
             if (!notification.shouldDoAnimation && notification.animationProgress == 0 && notificationExpired) {
                 timeRemainingInv = 1;
             }
-            Color color = Renderer.lerp(GREEN, RED, timeRemaining);
+            Color color = Renderer.Util.lerp(GREEN, RED, timeRemaining);
             double sin = Math.sin(Math.toRadians((c % 1000) / 1000d * 360));
             if (notification.duration == -1) {
-                color = Renderer.lerp(RED, RED.darker().darker(), sin);
+                color = Renderer.Util.lerp(RED, RED.darker().darker(), sin);
             } else if (notification.duration == -2) {
-                color = Renderer.lerp(GREEN, GREEN.darker().darker(), sin);
+                color = Renderer.Util.lerp(GREEN, GREEN.darker().darker(), sin);
             }
-            Renderer.fill(ms, color, notification.renderPosX - width, notification.renderPosY + height - 2, notification.renderPosX - width + (width * 2 * timeRemainingInv), notification.renderPosY + height - 1);
-            Renderer.unscissor();
+            Renderer.R2D.fill(ms, color, notification.renderPosX - width, notification.renderPosY + height - 2, notification.renderPosX - width + (width * 2 * timeRemainingInv), notification.renderPosY + height - 1);
+            Renderer.R2D.unscissor();
             currentYOffset += height + 3;
         }
     }
 
     public static void renderSide() {
-        MatrixStack ms = new MatrixStack();
+        MatrixStack ms = Renderer.R3D.getEmptyMatrixStack();
         if (!Objects.requireNonNull(ModuleRegistry.getByClass(Hud.class)).isEnabled()) return;
         int currentYOffset = -20;
         int baseX = Atomic.client.getWindow().getScaledWidth() - 160;
@@ -125,10 +130,10 @@ public class NotificationRenderer {
             }
             if (notification.renderPosY == 0) notification.renderPosY = notification.posY;
             if (notification.renderPosX == 0) notification.renderPosX = baseX + 150;
-            Renderer.fill(new Color(28, 28, 28, 170), notification.renderPosX, notification.renderPosY, notification.renderPosX + 151, notification.renderPosY + notifHeight);
+            Renderer.R2D.fill(new Color(28, 28, 28, 170), notification.renderPosX, notification.renderPosY, notification.renderPosX + 151, notification.renderPosY + notifHeight);
             Color GREEN = new Color(100, 255, 20);
             Color RED = new Color(255, 50, 20);
-            Renderer.fill(Renderer.lerp(GREEN, RED, timeRemaining), notification.renderPosX + 150, notification.renderPosY, notification.renderPosX + 150 + 1, notification.renderPosY + ((1 - timeRemaining) * notifHeight));
+            Renderer.R2D.fill(Renderer.Util.lerp(GREEN, RED, timeRemaining), notification.renderPosX + 150, notification.renderPosY, notification.renderPosX + 150 + 1, notification.renderPosY + ((1 - timeRemaining) * notifHeight));
             int currentYOffsetText = 2 + 9;
             Atomic.fontRenderer.drawString(ms, notification.title, notification.renderPosX + 2, notification.renderPosY + 2, 0xFFFFFF);
             for (String content : notification.contents) {

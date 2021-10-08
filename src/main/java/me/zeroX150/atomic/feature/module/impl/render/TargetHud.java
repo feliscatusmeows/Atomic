@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.render;
 
 import me.zeroX150.atomic.Atomic;
@@ -19,7 +24,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
@@ -101,7 +106,8 @@ public class TargetHud extends Module {
 
     @Override
     public void onHudRender() {
-        MatrixStack stack = new MatrixStack();
+        MatrixStack stack = Renderer.R3D.getEmptyMatrixStack();
+        stack.push();
         int w = Atomic.client.getWindow().getScaledWidth();
         int h = Atomic.client.getWindow().getHeight();
         int modalWidth = 160;
@@ -124,7 +130,7 @@ public class TargetHud extends Module {
             double y = rwxI * (modalHeight / 2d);
             stack.translate(x, y, 0);
             stack.scale((float) renderWX, (float) renderWX, 1);
-            Renderer.fill(stack, Renderer.modify(Themes.Theme.ATOMIC.getPalette().active(), -1, -1, -1, 200), 0, 0, modalWidth, modalHeight);
+            Renderer.R2D.fill(stack, Renderer.Util.modify(Themes.Theme.ATOMIC.getPalette().active(), -1, -1, -1, 200), 0, 0, modalWidth, modalHeight);
             Atomic.fontRenderer.drawString(stack, entity.getEntityName(), 40, yOffset, 0xFFFFFF);
             yOffset += 10;
             PlayerListEntry ple = Objects.requireNonNull(Atomic.client.getNetworkHandler()).getPlayerListEntry(entity.getUuid());
@@ -144,8 +150,8 @@ public class TargetHud extends Module {
             renderToX = MathHelper.clamp(renderToX, 0, modalWidth);
             Color GREEN = new Color(100, 255, 20);
             Color RED = new Color(255, 50, 20);
-            Color MID_END = Renderer.lerp(GREEN, RED, hPer);
-            Renderer.fillGradientH(stack, RED, MID_END, 0, modalHeight - 2, renderToX, modalHeight);
+            Color MID_END = Renderer.Util.lerp(GREEN, RED, hPer);
+            Renderer.R2D.fillGradientH(stack, RED, MID_END, 0, modalHeight - 2, renderToX, modalHeight);
             if (renderHP.getValue()) {
                 Atomic.fontRenderer.drawString(stack, Utils.Math.roundToDecimal(trackedHp, 2) + " HP", 40, yOffset, MID_END.getRGB());
                 yOffset += 10;
@@ -156,12 +162,10 @@ public class TargetHud extends Module {
             }
             if (renderMaxHP.getValue()) {
                 String t = Utils.Math.roundToDecimal(mhealth, 2) + "";
-                float offset = 0f;
                 if (remainder > 0) {
                     t += "§6 + " + Utils.Math.roundToDecimal(remainder, 1);
-                    offset = Atomic.fontRenderer.getStringWidth("§6");
                 }
-                float mhP = Atomic.fontRenderer.getStringWidth(t) - offset;
+                float mhP = Atomic.fontRenderer.getStringWidth(t);
                 Atomic.fontRenderer.drawString(stack, t, (modalWidth - mhP - 3), (modalHeight - 3 - 10), 0xFFFFFF);
             }
 
@@ -179,9 +183,10 @@ public class TargetHud extends Module {
             Text cname = re.getCustomName();
             re.setCustomName(Text.of("DoNotRenderThisUsernamePlease"));
             stack.pop();
-            Renderer.drawEntity((20 * renderWX) + x, (modalHeight - 11) * renderWX + y, renderWX * 27, -10, -10, entity, stack);
+            Renderer.R2D.drawEntity((20 * renderWX) + x, (modalHeight - 11) * renderWX + y, renderWX * 27, -10, -10, entity, stack);
             re.setCustomName(cname);
         }
+        stack.push();
     }
 
 }

@@ -1,5 +1,10 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper.event;
 
 public enum EventType {
-    PACKET_SEND, PACKET_RECEIVE, ENTITY_RENDER, BLOCK_ENTITY_RENDER, BLOCK_RENDER, MOUSE_EVENT, LORE_QUERY, CONFIG_SAVE, NOCLIP_QUERY
+    PACKET_SEND, PACKET_RECEIVE, ENTITY_RENDER, BLOCK_ENTITY_RENDER, BLOCK_RENDER, MOUSE_EVENT, LORE_QUERY, CONFIG_SAVE, NOCLIP_QUERY, KEYBOARD
 }

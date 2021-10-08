@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.movement;
 
 import me.zeroX150.atomic.Atomic;
@@ -13,7 +18,6 @@ import java.util.Objects;
 
 public class AutoElytra extends Module {
     final SliderValue fallDist = (SliderValue) this.config.create("Fall distance", 3, 2, 10, 1).description("How far to fall for the elytra to equip");
-    ItemStack before = null;
 
     public AutoElytra() {
         super("AutoElytra", "Automatically equips an elytra from your inventory if you fell long enough", ModuleType.MOVEMENT);
@@ -27,7 +31,6 @@ public class AutoElytra extends Module {
     public void tick() {
         if (Objects.requireNonNull(Atomic.client.player).fallDistance > fallDist.getValue()) {
             if (!equippedElytra()) { // do we not have an elytra equipped?
-                before = Atomic.client.player.getInventory().getArmorStack(2); // save stack we have as armor rn
                 for (int i = 0; i < (9 * 4 + 1); i++) { // gotta equip
                     ItemStack stack = Atomic.client.player.getInventory().getStack(i); // is it an elytra?
                     if (stack.getItem() == Items.ELYTRA) {

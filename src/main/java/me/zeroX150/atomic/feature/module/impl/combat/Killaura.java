@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.combat;
 
 import com.google.common.util.concurrent.AtomicDouble;
@@ -7,7 +12,11 @@ import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.feature.module.config.MultiValue;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
-import me.zeroX150.atomic.helper.*;
+import me.zeroX150.atomic.helper.AttackManager;
+import me.zeroX150.atomic.helper.Friends;
+import me.zeroX150.atomic.helper.Packets;
+import me.zeroX150.atomic.helper.Rotations;
+import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.util.math.MatrixStack;
@@ -216,7 +225,7 @@ public class Killaura extends Module {
         if (combatPartner != null) {
             Vec3d origin = combatPartner.getPos();
             float h = combatPartner.getHeight();
-            Renderer.line(origin, origin.add(0, h, 0), Utils.getCurrentRGB(), matrices);
+            Renderer.R3D.line(origin, origin.add(0, h, 0), Utils.getCurrentRGB(), matrices);
         }
     }
 

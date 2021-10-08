@@ -1,0 +1,29 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
+package me.zeroX150.atomic.helper.event.events;
+
+import me.zeroX150.atomic.helper.event.events.base.NonCancellableEvent;
+
+public class KeyboardEvent extends NonCancellableEvent {
+    final int kc;
+    final int t;
+
+    public KeyboardEvent(int keycode, int type) {
+        this.kc = keycode;
+        this.t = type;
+    }
+
+    public int getKeycode() {
+        return kc;
+    }
+
+    /**
+     * @return the type of the event<br>0 = key released<br>1 = key pressed
+     */
+    public int getType() {
+        return t;
+    }
+}

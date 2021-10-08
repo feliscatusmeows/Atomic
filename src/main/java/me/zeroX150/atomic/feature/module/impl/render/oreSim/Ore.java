@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.render.oreSim;
 
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
@@ -5,9 +10,12 @@ import net.minecraft.util.math.intprovider.ConstantIntProvider;
 import net.minecraft.util.math.intprovider.IntProvider;
 import net.minecraft.util.math.intprovider.UniformIntProvider;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Random;
 
 public class Ore {
     private static final BooleanValue coal = new BooleanValue("Coal", false);
@@ -64,7 +72,7 @@ public class Ore {
         List<Ore> ores = new ArrayList<>();
         HashMap<String, Integer> emeraldIndexes = new HashMap<>();
         emeraldIndexes.put("default", -1);
-        String[] emeraldBiomes = new String[]{"mountains", "mountain_edge", "wooded_mountains", "gravelly_mountains", "modified_gravelly_mountains", "paper"};
+        String[] emeraldBiomes = new String[]{ "mountains", "mountain_edge", "wooded_mountains", "gravelly_mountains", "modified_gravelly_mountains", "paper" };
         for (String emeraldBiome : emeraldBiomes) {
             emeraldIndexes.put(emeraldBiome, 17);
         }
@@ -76,7 +84,7 @@ public class Ore {
         LDebrisIndexes.forEach((biome, index) -> SDebrisIndexes.put(biome, index + 1));
         HashMap<String, Integer> extraGoldIndexes = new HashMap<>();
         extraGoldIndexes.put("default", -1);
-        String[] extraGoldBiomes = new String[]{"badlands", "badlands_plateau", "modified_badlands_plateau", "wooded_badlands_plateau", "modified_wooded_badlands_plateau", "eroded_badlands", "paper"};
+        String[] extraGoldBiomes = new String[]{ "badlands", "badlands_plateau", "modified_badlands_plateau", "wooded_badlands_plateau", "modified_wooded_badlands_plateau", "eroded_badlands", "paper" };
         for (String extraGoldBiome : extraGoldBiomes) {
             extraGoldIndexes.put(extraGoldBiome, 14);
         }

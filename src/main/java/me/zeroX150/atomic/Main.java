@@ -1,6 +1,11 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic;
 
-import javax.swing.*;
+import javax.swing.JOptionPane;
 
 public class Main {
     public static void main(String[] args) {

@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.world;
 
 import me.zeroX150.atomic.Atomic;
@@ -5,7 +10,11 @@ import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.CropBlock;
+import net.minecraft.block.NetherWartBlock;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -62,15 +71,6 @@ public class FarmingAura extends Module {
             }
         }
         if (greifing.getValue()) return;
-        Item[] V = new Item[]{
-                Items.WHEAT_SEEDS,
-                Items.BEETROOT_SEEDS,
-                Items.MELON_SEEDS,
-                Items.PUMPKIN_SEEDS,
-                Items.CARROT, Items.POTATO,
-                Items.NETHER_WART,
-                Items.SUGAR_CANE
-        };
         Map<Item, Block> blockMap = new HashMap<>();
         blockMap.put(Items.WHEAT_SEEDS, Blocks.FARMLAND);
         blockMap.put(Items.BEETROOT_SEEDS, Blocks.FARMLAND);

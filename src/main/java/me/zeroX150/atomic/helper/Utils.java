@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper;
 
 import baritone.api.Settings$Setting;
@@ -7,6 +12,7 @@ import com.mojang.authlib.Agent;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 import me.zeroX150.atomic.Atomic;
+import me.zeroX150.atomic.helper.font.FontRenderer;
 import me.zeroX150.atomic.mixin.game.IMinecraftClientAccessor;
 import me.zeroX150.atomic.mixin.game.IRenderTickCounterAccessor;
 import net.minecraft.client.network.ServerInfo;
@@ -22,15 +28,19 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 import org.apache.logging.log4j.Level;
 
-import java.awt.*;
+import java.awt.Color;
 import java.net.Proxy;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 public class Utils {
     public static ServerInfo latestServerInfo;
@@ -57,6 +67,26 @@ public class Utils {
         return new Color(Color.HSBtoRGB((System.currentTimeMillis() % 4750) / 4750f, 0.7f, 1));
     }
 
+    public static String[] splitLinesToWidth(String input, double maxWidth, FontRenderer rendererUsed) {
+        List<String> dSplit = List.of(input.split("\n"));
+        List<String> splits = new ArrayList<>();
+        for (String s : dSplit) {
+            List<String> splitContent = new ArrayList<>();
+            StringBuilder line = new StringBuilder();
+            for (String c : s.split(" ")) {
+                if (rendererUsed.getStringWidth(line + c) >= maxWidth - 10) {
+                    splitContent.add(line.toString().trim());
+                    line = new StringBuilder();
+                }
+                line.append(c).append(" ");
+            }
+            splitContent.add(line.toString().trim());
+            splits.addAll(splitContent);
+        }
+        return splits.toArray(new String[0]);
+    }
+
+    @SuppressWarnings("UnusedReturnValue")
     public static NbtCompound putPos(Vec3d pos, NbtCompound comp) {
         NbtList list = new NbtList();
         list.add(NbtDouble.of(pos.x));
@@ -123,8 +153,8 @@ public class Utils {
     }
 
     public static class Players {
-        static Map<String, UUID> UUID_CACHE = new HashMap<>();
-        static HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+        static final Map<String, UUID> UUID_CACHE = new HashMap<>();
+        static final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 
         public static UUID getUUIDFromName(String name) {
             if (!isPlayerNameValid(name)) return null;
@@ -206,6 +236,7 @@ public class Utils {
 
     public static class TickManager {
         static final List<TickEntry> entries = new ArrayList<>();
+        static final List<Runnable> nextTickRunners = new ArrayList<>();
 
         public static void runInNTicks(int n, Runnable toRun) {
             entries.add(new TickEntry(n, toRun));
@@ -219,6 +250,17 @@ public class Utils {
                     entries.remove(entry);
                 }
             }
+        }
+
+        public static void runOnNextRender(Runnable r) {
+            nextTickRunners.add(r);
+        }
+
+        public static void render() {
+            for (Runnable nextTickRunner : nextTickRunners) {
+                nextTickRunner.run();
+            }
+            nextTickRunners.clear();
         }
 
         static class TickEntry {

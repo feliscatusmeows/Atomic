@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.combat;
 
 import me.zeroX150.atomic.Atomic;
@@ -138,7 +143,7 @@ public class AimAssist extends Module {
         if (le != null) {
             Vec3d origin = le.getPos();
             float h = le.getHeight();
-            Renderer.line(origin, origin.add(0, h, 0), Utils.getCurrentRGB(), matrices);
+            Renderer.R3D.line(origin, origin.add(0, h, 0), Utils.getCurrentRGB(), matrices);
         }
     }
 

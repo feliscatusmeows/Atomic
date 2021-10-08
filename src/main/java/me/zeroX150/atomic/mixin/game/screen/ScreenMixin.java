@@ -1,18 +1,29 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.command.Command;
 import me.zeroX150.atomic.feature.command.CommandRegistry;
+import me.zeroX150.atomic.feature.gui.screen.MessageScreen;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.CleanGUI;
-import me.zeroX150.atomic.feature.module.impl.external.ClientConfig;
+import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
+import me.zeroX150.atomic.feature.module.impl.render.CleanGUI;
 import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -115,21 +126,21 @@ public class ScreenMixin extends DrawableHelper {
     @Inject(method = "renderBackgroundTexture", at = @At("HEAD"), cancellable = true)
     public void renderBackgroundTexture(int vOffset, CallbackInfo ci) {
         ci.cancel();
-        Renderer.renderBackgroundTexture();
+        Renderer.R2D.renderBackgroundTexture();
     }
 
     @Redirect(method = "handleTextClick", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/gui/screen/Screen;sendMessage(Ljava/lang/String;Z)V"
     ))
-    public void redirSendMsg(Screen screen, String message, boolean toHud) {
-        me.zeroX150.atomic.feature.gui.screen.ConfirmScreen confirmScreen = new me.zeroX150.atomic.feature.gui.screen.ConfirmScreen("Uh oh", "Clicking that would send this message into chat:\n" + message + "\nDo you want to do that?", screen, t -> {
+    public void warnUserAboutClickedText(Screen screen, String message, boolean toHud) {
+        MessageScreen confirmScreen = new MessageScreen(screen, "Careful!", "Clicking that would send this message:\n" + message + "\nDo you want to do that?", t -> {
             if (t) {
                 screen.sendMessage(message, toHud);
             } else {
                 Utils.Client.sendMessage("Blocked sending of message \"" + message + "\"");
             }
-        });
+        }, MessageScreen.ScreenType.YESNO);
         Utils.TickManager.runInNTicks(0, () -> Atomic.client.setScreen(confirmScreen));
     }
 }

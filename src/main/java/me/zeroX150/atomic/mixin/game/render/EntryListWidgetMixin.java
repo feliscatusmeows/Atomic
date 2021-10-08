@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.render;
 
 import me.zeroX150.atomic.helper.render.Renderer;
@@ -27,6 +32,6 @@ public class EntryListWidgetMixin {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         this.renderBackground = false;
         this.renderHorizontalShadows = false;
-        if (!(((Object) this) instanceof PackListWidget)) Renderer.renderBackgroundTexture();
+        if (!(((Object) this) instanceof PackListWidget)) Renderer.R2D.renderBackgroundTexture();
     }
 }

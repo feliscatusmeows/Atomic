@@ -1,22 +1,24 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.world;
 
 import me.zeroX150.atomic.Atomic;
+import me.zeroX150.atomic.feature.gui.screen.MessageScreen;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
 import me.zeroX150.atomic.helper.Utils;
-import me.zeroX150.atomic.helper.event.EventType;
-import me.zeroX150.atomic.helper.event.Events;
-import me.zeroX150.atomic.helper.event.events.PacketEvent;
 import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -30,18 +32,6 @@ public class MassFillNuke extends Module {
 
     public MassFillNuke() {
         super("MassFillNuke", "Erases your whole render distance one by one [REQUIRES OP]", ModuleType.WORLD);
-        Events.registerEventHandler(EventType.PACKET_SEND, event -> {
-            if (!this.isEnabled() || run) return;
-            PacketEvent pe = (PacketEvent) event;
-            if (pe.getPacket() instanceof ChatMessageC2SPacket packet) {
-                if (packet.getChatMessage().equalsIgnoreCase("go")) {
-                    event.setCancelled(true);
-                    Utils.Client.sendMessage("Alright then. No returning.");
-                    run = true;
-                    startThread();
-                }
-            }
-        });
     }
 
     @Override
@@ -118,9 +108,15 @@ public class MassFillNuke extends Module {
     @Override
     public void enable() {
         startPos = Objects.requireNonNull(Atomic.client.player).getPos();
-        Utils.Client.sendMessage("THIS WILL ABSOLUTELY DESTROY EVERYTHING, AND YOU NEED OP");
-        Utils.Client.sendMessage("SEND \"GO\" INTO CHAT TO CONTINUE. THIS WILL BE DANGEROUS");
-        Utils.Client.sendMessage("MAKE SURE YOUR RENDER DISTANCE IS ALL THE WAY UP AND EVERYTHING IS LOADED");
+        MessageScreen ms = new MessageScreen(null, "Warning!", "This module is dangerous\nA few requirements:\n1. You need op\n2. You need time\nThis module will destroy absolutely everything. Are you sure you want to continue?", t -> {
+            if (!t) {
+                setEnabled(false);
+            } else {
+                run = true;
+                startThread();
+            }
+        }, MessageScreen.ScreenType.YESNO);
+        Atomic.client.execute(() -> Atomic.client.setScreen(ms));
     }
 
     @Override
@@ -138,13 +134,13 @@ public class MassFillNuke extends Module {
     public void onWorldRender(MatrixStack matrices) {
         if (last != null) {
             Vec3d origin = last.subtract(0.5, 0.5, 0.5);
-            Renderer.renderFilled(origin, new Vec3d(1, 1, 1), Utils.getCurrentRGB(), matrices);
-            Renderer.line(origin.add(0.5, 0.5, 0.5).subtract(10, 0, 0), origin.add(0.5, 0.5, 0.5).add(10, 0, 0), Color.RED, matrices);
-            Renderer.line(origin.add(0.5, 0.5, 0.5).subtract(0, 0, 10), origin.add(0.5, 0.5, 0.5).add(0, 0, 10), Color.GREEN, matrices);
-            Renderer.line(origin.add(0.5, 0.5, 0.5).subtract(0, 10, 0), origin.add(0.5, 0.5, 0.5).add(0, 10, 0), Color.BLUE, matrices);
+            Renderer.R3D.renderFilled(origin, new Vec3d(1, 1, 1), Utils.getCurrentRGB(), matrices);
+            Renderer.R3D.line(origin.add(0.5, 0.5, 0.5).subtract(10, 0, 0), origin.add(0.5, 0.5, 0.5).add(10, 0, 0), Color.RED, matrices);
+            Renderer.R3D.line(origin.add(0.5, 0.5, 0.5).subtract(0, 0, 10), origin.add(0.5, 0.5, 0.5).add(0, 0, 10), Color.GREEN, matrices);
+            Renderer.R3D.line(origin.add(0.5, 0.5, 0.5).subtract(0, 10, 0), origin.add(0.5, 0.5, 0.5).add(0, 10, 0), Color.BLUE, matrices);
             for (Vec3d vec3d : blacklistedChunks.toArray(new Vec3d[0])) {
                 if (vec3d.subtract(0.5, 0.5, 0.5).distanceTo(last) > 60) continue;
-                Renderer.renderFilled(vec3d.subtract(0.5, 0.5, 0.5), new Vec3d(1, 1, 1), Color.RED, matrices);
+                Renderer.R3D.renderFilled(vec3d.subtract(0.5, 0.5, 0.5), new Vec3d(1, 1, 1), Color.RED, matrices);
             }
         }
     }

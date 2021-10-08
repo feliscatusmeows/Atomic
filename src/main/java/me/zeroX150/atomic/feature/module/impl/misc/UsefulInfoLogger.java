@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.misc;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -14,7 +19,12 @@ import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.mixin.network.IReasonAccessor;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.Packet;
-import net.minecraft.network.packet.s2c.play.*;
+import net.minecraft.network.packet.s2c.play.CommandTreeS2CPacket;
+import net.minecraft.network.packet.s2c.play.DifficultyS2CPacket;
+import net.minecraft.network.packet.s2c.play.EndCombatS2CPacket;
+import net.minecraft.network.packet.s2c.play.EnterCombatS2CPacket;
+import net.minecraft.network.packet.s2c.play.GameStateChangeS2CPacket;
+import net.minecraft.network.packet.s2c.play.WorldBorderCenterChangedS2CPacket;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.Difficulty;
 
@@ -25,20 +35,6 @@ public class UsefulInfoLogger extends Module {
     static final Int2ObjectOpenHashMap<String> REASON_MAPPINGS = new Int2ObjectOpenHashMap<>();
 
     static {
-        /*
-    public static final GameStateChangeS2CPacket.Reason NO_RESPAWN_BLOCK = new GameStateChangeS2CPacket.Reason(0);
-    public static final GameStateChangeS2CPacket.Reason RAIN_STARTED = new GameStateChangeS2CPacket.Reason(1);
-    public static final GameStateChangeS2CPacket.Reason RAIN_STOPPED = new GameStateChangeS2CPacket.Reason(2);
-    public static final GameStateChangeS2CPacket.Reason GAME_MODE_CHANGED = new GameStateChangeS2CPacket.Reason(3);
-    public static final GameStateChangeS2CPacket.Reason GAME_WON = new GameStateChangeS2CPacket.Reason(4);
-    public static final GameStateChangeS2CPacket.Reason DEMO_MESSAGE_SHOWN = new GameStateChangeS2CPacket.Reason(5);
-    public static final GameStateChangeS2CPacket.Reason PROJECTILE_HIT_PLAYER = new GameStateChangeS2CPacket.Reason(6);
-    public static final GameStateChangeS2CPacket.Reason RAIN_GRADIENT_CHANGED = new GameStateChangeS2CPacket.Reason(7);
-    public static final GameStateChangeS2CPacket.Reason THUNDER_GRADIENT_CHANGED = new GameStateChangeS2CPacket.Reason(8);
-    public static final GameStateChangeS2CPacket.Reason PUFFERFISH_STING = new GameStateChangeS2CPacket.Reason(9);
-    public static final GameStateChangeS2CPacket.Reason ELDER_GUARDIAN_EFFECT = new GameStateChangeS2CPacket.Reason(10);
-    public static final GameStateChangeS2CPacket.Reason IMMEDIATE_RESPAWN = new GameStateChangeS2CPacket.Reason(11);
-        * */
         REASON_MAPPINGS.put(0, "No respawn block");
         REASON_MAPPINGS.put(1, "Rain started");
         REASON_MAPPINGS.put(2, "Rain stopped");
@@ -62,7 +58,7 @@ public class UsefulInfoLogger extends Module {
     final BooleanValue showWorldBorderCenterChange = (BooleanValue) this.config.create("World border update", true).description("Shows when the world border changes center");
 
     public UsefulInfoLogger() {
-        super("UsefulInfoLogger", "Prints useful information about the server in chat, when it arrives", ModuleType.MISC);
+        super("ServerLogger", "Prints useful information about the server in chat, when it arrives", ModuleType.MISC);
         Events.registerEventHandler(EventType.PACKET_RECEIVE, event -> {
             if (!this.isEnabled()) return;
             PacketEvent pe = (PacketEvent) event;
@@ -76,10 +72,10 @@ public class UsefulInfoLogger extends Module {
             if (p instanceof CommandTreeS2CPacket packet && showCommandTreeArrival.getValue()) {
                 Utils.Client.sendMessage("[UIL] [Command tree packet] Command tree packet arrived with " + packet.getCommandTree().getChildren().size() + " commands.");
             }
-            if (p instanceof EnterCombatS2CPacket packet && showEngageInCombat.getValue()) {
+            if (p instanceof EnterCombatS2CPacket && showEngageInCombat.getValue()) {
                 Utils.Client.sendMessage("[UIL] [Combat update] The server considers you now in combat");
             }
-            if (p instanceof EndCombatS2CPacket packet && showEndCombat.getValue()) {
+            if (p instanceof EndCombatS2CPacket && showEndCombat.getValue()) {
                 Utils.Client.sendMessage("[UIL] [Combat update] The server considers you now no longer in combat");
             }
             if (p instanceof DifficultyS2CPacket packet && showDifficultyChange.getValue()) {
@@ -126,7 +122,7 @@ public class UsefulInfoLogger extends Module {
     public void onWorldRender(MatrixStack matrices) {
         renders.removeIf(AnimatedRenderablePos::isExpired);
         for (AnimatedRenderablePos render : renders) {
-            Renderer.renderFilled(render.getPos(), render.getDimensions(), render.getColor(), matrices);
+            Renderer.R3D.renderFilled(render.getPos(), render.getDimensions(), render.getColor(), matrices);
         }
     }
 

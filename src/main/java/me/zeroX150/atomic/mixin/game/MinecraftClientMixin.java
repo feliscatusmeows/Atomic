@@ -1,11 +1,18 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game;
 
+import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.AntiReducedDebugInfo;
-import me.zeroX150.atomic.feature.module.impl.external.FastUse;
+import me.zeroX150.atomic.feature.module.impl.exploit.AntiReducedDebugInfo;
 import me.zeroX150.atomic.feature.module.impl.misc.WindowCustomization;
+import me.zeroX150.atomic.feature.module.impl.world.FastUse;
 import me.zeroX150.atomic.helper.ConfigManager;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -48,5 +55,10 @@ public class MinecraftClientMixin {
         String v = Objects.requireNonNull(ModuleRegistry.getByClass(WindowCustomization.class)).title.getValue();
         if (Objects.requireNonNull(ModuleRegistry.getByClass(WindowCustomization.class)).isEnabled() && !v.isEmpty())
             cir.setReturnValue(v);
+    }
+
+    @Inject(method = "setScreen", at = @At("HEAD"))
+    void onSetScreen(Screen screen, CallbackInfo ci) {
+        Atomic.lastScreenChange = System.currentTimeMillis();
     }
 }

@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game;
 
 import me.zeroX150.atomic.Atomic;
@@ -16,7 +21,7 @@ import java.io.IOException;
 @Mixin(NamespaceResourceManager.class)
 public class NamespaceResourceManagerMixin {
     @Inject(method = "getResource", cancellable = true, at = @At("HEAD"))
-    public void gr(Identifier id, CallbackInfoReturnable<Resource> cir) {
+    public void getResource(Identifier id, CallbackInfoReturnable<Resource> cir) {
         if (id.getNamespace().equalsIgnoreCase("atomic") && id.getPath().startsWith("capes/")) {
             String sanitizedPath = id.getPath().replace("capes/", "");
             File f = new File(Atomic.client.runDirectory.getAbsolutePath() + "/aCapes/" + sanitizedPath);

@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.world;
 
 import me.zeroX150.atomic.Atomic;
@@ -6,7 +11,6 @@ import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.feature.module.config.MultiValue;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
-import me.zeroX150.atomic.feature.module.impl.misc.AutoTool;
 import me.zeroX150.atomic.helper.Rotations;
 import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.render.Renderer;
@@ -116,7 +120,7 @@ public class Nuker extends Module {
     public void onWorldRender(MatrixStack matrices) {
         for (BlockPos render : renders) {
             Vec3d vp = new Vec3d(render.getX(), render.getY(), render.getZ());
-            Renderer.renderFilled(vp, new Vec3d(1, 1, 1), Renderer.modify(Utils.getCurrentRGB(), -1, -1, -1, 50), matrices);
+            Renderer.R3D.renderFilled(vp, new Vec3d(1, 1, 1), Renderer.Util.modify(Utils.getCurrentRGB(), -1, -1, -1, 50), matrices);
         }
     }
 

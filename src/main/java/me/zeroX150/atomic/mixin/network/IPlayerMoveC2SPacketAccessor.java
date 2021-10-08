@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.network;
 
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
@@ -38,9 +43,6 @@ public interface IPlayerMoveC2SPacketAccessor {
     @Mutable
     @Accessor("yaw")
     void setYaw(float yaw);
-
-    @Accessor("pitch")
-    float getPitch();
 
     @Mutable
     @Accessor("pitch")

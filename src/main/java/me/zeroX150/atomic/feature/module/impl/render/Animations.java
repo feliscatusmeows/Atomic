@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.render;
 
 import me.zeroX150.atomic.Atomic;
@@ -12,12 +17,12 @@ public class Animations extends Module {
     final SliderValue scaleX = (SliderValue) this.config.create("Scale X", 0.5, 0, 2, 3).description("How much to scale on the X axis");
     final SliderValue scaleY = (SliderValue) this.config.create("Scale Y", 0.5, 0, 2, 3).description("How much to scale on the Y axis");
     final SliderValue scaleZ = (SliderValue) this.config.create("Scale Z", 0.5, 0, 2, 3).description("How much to scale on the Z axis");
-    SliderValue rotateX = (SliderValue) this.config.create("Rotate X", 0, 0, 360, 0).description("How much to rotate on the X");
-    SliderValue rotateY = (SliderValue) this.config.create("Rotate Y", 0, 0, 360, 0).description("How much to rotate on the Y");
-    SliderValue rotateZ = (SliderValue) this.config.create("Rotate Z", 0, 0, 360, 0).description("How much to rotate on the Z");
-    SliderValue offsetX = (SliderValue) this.config.create("Offset X", 0, -5, 5, 3).description("How much to offset on the X");
-    SliderValue offsetY = (SliderValue) this.config.create("Offset Y", 0, -5, 5, 3).description("How much to offset on the Y");
-    SliderValue offsetZ = (SliderValue) this.config.create("Offset Z", 0, -5, 5, 3).description("How much to offset on the Z");
+    final SliderValue rotateX = (SliderValue) this.config.create("Rotate X", 0, 0, 360, 0).description("How much to rotate on the X");
+    final SliderValue rotateY = (SliderValue) this.config.create("Rotate Y", 0, 0, 360, 0).description("How much to rotate on the Y");
+    final SliderValue rotateZ = (SliderValue) this.config.create("Rotate Z", 0, 0, 360, 0).description("How much to rotate on the Z");
+    final SliderValue offsetX = (SliderValue) this.config.create("Offset X", 0, -5, 5, 3).description("How much to offset on the X");
+    final SliderValue offsetY = (SliderValue) this.config.create("Offset Y", 0, -5, 5, 3).description("How much to offset on the Y");
+    final SliderValue offsetZ = (SliderValue) this.config.create("Offset Z", 0, -5, 5, 3).description("How much to offset on the Z");
 
     public Animations() {
         super("Animations", "Does a funny when you use an item", ModuleType.RENDER);

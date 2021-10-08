@@ -1,11 +1,20 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.command.impl;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.command.Command;
 import me.zeroX150.atomic.feature.command.CommandRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.ClientConfig;
+import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
 import me.zeroX150.atomic.helper.Utils;
-import net.minecraft.text.*;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 
 import java.util.Objects;
 

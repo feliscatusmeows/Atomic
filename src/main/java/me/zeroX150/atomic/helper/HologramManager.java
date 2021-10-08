@@ -1,18 +1,23 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.NbtByte;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtDouble;
+import net.minecraft.nbt.NbtList;
+import net.minecraft.nbt.NbtString;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
 public class HologramManager {
     public static Hologram generateDefault(String text, Vec3d pos) {
         return new Hologram().position(pos).text(text).isEgg(false).isSmall(false);
-    }
-
-    public static Hologram newBuilder() {
-        return new Hologram();
     }
 
     public static class Hologram {

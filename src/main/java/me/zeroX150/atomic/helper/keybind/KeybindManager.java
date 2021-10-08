@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper.keybind;
 
 import me.zeroX150.atomic.Atomic;
@@ -12,17 +17,20 @@ public class KeybindManager {
 
     public static void init() {
         for (Module module : ModuleRegistry.getModules()) {
-            if (!module.config.get("Keybind").getValue().equals(-1.0)) {
+            if (!module.config.get("Keybind").getValue().equals(-1)) {
                 keybindMap.put(module, new Keybind(Integer.parseInt(module.config.get("Keybind").getValue() + "")));
             }
         }
     }
 
-    public static void update() {
-        for (Module module : keybindMap.keySet().toArray(new Module[0])) {
-            Keybind kb = keybindMap.get(module);
-            if (kb.isPressed()) {
-                Atomic.client.execute(module::toggle);
+    public static void updateSingle(int kc, int action) {
+        if (kc == -1) return; // JESSE WE FUCKED UP
+        if (action == 1) { // key pressed
+            for (Module o : keybindMap.keySet().toArray(new Module[0])) {
+                Keybind kb = keybindMap.get(o);
+                if (kb.keycode == kc) {
+                    Atomic.client.execute(o::toggle);
+                }
             }
         }
     }

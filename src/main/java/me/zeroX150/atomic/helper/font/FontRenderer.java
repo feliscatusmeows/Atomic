@@ -1,40 +1,54 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper.font;
 
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Matrix4f;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
-import java.util.Arrays;
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 import java.util.Random;
 import java.util.regex.Pattern;
 
 public class FontRenderer {
+    final boolean isBig = false;
     private final float fontSize;
     private final int startChar;
     private final int endChar;
     private final float[] xPos;
     private final float[] yPos;
     private final Pattern patternControlCode = Pattern.compile("(?i)\\u00A7[0-9A-FK-OG]"), patternUnsupported = Pattern.compile("(?i)\\u00A7[L-O]");
-    boolean isBig = false;
     private Font font;
     private Graphics2D graphics;
     private FontMetrics metrics;
@@ -65,10 +79,6 @@ public class FontRenderer {
 
             return null;
         }
-    }
-
-    public void setBig(boolean big) {
-        isBig = big;
     }
 
     private void setupGraphics2D() {
@@ -162,26 +172,26 @@ public class FontRenderer {
         RenderSystem.enableBlend();
         RenderSystem.disableTexture();
         String text2 = stripControlCodes(text);
-        switch (fontType.ordinal()) {
-            case 1:
+        switch (fontType) {
+            case NORMAL:
                 drawer(matrixStack, text2, x + 0.5F, y, color2);
                 drawer(matrixStack, text2, x - 0.5F, y, color2);
                 drawer(matrixStack, text2, x, y + 0.5F, color2);
                 drawer(matrixStack, text2, x, y - 0.5F, color2);
                 break;
-            case 2:
+            case SHADOW_THICK:
                 drawer(matrixStack, text2, x + 0.5F, y + 0.5F, color2);
                 break;
-            case 3:
+            case SHADOW_THIN:
                 drawer(matrixStack, text2, x + 0.5F, y + 1.0F, color2);
                 break;
-            case 4:
+            case OUTLINE_THIN:
                 drawer(matrixStack, text2, x, y + 0.5F, color2);
                 break;
-            case 5:
+            case EMBOSS_TOP:
                 drawer(matrixStack, text2, x, y - 0.5F, color2);
                 break;
-            case 6:
+            case EMBOSS_BOTTOM:
                 break;
         }
 
@@ -208,7 +218,7 @@ public class FontRenderer {
         if (c.getRed() < 50 && c.getGreen() < 50 && c.getBlue() < 50) fontType = FontType.NORMAL;
         if (!isBig) matrixStack.scale(0.5f, 0.5f, 1);
         Color o = new Color(color);
-        drawString(matrixStack, text, x, y, fontType, color, Renderer.modify(o, 0, 0, 0, Math.min(0xBB, o.getAlpha())).getRGB());
+        drawString(matrixStack, text, x, y, fontType, color, Renderer.Util.modify(o, 0, 0, 0, Math.min(0xBB, o.getAlpha())).getRGB());
         if (!isBig) matrixStack.scale(2f, 2f, 1);
     }
 
@@ -269,7 +279,27 @@ public class FontRenderer {
     }
 
     public final float getStringWidth(String text) {
-        return (float) (getBounds(text).getWidth()) / 2.0F;
+        //text = stripControlCodes(text);
+        StringBuilder finalText = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            if (c >= this.startChar && c <= this.endChar) finalText.append(c);
+            else finalText.append("?");
+        }
+        String t = finalText.toString();
+        StringBuilder real = new StringBuilder();
+        for (int i = 0; i < t.length(); i++) {
+            char v = t.charAt(i);
+            if (v == '§' && (i + 1 < t.length())) {
+                char c = t.toLowerCase().charAt(i + 1);
+                if (isFormatColor(t.charAt(i + 1)) || c == 'n' || c == 'k' || c == 'r') {
+                    i++;
+                    continue;
+                }
+            }
+            real.append(v);
+        }
+        //System.out.println(real.toString());
+        return (float) (getBounds(real.toString()).getWidth()) / 2.0F;
     }
 
     public final float getStringHeight(String text) {
@@ -285,104 +315,8 @@ public class FontRenderer {
         drawTexturedModalRect(matrixStack, x, y, this.xPos[(character - this.startChar)], this.yPos[(character - this.startChar)], (float) bounds.getWidth(), (float) bounds.getHeight() + this.metrics.getMaxDescent() + 1.0F, color);
     }
 
-    private List<String> listFormattedStringToWidth(String s, int width) {
-        return Arrays.asList(wrapFormattedStringToWidth(s, width).split("\n"));
-    }
-
-    private String wrapFormattedStringToWidth(String s, float width) {
-        int wrapWidth = sizeStringToWidth(s, width);
-
-        if (s.length() <= wrapWidth) {
-            return s;
-        }
-        String split = s.substring(0, wrapWidth);
-        String split2 = getFormatFromString(split)
-                + s.substring(wrapWidth + ((s.charAt(wrapWidth) == ' ') || (s.charAt(wrapWidth) == '\n') ? 1 : 0));
-        try {
-            return split + "\n" + wrapFormattedStringToWidth(split2, width);
-        } catch (Exception e) {
-            Atomic.log(Level.ERROR, "Cannot wrap string to width.");
-        }
-        return "";
-    }
-
-    private int sizeStringToWidth(String par1Str, float par2) {
-        int var3 = par1Str.length();
-        float var4 = 0.0F;
-        int var5 = 0;
-        int var6 = -1;
-
-        for (boolean var7 = false; var5 < var3; var5++) {
-            char var8 = par1Str.charAt(var5);
-
-            switch (var8) {
-                case '\n':
-                    var5--;
-                    break;
-                case '\247':
-                    if (var5 < var3 - 1) {
-                        var5++;
-                        char var9 = par1Str.charAt(var5);
-
-                        if ((var9 != 'l') && (var9 != 'L')) {
-                            if ((var9 == 'r') || (var9 == 'R') || (isFormatColor(var9)))
-                                var7 = false;
-                        } else
-                            var7 = true;
-                    }
-                    break;
-                case ' ':
-                case '-':
-                case '_':
-                case ':':
-                    var6 = var5;
-                default:
-                    String text = String.valueOf(var8);
-                    var4 += getStringWidth(text);
-
-                    if (var7) {
-                        var4 += 1.0F;
-                    }
-                    break;
-            }
-            if (var8 == '\n') {
-                var5++;
-                var6 = var5;
-            } else {
-                if (var4 > par2) {
-                    break;
-                }
-            }
-        }
-        return (var5 != var3) && (var6 != -1) && (var6 < var5) ? var6 : var5;
-    }
-
-    private String getFormatFromString(String par0Str) {
-        StringBuilder var1 = new StringBuilder();
-        int var2 = -1;
-        int var3 = par0Str.length();
-
-        while ((var2 = par0Str.indexOf('\247', var2 + 1)) != -1) {
-            if (var2 < var3 - 1) {
-                char var4 = par0Str.charAt(var2 + 1);
-
-                if (isFormatColor(var4))
-                    var1 = new StringBuilder("\247" + var4);
-                else if (isFormatSpecial(var4)) {
-                    var1.append("\247").append(var4);
-                }
-            }
-        }
-
-        return var1.toString();
-    }
-
     private boolean isFormatColor(char par0) {
         return ((par0 >= '0') && (par0 <= '9')) || ((par0 >= 'a') && (par0 <= 'f')) || ((par0 >= 'A') && (par0 <= 'F'));
-    }
-
-    private boolean isFormatSpecial(char par0) {
-        return ((par0 >= 'k') && (par0 <= 'o')) || ((par0 >= 'K') && (par0 <= 'O')) || (par0 == 'r') || (par0 == 'R');
     }
 
     private void drawTexturedModalRect(MatrixStack matrixStack, float x, float y, float u, float v, float width, float height, int color) {
@@ -406,10 +340,6 @@ public class FontRenderer {
 
     public final String stripUnsupported(String s) {
         return this.patternUnsupported.matcher(s).replaceAll("");
-    }
-
-    public final Graphics2D getGraphics() {
-        return this.graphics;
     }
 
     public final Font getFont() {

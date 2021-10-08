@@ -1,11 +1,16 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.screen;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.widget.HoverableExtenderWidget;
 import me.zeroX150.atomic.feature.gui.widget.SimpleTextWidget;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.InventoryWalk;
-import me.zeroX150.atomic.feature.module.impl.external.SlotSpammer;
+import me.zeroX150.atomic.feature.module.impl.misc.SlotSpammer;
+import me.zeroX150.atomic.feature.module.impl.movement.InventoryWalk;
 import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -102,7 +107,7 @@ public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> exte
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    public void oMC(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+    public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (isSelecting) {
             Slot s = null;
             for (Slot slot : this.handler.slots) {
@@ -134,7 +139,7 @@ public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> exte
         tw.setText("Slot spammer " + t);
         //DrawableHelper.drawCenteredText(matrices, textRenderer, "Slot spammer " + t, width / 2, 1, 0xFFFFFF);
         if (SlotSpammer.slotToSpam != null) {
-            Renderer.fill(Renderer.modify(Utils.getCurrentRGB(), -1, -1, -1, 100), this.x + SlotSpammer.slotToSpam.x, this.y + SlotSpammer.slotToSpam.y, this.x + SlotSpammer.slotToSpam.x + 16, this.y + SlotSpammer.slotToSpam.y + 16);
+            Renderer.R2D.fill(Renderer.Util.modify(Utils.getCurrentRGB(), -1, -1, -1, 100), this.x + SlotSpammer.slotToSpam.x, this.y + SlotSpammer.slotToSpam.y, this.x + SlotSpammer.slotToSpam.x + 16, this.y + SlotSpammer.slotToSpam.y + 16);
         }
     }
 

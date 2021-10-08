@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.world;
 
 import me.zeroX150.atomic.Atomic;
@@ -19,7 +24,7 @@ import java.util.Objects;
 
 public class WaterClutch extends Module {
     public WaterClutch() {
-        super("WaterClutch", "YOOOO LOOK AT THAT SKILLZ BRUHH", ModuleType.WORLD);
+        super("WaterClutch", "Places blocks below you when you are on water", ModuleType.WORLD);
     }
 
     @Override

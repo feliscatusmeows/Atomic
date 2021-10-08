@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper.keybind;
 
 import me.zeroX150.atomic.Atomic;
@@ -18,6 +23,7 @@ public class Keybind {
                 && Atomic.client.currentScreen == null;
     }
 
+    @SuppressWarnings("unused")
     public boolean isPressed() {
         if (Atomic.client.currentScreen != null)
             return false;

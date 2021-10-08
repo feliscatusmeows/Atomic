@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.render;
 
 import me.zeroX150.atomic.Atomic;
@@ -12,9 +17,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
 
 public class ChestESP extends Module {
     final SliderValue range = (SliderValue) this.config.create("Range", 30, 10, 100, 0).description("The range to scan for chests in");
@@ -124,9 +132,9 @@ public class ChestESP extends Module {
             double d = v.distanceTo(Objects.requireNonNull(Atomic.client.player).getPos());
             if (d < 10) {
                 int r = (int) Math.floor(d / 10d * 255d);
-                c = Renderer.modify(c, -1, -1, -1, r);
+                c = Renderer.Util.modify(c, -1, -1, -1, r);
             }
-            Renderer.renderFilled(v, new Vec3d(1, 1, 1), c, matrices);
+            Renderer.R3D.renderFilled(v, new Vec3d(1, 1, 1), c, matrices);
         }
     }
 

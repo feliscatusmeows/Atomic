@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.world;
 
 import me.zeroX150.atomic.Atomic;
@@ -93,6 +98,7 @@ public class BlockTagViewer extends Module {
         float w = Atomic.client.getWindow().getScaledWidth() / 2f;
         float h = Atomic.client.getWindow().getScaledHeight() / 2f;
         MatrixStack s = new MatrixStack();
+        s.push();
         s.translate(w, h, 0);
         float r = 0;
         for (Entry entry : l) {
@@ -112,11 +118,12 @@ public class BlockTagViewer extends Module {
             double prog = e(entry.animProg);
             double c = prog * 10;
             s.scale(1, (float) prog, 1);
-            Renderer.fill(s, new Color(0, 0, 0, (int) (prog * 100)), 0, 0, mw, 10);
+            Renderer.R2D.fill(s, new Color(0, 0, 0, (int) (prog * 100)), 0, 0, mw, 10);
             Atomic.monoFontRenderer.drawString(s, entry.v, 2, 0.5f, new Color(255, 255, 255, (int) (prog * 255)).getRGB());
             s.pop();
             s.translate(0, c, 0);
         }
+        s.pop();
     }
 
     static class Entry {

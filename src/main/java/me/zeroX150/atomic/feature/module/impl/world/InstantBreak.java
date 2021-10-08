@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.world;
 
 import me.zeroX150.atomic.Atomic;
@@ -88,7 +93,7 @@ public class InstantBreak extends Module {
     @Override
     public void onWorldRender(MatrixStack matrices) {
         for (Vec3d position : new ArrayList<>(positions)) {
-            Renderer.renderOutline(position, new Vec3d(1, 1, 1), Utils.getCurrentRGB(), matrices);
+            Renderer.R3D.renderOutline(position, new Vec3d(1, 1, 1), Utils.getCurrentRGB(), matrices);
             //Renderer.renderFilled(position,new Vec3d(1,1,1),new Color(0,0,0,150),matrices);
         }
     }

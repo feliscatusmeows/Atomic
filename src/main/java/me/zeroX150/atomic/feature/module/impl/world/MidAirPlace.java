@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.world;
 
 import me.zeroX150.atomic.Atomic;
@@ -47,7 +52,7 @@ public class MidAirPlace extends Module {
         BlockPos bp = hitresult.getBlockPos();
         BlockState bs = Objects.requireNonNull(Atomic.client.world).getBlockState(bp);
         if (bs.isAir()) {
-            Renderer.renderFilled(new Vec3d(bp.getX(), bp.getY(), bp.getZ()), new Vec3d(1, 1, 1), Utils.getCurrentRGB(), matrices);
+            Renderer.R3D.renderFilled(new Vec3d(bp.getX(), bp.getY(), bp.getZ()), new Vec3d(1, 1, 1), Utils.getCurrentRGB(), matrices);
             if (Atomic.client.options.keyUse.wasPressed()) {
                 Objects.requireNonNull(Atomic.client.interactionManager).interactBlock(Atomic.client.player, Atomic.client.world, Hand.MAIN_HAND, hitresult);
             }

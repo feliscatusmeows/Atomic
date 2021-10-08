@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper.render;
 
 import net.minecraft.util.math.MathHelper;
@@ -22,7 +27,7 @@ public class AnimatedRenderablePos extends RenderablePosition {
         double v = timeExisted / duration;
         v = MathHelper.clamp(v, 0, 1);
         v = 1 - v;
-        return new Color(Renderer.lerp(from, to, v).getRGB(), super.getColor().isChroma());
+        return new Color(Renderer.Util.lerp(from, to, v).getRGB(), super.getColor().isChroma());
     }
 
     public boolean isExpired() {

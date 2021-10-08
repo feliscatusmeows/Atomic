@@ -1,8 +1,13 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.network;
 
 import io.netty.channel.ChannelHandlerContext;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.AntiPacketKick;
+import me.zeroX150.atomic.feature.module.impl.exploit.AntiPacketKick;
 import me.zeroX150.atomic.helper.event.EventType;
 import me.zeroX150.atomic.helper.event.Events;
 import me.zeroX150.atomic.helper.event.events.PacketEvent;

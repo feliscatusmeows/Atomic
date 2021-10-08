@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.movement;
 
 import me.zeroX150.atomic.Atomic;
@@ -17,7 +22,7 @@ public class AutoWalk extends Module {
     Direction look = null;
 
     public AutoWalk() {
-        super("AutoWalk", "No description", ModuleType.MISC);
+        super("AutoWalk", "No description", ModuleType.MOVEMENT);
         autoJump = (BooleanValue) this.config.create("Auto jump", true).description("Automatically jumps while module is active");
     }
 

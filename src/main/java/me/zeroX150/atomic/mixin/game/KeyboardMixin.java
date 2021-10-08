@@ -1,6 +1,20 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game;
 
+import me.zeroX150.atomic.Atomic;
+import me.zeroX150.atomic.feature.module.ModuleRegistry;
+import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.event.EventType;
+import me.zeroX150.atomic.helper.event.Events;
+import me.zeroX150.atomic.helper.event.events.KeyboardEvent;
+import me.zeroX150.atomic.helper.keybind.KeybindManager;
 import net.minecraft.client.Keyboard;
+import net.minecraft.client.MinecraftClient;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,9 +26,27 @@ public class KeyboardMixin {
     @Shadow
     private boolean repeatEvents;
 
+    @Shadow
+    @Final
+    private MinecraftClient client;
+
     @Inject(method = "setRepeatEvents", at = @At("HEAD"), cancellable = true)
     public void setRepeatEvents(boolean repeatEvents, CallbackInfo ci) {
         this.repeatEvents = true;
         ci.cancel();
+    }
+
+    @Inject(method = "onKey", at = @At("RETURN"))
+    void keyPressed(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci) {
+        if (ModuleRegistry.isDebuggerEnabled()) {
+            Utils.Client.sendMessage(String.format("D_KeyEvent window=%s;key=%s;sc=%s;a=%s;mod=%s", window, key, scancode, action, modifiers));
+            if (ModuleRegistry.getDebugger().disableKeyEvent.getValue()) return;
+        }
+        if (window == this.client.getWindow().getHandle() && Atomic.client.currentScreen == null && System.currentTimeMillis() - Atomic.lastScreenChange > 10) { // make sure we are in game and the screen has been there for at least 10 ms
+            if (Atomic.client.player == null || Atomic.client.world == null)
+                return; // again, make sure we are in game and exist
+            KeybindManager.updateSingle(key, action);
+            Events.fireEvent(EventType.KEYBOARD, new KeyboardEvent(key, action));
+        }
     }
 }

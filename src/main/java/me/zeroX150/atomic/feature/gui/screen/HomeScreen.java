@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.screen;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -6,7 +11,7 @@ import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.clickgui.ClickGUI;
 import me.zeroX150.atomic.feature.gui.overlay.WelcomeOverlay;
 import me.zeroX150.atomic.feature.gui.particles.flow.FlowParticleManager;
-import me.zeroX150.atomic.feature.module.impl.external.ClientConfig;
+import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
 import me.zeroX150.atomic.helper.Utils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;

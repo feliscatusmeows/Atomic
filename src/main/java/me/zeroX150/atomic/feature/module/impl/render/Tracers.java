@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.render;
 
 import me.zeroX150.atomic.Atomic;
@@ -17,7 +22,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Comparator;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -82,7 +87,7 @@ public class Tracers extends Module {
                 } else c = Color.GREEN;
             } else if (entity instanceof HostileEntity) c = Color.YELLOW;
             else c = Color.GREEN;
-            c = Renderer.modify(c, -1, -1, -1, (int) Math.floor(dc * 255));
+            c = Renderer.Util.modify(c, -1, -1, -1, (int) Math.floor(dc * 255));
             if (isEntityApplicable(entity)) {
                 if (fancy.getValue()) {
                     Vec3d ppos = entity.getPos().add(0, entity.getHeight() / 2, 0);
@@ -95,11 +100,11 @@ public class Tracers extends Module {
                     double cos = Math.cos(rad) * v;
                     double rad1 = Math.toRadians(pitch);
                     double sin1 = Math.sin(rad1);
-                    Vec3d vv = Renderer.getCrosshairVector().add(-sin, -sin1, cos);
-                    Vec3d vv2 = Renderer.getCrosshairVector().add(-sin / 4, -sin1 / 4, cos / 4);
-                    Renderer.line(vv2, vv, c, matrices);
+                    Vec3d vv = Renderer.R3D.getCrosshairVector().add(-sin, -sin1, cos);
+                    Vec3d vv2 = Renderer.R3D.getCrosshairVector().add(-sin / 4, -sin1 / 4, cos / 4);
+                    Renderer.R3D.line(vv2, vv, c, matrices);
                 } else
-                    Renderer.line(Renderer.getCrosshairVector(), entity.getPos().add(0, entity.getHeight() / 2, 0), c, matrices);
+                    Renderer.R3D.line(Renderer.R3D.getCrosshairVector(), entity.getPos().add(0, entity.getHeight() / 2, 0), c, matrices);
             }
         }
     }

@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.command.impl;
 
 import com.google.common.base.Charsets;
@@ -13,7 +18,11 @@ import me.zeroX150.atomic.feature.module.config.DynamicValue;
 import me.zeroX150.atomic.helper.TypeConverter;
 import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.keybind.KeybindManager;
-import net.minecraft.text.*;
+import net.minecraft.text.ClickEvent;
+import net.minecraft.text.HoverEvent;
+import net.minecraft.text.LiteralText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;

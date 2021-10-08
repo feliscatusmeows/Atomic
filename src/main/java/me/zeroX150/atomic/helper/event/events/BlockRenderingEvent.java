@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper.event.events;
 
 import net.minecraft.block.BlockState;
@@ -14,7 +19,7 @@ public class BlockRenderingEvent extends RenderEvent {
         this.state = state;
     }
 
-    public BlockPos getPosition() {
+    @SuppressWarnings("unused") public BlockPos getPosition() {
         return bp;
     }
 

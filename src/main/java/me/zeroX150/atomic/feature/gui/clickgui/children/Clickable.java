@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.clickgui.children;
 
 import me.zeroX150.atomic.Atomic;
@@ -9,7 +14,7 @@ import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class Clickable implements ContainerMember {
     final Module parent;
@@ -25,7 +30,7 @@ public class Clickable implements ContainerMember {
         return ClickGUI.currentActiveTheme.h_margin();
     }
 
-    public void render(double x, double y, MatrixStack stack, double animProgress, double actualX, double actualY, float delta, double scroll, double parentY) {
+    public void render(double x, double y, MatrixStack stack, double actualX, double actualY, float delta, double parentY) {
         Color fillColor = ClickGUI.currentActiveTheme.inactive();
         Color fontColor = ClickGUI.currentActiveTheme.fontColor();
         if (!ClickGUI.INSTANCE.searchTerm.isEmpty()) {
@@ -38,10 +43,10 @@ public class Clickable implements ContainerMember {
             }
             if (!isGood) {
                 //fillColor = fillColor.darker().darker();
-                fontColor = Renderer.modify(fontColor, -1, -1, -1, 60);
+                fontColor = Renderer.Util.modify(fontColor, -1, -1, -1, 60);
             }
         }
-        boolean isHovered = (actualX != -1 && actualY != -1 && isHovered(actualX, actualY, scroll, parentY));
+        boolean isHovered = (actualX != -1 && actualY != -1 && isHovered(actualX, actualY, parentY));
         double apg = .03 * (delta + .5);
         if (isHovered) {
             ClickGUI.INSTANCE.renderDescription(parent.getDescription());
@@ -59,7 +64,7 @@ public class Clickable implements ContainerMember {
         DrawableHelper.fill(stack, (int) (x - getMargin()), (int) Math.floor(y - getMargin()), (int) (x + width + getMargin()), (int) floor, fillColor.getRGB());
         DrawableHelper.fill(stack, (int) (x - getMargin()), (int) Math.floor(y - getMargin()), (int) (x - getMargin() + (width + getMargin() * 2) * hoverAnimationInter), (int) floor, ClickGUI.currentActiveTheme.active().getRGB());
         //DrawableHelper.fill(stack, (int) (x - getMargin()), (int) Math.floor(y - getMargin()), (int) (x - getMargin() + 1.5), (int) Math.floor(y - getMargin() + ((getMargin() * 2 + 9) * barAnimInter) * animProgress), ClickGUI.currentActiveTheme.l_highlight().getRGB());
-        Renderer.fill(stack, ClickGUI.currentActiveTheme.l_highlight(), x - getMargin(), y - getMargin(), x - getMargin() + 1.5, y - getMargin() + ((getMargin() * 2 + 9) * barAnimInter));
+        Renderer.R2D.fill(stack, ClickGUI.currentActiveTheme.l_highlight(), x - getMargin(), y - getMargin(), x - getMargin() + 1.5, y - getMargin() + ((getMargin() * 2 + 9) * barAnimInter));
         if (ClickGUI.currentActiveTheme.centerText())
             Atomic.fontRenderer.drawCenteredString(stack, parent.getName(), (float) (x + (width / 2f)), (float) y, fontColor.getRGB());
         else
@@ -79,7 +84,7 @@ public class Clickable implements ContainerMember {
         else if (parent.config.getAll().size() != 0) ClickGUI.INSTANCE.showModuleConfig(parent);
     }
 
-    boolean isHovered(double x, double y, double scroll, double py) {
+    boolean isHovered(double x, double y, double py) {
         double mx = Utils.Mouse.getMouseX();
         double my = Utils.Mouse.getMouseY();
         if (my < py || my > py + 200) return false;

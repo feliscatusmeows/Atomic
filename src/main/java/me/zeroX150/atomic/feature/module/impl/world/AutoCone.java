@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.world;
 
 import me.zeroX150.atomic.Atomic;
@@ -16,7 +21,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -88,7 +93,7 @@ public class AutoCone extends Module {
     public void onWorldRender(MatrixStack matrices) {
         for (BlockPos blockPos : cached.toArray(new BlockPos[0])) {
             Color v = Color.getHSBColor(MathHelper.clamp((float) (new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()).distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()) / 20f), 0, 1), 0.6f, 1f);
-            Renderer.renderOutline(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()), new Vec3d(1, 1, 1), Renderer.modify(v, -1, -1, -1, 100), matrices);
+            Renderer.R3D.renderOutline(new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ()), new Vec3d(1, 1, 1), Renderer.Util.modify(v, -1, -1, -1, 100), matrices);
         }
     }
 

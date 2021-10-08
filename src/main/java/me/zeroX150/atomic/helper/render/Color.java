@@ -1,8 +1,13 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper.render;
 
 import me.zeroX150.atomic.helper.Utils;
 
-public class Color extends java.awt.Color {
+@SuppressWarnings("unused") public class Color extends java.awt.Color {
     final int alpha;
     private boolean isChroma = false;
 

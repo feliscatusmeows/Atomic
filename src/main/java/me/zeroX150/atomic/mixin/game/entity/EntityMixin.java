@@ -1,7 +1,12 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.entity;
 
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.IgnoreWorldBorder;
+import me.zeroX150.atomic.feature.module.impl.movement.IgnoreWorldBorder;
 import me.zeroX150.atomic.feature.module.impl.movement.Squake;
 import me.zeroX150.atomic.feature.module.impl.render.ESP;
 import me.zeroX150.atomic.helper.squake.QuakeClientPlayer;
@@ -22,8 +27,7 @@ public class EntityMixin {
     @Redirect(method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;", at = @At(
             value = "INVOKE",
             target = "Ljava/util/stream/Stream;concat(Ljava/util/stream/Stream;Ljava/util/stream/Stream;)Ljava/util/stream/Stream;"
-    ))
-    <T> Stream<T> disableWBCollision(Stream<? extends T> a, Stream<? extends T> b) {
+    )) <T> Stream<T> disableWBCollision(Stream<? extends T> a, Stream<? extends T> b) {
         if (Objects.requireNonNull(ModuleRegistry.getByClass(IgnoreWorldBorder.class)).isEnabled())
             return Stream.empty();
         else return Stream.concat(a, b);

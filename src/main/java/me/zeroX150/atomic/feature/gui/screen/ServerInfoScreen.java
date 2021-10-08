@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.screen;
 
 import me.zeroX150.atomic.Atomic;
@@ -8,9 +13,13 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.text.Text;
 
-import java.awt.*;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -50,7 +59,7 @@ public class ServerInfoScreen extends Screen {
         int h = 80;
         Color c = new Color(38, 83, 92, 70);
         // c2s traffic
-        Renderer.fill(c, margin, margin, width - margin, h - (margin / 2d));
+        Renderer.R2D.fill(c, margin, margin, width - margin, h - (margin / 2d));
         Atomic.fontRenderer.drawCenteredString(matrices, "Client -> Server traffic " + Utils.Math.roundToDecimal(pSent, 1), width / 2f, margin + 2, 0xFFFFFF);
         double max = 10;
 
@@ -63,14 +72,14 @@ public class ServerInfoScreen extends Screen {
         for (Double aDouble : c2sLog) {
             double interY = (aDouble / max) * (h - 18);
             if (lastY == 0) lastY = interY;
-            Renderer.lineScreenD(Utils.getCurrentRGB(), xOffset - 3, baseY - lastY, xOffset, baseY - interY);
+            Renderer.R2D.lineScreenD(Utils.getCurrentRGB(), xOffset - 3, baseY - lastY, xOffset, baseY - interY);
             lastY = interY;
             xOffset += 3;
         }
 
 
         // s2c traffic
-        Renderer.fill(c, margin, h + (margin / 2d), width - margin, (h + (margin / 2d)) * 2);
+        Renderer.R2D.fill(c, margin, h + (margin / 2d), width - margin, (h + (margin / 2d)) * 2);
         Atomic.fontRenderer.drawCenteredString(matrices, "Server -> Client traffic " + Utils.Math.roundToDecimal(pRecv, 1), width / 2f, (h + (margin / 2f) + 2), 0xFFFFFF);
         double max1 = 1;
         for (Double aDouble : s2cLog) {
@@ -82,7 +91,7 @@ public class ServerInfoScreen extends Screen {
         for (Double aDouble : s2cLog) {
             double interY = (aDouble / max1) * (h - 18);
             if (lastY1 == 0) lastY1 = interY;
-            Renderer.lineScreenD(Utils.getCurrentRGB(), xOffset1 - 3, baseY1 - lastY1, xOffset1, baseY1 - interY);
+            Renderer.R2D.lineScreenD(Utils.getCurrentRGB(), xOffset1 - 3, baseY1 - lastY1, xOffset1, baseY1 - interY);
             lastY1 = interY;
             xOffset1 += 3;
         }

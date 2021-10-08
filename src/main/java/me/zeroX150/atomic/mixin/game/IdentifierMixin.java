@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game;
 
 import net.minecraft.util.Identifier;
@@ -31,7 +36,7 @@ public class IdentifierMixin {
     }
 
     @Inject(method = "getPath", at = @At("HEAD"), cancellable = true)
-    public void gp(CallbackInfoReturnable<String> cir) {
+    public void getPath(CallbackInfoReturnable<String> cir) {
         if (this.path.startsWith("nomod.")) {
             cir.setReturnValue(this.path.replaceAll("nomod.", ""));
             return;
@@ -42,7 +47,7 @@ public class IdentifierMixin {
     }
 
     @Inject(method = "getNamespace", at = @At("HEAD"), cancellable = true)
-    public void gn(CallbackInfoReturnable<String> cir) {
+    public void getNamespace(CallbackInfoReturnable<String> cir) {
         if (this.path.startsWith("nomod.")) {
             cir.setReturnValue(this.namespace);
             return;

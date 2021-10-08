@@ -1,11 +1,17 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.render;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.notifications.NotificationRenderer;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.BetterCrosshair;
+import me.zeroX150.atomic.feature.module.impl.render.BetterCrosshair;
 import me.zeroX150.atomic.feature.module.impl.render.Hud;
+import me.zeroX150.atomic.helper.Utils;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.InGameHud;
 import net.minecraft.client.util.math.MatrixStack;
@@ -16,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Objects;
 
 @Mixin(InGameHud.class)
@@ -35,6 +41,7 @@ public abstract class AInGameHudMixin extends DrawableHelper {
             if (module.isEnabled()) module.onHudRender();
         }
         NotificationRenderer.render();
+        Utils.TickManager.render();
     }
 
     @Redirect(method = "renderCrosshair", at = @At(

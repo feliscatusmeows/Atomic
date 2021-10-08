@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.command.impl;
 
 import com.google.gson.JsonArray;
@@ -25,7 +30,11 @@ import org.apache.logging.log4j.Level;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 @SuppressWarnings("ResultOfMethodCallIgnored")
 public class ItemStorage extends Command {
@@ -95,7 +104,7 @@ public class ItemStorage extends Command {
     @Override
     public void onExecute(String[] args) {
         if (args.length == 0) {
-            onExecute(new String[]{"help"});
+            onExecute(new String[]{ "help" });
             return;
         }
         switch (args[0].toLowerCase()) {
@@ -176,6 +185,6 @@ public class ItemStorage extends Command {
         }
     }
 
-    record ItemEntry(String name, Item type, NbtCompound tag) {
+    public record ItemEntry(String name, Item type, NbtCompound tag) {
     }
 }

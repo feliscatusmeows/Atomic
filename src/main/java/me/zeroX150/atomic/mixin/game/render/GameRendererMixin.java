@@ -1,10 +1,16 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.render;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.NoRender;
+import me.zeroX150.atomic.feature.module.impl.render.NoRender;
 import me.zeroX150.atomic.feature.module.impl.render.Zoom;
+import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.client.render.Camera;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -24,13 +30,13 @@ public class GameRendererMixin {
     private boolean dis;
 
     @Inject(
-            at = {@At(value = "FIELD",
+            at = @At(value = "FIELD",
                     target = "Lnet/minecraft/client/render/GameRenderer;renderHand:Z",
                     opcode = Opcodes.GETFIELD,
-                    ordinal = 0)},
-            method = {
-                    "renderWorld(FJLnet/minecraft/client/util/math/MatrixStack;)V"})
+                    ordinal = 0),
+            method = "renderWorld")
     void onRenderWorld(float tickDelta, long limitTime, MatrixStack matrix, CallbackInfo ci) {
+        Renderer.R3D.setLastRenderStack(matrix);
         if (vb) {
             Atomic.client.options.bobView = true;
             vb = false;

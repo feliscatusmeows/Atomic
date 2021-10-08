@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.movement;
 
 import me.zeroX150.atomic.Atomic;
@@ -14,7 +19,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class ClickFly extends Module {
     final BooleanValue autoDisable = (BooleanValue) this.config.create("Auto disable", false).description("Automatically disable when the goal is reached");
@@ -66,7 +71,7 @@ public class ClickFly extends Module {
                         Vec3d last = Vec3d.ZERO;
                         Vec3d finVel = Vec3d.ZERO;
                         for (double i = 0; i < dist; i += 0.2) {
-                            Vec3d c = new Vec3d(Renderer.lerp(base.x, goal.x, i / dist), Renderer.lerp(base.y, goal.y, i / dist), Renderer.lerp(base.z, goal.z, i / dist));
+                            Vec3d c = new Vec3d(Renderer.Util.lerp(base.x, goal.x, i / dist), Renderer.Util.lerp(base.y, goal.y, i / dist), Renderer.Util.lerp(base.z, goal.z, i / dist));
                             BlockState bs = Atomic.client.world.getBlockState(new BlockPos(c));
                             if (bs.getMaterial().blocksMovement()) continue;
                             Atomic.client.player.updatePosition(c.x, c.y, c.z);
@@ -111,7 +116,7 @@ public class ClickFly extends Module {
     public void onWorldRender(MatrixStack matrices) {
         if (goingToTeleportTo != null) {
             Vec3d bruh = new Vec3d(goingToTeleportTo.getX(), goingToTeleportTo.getY(), goingToTeleportTo.getZ());
-            Renderer.renderFilled(bruh, new Vec3d(1, 1, 1), color.getColor(), matrices);
+            Renderer.R3D.renderFilled(bruh, new Vec3d(1, 1, 1), color.getColor(), matrices);
         }
     }
 

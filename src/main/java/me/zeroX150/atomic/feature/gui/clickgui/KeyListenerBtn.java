@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.clickgui;
 
 import me.zeroX150.atomic.Atomic;
@@ -13,7 +18,6 @@ public class KeyListenerBtn extends ButtonWidget {
     public boolean listening = false;
     public long stoppedScanning = 0;
     int kc;
-    int sc;
 
     public KeyListenerBtn(int x, int y, int width, Module parent) {
         super(x, y, width, 12, Text.of(String.valueOf((char) Integer.parseInt(parent.config.get("Keybind").getValue() + "")).toUpperCase()), button -> {
@@ -39,7 +43,6 @@ public class KeyListenerBtn extends ButtonWidget {
             return true;
         }
         kc = keyCode;
-        sc = scanCode;
         listening = false;
         parent.config.get("Keybind").setValue(kc);
         KeybindManager.reload();

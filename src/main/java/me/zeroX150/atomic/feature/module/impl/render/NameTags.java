@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -59,8 +64,8 @@ public class NameTags extends Module {
         tp += trackDiff;
         RenderSystem.polygonOffset(1, -15000000);
         RenderSystem.enablePolygonOffset();
-        Renderer.fill(matrices, Themes.Theme.ATOMIC.getPalette().active(), -width - 4, 8 + 2, width + 4, 1);
-        Renderer.fill(matrices, Themes.Theme.ATOMIC.getPalette().l_highlight(), -width - 4, 8 + 2, (width + 4) * (tp * 2 - 1), 8 + 1);
+        Renderer.R2D.fill(matrices, Themes.Theme.ATOMIC.getPalette().active(), -width - 4, 8 + 2, width + 4, 1);
+        Renderer.R2D.fill(matrices, Themes.Theme.ATOMIC.getPalette().l_highlight(), -width - 4, 8 + 2, (width + 4) * (tp * 2 - 1), 8 + 1);
         trackedProgress.put(entity.getUuid(), tp);
         Atomic.client.textRenderer.draw(matrices, t, -Atomic.client.textRenderer.getWidth(t) / 2f, f - 0.75f, 0xFFFFFF);
         matrices.pop();

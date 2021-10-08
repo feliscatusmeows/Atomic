@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.render.oreSim;
 
 import baritone.api.BaritoneAPI;
@@ -28,7 +33,15 @@ import net.minecraft.world.gen.ChunkRandom;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Random;
 
 public class OreSim extends Module {
 
@@ -103,9 +116,9 @@ public class OreSim extends Module {
             for (Ore ore : oreConfig) {
                 if (ore.enabled.getValue()) {
                     if (!chunkRenderers.get(chunkKey).containsKey(ore.type)) continue;
-                    BufferBuilder buffer = Renderer.renderPrepare(ore.color);
+                    BufferBuilder buffer = Renderer.R3D.renderPrepare(ore.color);
                     for (Vec3d pos : chunkRenderers.get(chunkKey).get(ore.type)) {
-                        Renderer.renderOutlineIntern(pos, new Vec3d(1, 1, 1), ms, buffer);
+                        Renderer.R3D.renderOutlineIntern(pos, new Vec3d(1, 1, 1), ms, buffer);
                     }
                     buffer.end();
                     BufferRenderer.draw(buffer);
@@ -207,11 +220,11 @@ public class OreSim extends Module {
     }
 
     private void seedChanged() {
-        Long tempSeed;
+        long tempSeed;
         try {
             tempSeed = Long.parseLong(seedInput.getValue());
         } catch (Exception e) {
-            tempSeed = (long) seedInput.getValue().hashCode();
+            tempSeed = seedInput.getValue().hashCode();
         }
         if (worldSeed == null || !worldSeed.equals(tempSeed)) {
             worldSeed = tempSeed;

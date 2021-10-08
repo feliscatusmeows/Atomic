@@ -1,8 +1,13 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.entity;
 
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.NoBreakDelay;
-import me.zeroX150.atomic.feature.module.impl.external.ProtectFriends;
+import me.zeroX150.atomic.feature.module.impl.combat.ProtectFriends;
+import me.zeroX150.atomic.feature.module.impl.world.NoBreakDelay;
 import me.zeroX150.atomic.helper.Friends;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.Entity;
@@ -45,6 +50,4 @@ public class ClientPlayerInteractionManagerMixin {
         if (Objects.requireNonNull(ModuleRegistry.getByClass(ProtectFriends.class)).isEnabled() && target instanceof PlayerEntity pe && Friends.isAFriend(pe))
             ci.cancel();
     }
-
-
 }

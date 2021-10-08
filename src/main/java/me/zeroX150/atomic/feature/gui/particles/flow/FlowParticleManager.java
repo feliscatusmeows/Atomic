@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.particles.flow;
 
 import me.zeroX150.atomic.Atomic;
@@ -5,7 +10,7 @@ import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec2f;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -32,7 +37,7 @@ public class FlowParticleManager {
     public void render() {
         FlowParticle[] pl = particles.toArray(new FlowParticle[0]);
         for (FlowParticle particle : pl) {
-            Renderer.fill(Renderer.modify(particle.color, -1, -1, -1, (int) MathHelper.clamp(particle.brightness * 255, 0, 255)), particle.x - 0.5, particle.y - 0.5, particle.x + .5, particle.y + .5);
+            Renderer.R2D.fill(Renderer.Util.modify(particle.color, -1, -1, -1, (int) MathHelper.clamp(particle.brightness * 255, 0, 255)), particle.x - 0.5, particle.y - 0.5, particle.x + .5, particle.y + .5);
             FlowParticle.PosEntry last = null;
             for (int i = 0; i < particle.previousPos.size(); i++) {
                 FlowParticle.PosEntry previousPos = particle.previousPos.get(i);
@@ -40,7 +45,7 @@ public class FlowParticleManager {
                 if (last == null) last = previousPos;
                 double dist = Math.sqrt(Math.pow((last.x() - previousPos.x()), 2) + Math.pow((last.y() - previousPos.y()), 2));
                 if (dist < 10)
-                    Renderer.lineScreenD(Renderer.modify(Color.getHSBColor((float) v, 0.6f, 1), -1, -1, -1, (int) (v * 255f)), last.x(), last.y(), previousPos.x(), previousPos.y());
+                    Renderer.R2D.lineScreenD(Renderer.Util.modify(Color.getHSBColor((float) v, 0.6f, 1), -1, -1, -1, (int) (v * 255f)), last.x(), last.y(), previousPos.x(), previousPos.y());
                 last = previousPos;
             }
         }

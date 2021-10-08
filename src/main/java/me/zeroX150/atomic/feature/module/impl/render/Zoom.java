@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.render;
 
 import me.zeroX150.atomic.Atomic;
@@ -31,7 +36,7 @@ public class Zoom extends Module {
         double prog = MathHelper.clamp(enabledFor / 100d, 0, 1);
         if (!Objects.requireNonNull(ModuleRegistry.getByClass(Zoom.class)).isEnabled()) prog = Math.abs(1 - prog);
         prog = easeOutBounce(prog);
-        return Renderer.lerp(vanilla, finalFov.getValue(), prog);
+        return Renderer.Util.lerp(vanilla, finalFov.getValue(), prog);
     }
 
     static double easeOutBounce(double x) {

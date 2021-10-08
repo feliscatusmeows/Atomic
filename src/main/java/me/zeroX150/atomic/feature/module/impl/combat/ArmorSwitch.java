@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.combat;
 
 import me.zeroX150.atomic.Atomic;
@@ -39,7 +44,7 @@ public class ArmorSwitch extends Module {
                 case LEGS -> slotToPut = 7;
                 case FEET -> slotToPut = 8;
             }
-        } else if (Arrays.stream(new Item[]{Items.CREEPER_HEAD, Items.DRAGON_HEAD, Items.PLAYER_HEAD, Items.ZOMBIE_HEAD}).anyMatch(item -> item == selected.getItem())) {
+        } else if (Arrays.stream(new Item[]{ Items.CREEPER_HEAD, Items.DRAGON_HEAD, Items.PLAYER_HEAD, Items.ZOMBIE_HEAD }).anyMatch(item -> item == selected.getItem())) {
             slotToPut = 5;
         } else if (selected.getItem() == Items.ELYTRA) {
             slotToPut = 6;

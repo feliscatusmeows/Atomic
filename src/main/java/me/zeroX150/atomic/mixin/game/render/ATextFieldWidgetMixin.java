@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.render;
 
 import me.zeroX150.atomic.helper.render.Renderer;
@@ -14,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.awt.*;
+import java.awt.Color;
 
 @Mixin(TextFieldWidget.class)
 public abstract class ATextFieldWidgetMixin extends ClickableWidget {
@@ -61,13 +66,13 @@ public abstract class ATextFieldWidgetMixin extends ClickableWidget {
         if (this.getText().isEmpty()) this.setSuggestion(this.getMessage().getString());
         else this.setSuggestion("");
         int w = this.isFocused() ? 2 : 1;
-        Renderer.fill(matrices, new Color(20, 20, 20, 220), x, y, x + width, y + height);
-        Renderer.fill(matrices, new Color(0, 194, 111, 255), x, y, x + w, y + height);
+        Renderer.R2D.fill(matrices, new Color(20, 20, 20, 220), x, y, x + width, y + height);
+        Renderer.R2D.fill(matrices, new Color(0, 194, 111, 255), x, y, x + w, y + height);
         matrices.translate(4, 1 + (height / 2d) - (9 / 2d), 0);
     }
 
-    @Inject(method = "setDrawsBackground", at = @At("HEAD"), cancellable = true)
-    public void sDB(boolean drawsBackground, CallbackInfo ci) {
+    @Inject(method = "setDrawsBackground", at = @At("HEAD"))
+    public void overwriteDrawBackground(boolean drawsBackground, CallbackInfo ci) {
         if (isSpecial) this.drawsBackground = false;
     }
 

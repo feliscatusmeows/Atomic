@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.widget;
 
 import com.mojang.authlib.Agent;
@@ -22,7 +27,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Level;
 
-import java.awt.*;
+import java.awt.Color;
 import java.net.Proxy;
 import java.util.HashMap;
 import java.util.Map;
@@ -138,10 +143,10 @@ public class AltEntryWidget extends ClickableWidget implements Drawable, Element
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Color fontColor = Color.WHITE;
         if (failedLogIn) fontColor = new Color(255, 255, 255, 100);
-        Color c = Renderer.modify(Themes.Theme.ATOMIC.getPalette().h_exp().brighter(), -1, -1, -1, 100);
+        Color c = Renderer.Util.modify(Themes.Theme.ATOMIC.getPalette().h_exp().brighter(), -1, -1, -1, 100);
         float mid = y + (height / 2f - (9 / 2f));
-        Renderer.fill(matrices, c, renderX, y, renderX + width, y + height);
-        Renderer.fill(matrices, c.brighter(), renderX + width - 20, y, renderX + width, y + height);
+        Renderer.R2D.fill(matrices, c, renderX, y, renderX + width, y + height);
+        Renderer.R2D.fill(matrices, c.brighter(), renderX + width - 20, y, renderX + width, y + height);
         String uid = uuid.toString();
         RenderSystem.setShaderTexture(0, skin);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);

@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -5,7 +10,8 @@ import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.clickgui.Themes;
 import me.zeroX150.atomic.feature.gui.widget.AltEntryWidget;
 import me.zeroX150.atomic.feature.gui.widget.PasswordFieldWidget;
-import me.zeroX150.atomic.feature.module.impl.external.Alts;
+import me.zeroX150.atomic.feature.module.impl.client.Alts;
+import me.zeroX150.atomic.helper.MicrosoftLogin;
 import me.zeroX150.atomic.helper.Transitions;
 import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.render.Renderer;
@@ -29,13 +35,13 @@ public class AltManager extends Screen implements FastTickable {
     public static final Identifier EYE = new Identifier("atomic", "eye.png");
     public static final Identifier EYEINVIS = new Identifier("atomic", "eyeinvis.png");
     final List<Runnable> r = new ArrayList<>();
+    public String feedback = "";
     TextFieldWidget username;
     PasswordFieldWidget password;
     ButtonWidget login;
     ButtonWidget save;
     ButtonWidget paste;
     ButtonWidget hidepass;
-    String feedback = "";
     double savedHeight = 0;
     double scroll = 0;
     double renderScroll = 0;
@@ -123,6 +129,8 @@ public class AltManager extends Screen implements FastTickable {
 
             }
         });
+        ButtonWidget loginWithMSA = new ButtonWidget(midpoint - widgetW / 2, 85 + 50 + 25, (widgetW / 2 - 5) * 2, 20, Text.of("Login with msa"), button -> new MicrosoftLogin().startLoginProcess());
+        addDrawableChild(loginWithMSA);
         hidepass = new ButtonWidget(midpoint + 85, 85, 20, 20, Text.of(""), button -> password.setShowText(!password.isShowText()));
         ButtonWidget quit = new ButtonWidget(width - 10 - 100, height - 30, 100, 20, Text.of("Quit"), button -> Atomic.client.setScreen(null));
 
@@ -244,7 +252,7 @@ public class AltManager extends Screen implements FastTickable {
         Objects.requireNonNull(this.client).keyboard.setRepeatEvents(true);
         renderBackground(matrices);
 
-        Renderer.fill(Renderer.modify(Themes.Theme.ATOMIC.getPalette().h_exp().brighter(), -1, -1, -1, 100), width - 250, 50, width - 5, height - 5);
+        Renderer.R2D.fill(Renderer.Util.modify(Themes.Theme.ATOMIC.getPalette().h_exp().brighter(), -1, -1, -1, 100), width - 250, 50, width - 5, height - 5);
 
         Atomic.fontRenderer.drawString(matrices, "Alt manager    Current account: " + Atomic.client.getSession().getUsername() + " | " + Atomic.client.getSession().getUuid(), 5, 5, 0xFFFFFF);
         //Atomic.fontRenderer.drawCenteredString(matrices, status, width - (width / 3.5 / 2 - 2.5d), 10, 0xAAFFFFFF);
@@ -276,7 +284,7 @@ public class AltManager extends Screen implements FastTickable {
         RenderSystem.blendFunc(770, 1);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1F, 1F);
-        drawTexture(new MatrixStack(), (int) ((width - 240 / 2 - 2.5) + 87), 87, 16, 16, 0, 0, 32, 32, 32, 32);
+        drawTexture(Renderer.R3D.getEmptyMatrixStack(), (int) ((width - 240 / 2 - 2.5) + 87), 87, 16, 16, 0, 0, 32, 32, 32, 32);
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
 

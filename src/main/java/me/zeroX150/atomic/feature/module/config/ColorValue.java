@@ -1,8 +1,13 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.config;
 
 import me.zeroX150.atomic.helper.Utils;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class ColorValue extends DynamicValue<String> {
     boolean isRGB = false;

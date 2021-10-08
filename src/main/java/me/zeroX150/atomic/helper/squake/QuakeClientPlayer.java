@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.helper.squake;
 
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
@@ -22,6 +27,7 @@ import org.apache.commons.lang3.mutable.MutableBoolean;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 
 /*
@@ -80,7 +86,7 @@ public class QuakeClientPlayer {
         float wishspeed = movementSpeed;
         wishspeed *= 2.15f;
         double[] wishdir = getMovementDirection(player, movementInput.x, movementInput.z);
-        double[] wishvel = new double[]{wishdir[0] * wishspeed, wishdir[1] * wishspeed};
+        double[] wishvel = new double[]{ wishdir[0] * wishspeed, wishdir[1] * wishspeed };
         baseVelocities.add(wishvel);
 
         return true;
@@ -111,7 +117,6 @@ public class QuakeClientPlayer {
     private static float getSlipperiness(PlayerEntity player) {
         float f2 = 0.91F;
         if (player.isOnGround()) {
-            f2 = 0.54600006F;
             BlockPos groundPos = new BlockPos(MathHelper.floor(player.getX()), MathHelper.floor(player.getBoundingBox().minY) - 1, MathHelper.floor(player.getZ()));
             Block ground = player.world.getBlockState(groundPos).getBlock();
 
@@ -130,7 +135,7 @@ public class QuakeClientPlayer {
 
     private static double[] getMovementDirection(PlayerEntity player, double sidemove, double forwardmove) {
         double f3 = sidemove * sidemove + forwardmove * forwardmove;
-        double[] dir = {0.0F, 0.0F};
+        double[] dir = { 0.0F, 0.0F };
 
         if (f3 >= 1.0E-4F) {
             f3 = MathHelper.sqrt((float) f3);
@@ -197,11 +202,12 @@ public class QuakeClientPlayer {
         return result.booleanValue();
     }
 
+    @SuppressWarnings("deprecation")
     private static void minecraft_ApplyGravity(PlayerEntity player) {
         BlockPos pos = new BlockPos((int) player.getX(), (int) player.getY(), (int) player.getZ());
         double velocityY = player.getVelocity().y;
         if (player.hasStatusEffect(StatusEffects.LEVITATION)) {
-            velocityY += (0.05D * (double) (player.getStatusEffect(StatusEffects.LEVITATION).getAmplifier() + 1) - /*vec3d6.y*/ velocityY) * 0.2D;
+            velocityY += (0.05D * (double) (Objects.requireNonNull(player.getStatusEffect(StatusEffects.LEVITATION)).getAmplifier() + 1) - /*vec3d6.y*/ velocityY) * 0.2D;
             player.fallDistance = 0.0F;
         } else if (player.hasStatusEffect(StatusEffects.SLOW_FALLING) && velocityY < 0) {
             velocityY = -0.01D;
@@ -372,7 +378,7 @@ public class QuakeClientPlayer {
                 player.setVelocity(player.getVelocity().add(0, speedbonus * curspeed * ModuleRegistry.getByClass(Squake.class).trimpMultiplier.getValue(), 0));
 
                 if (ModuleRegistry.getByClass(Squake.class).trimpMultiplier.getValue() > 0) {
-                    float mult = 1.0f / Float.valueOf(ModuleRegistry.getByClass(Squake.class).trimpMultiplier.getValue().toString());
+                    float mult = 1.0f / Float.parseFloat(ModuleRegistry.getByClass(Squake.class).trimpMultiplier.getValue().toString());
                     player.setVelocity(player.getVelocity().multiply(mult, 1, mult));
                 }
 
@@ -575,7 +581,7 @@ public class QuakeClientPlayer {
     }
 
     private static void quake_ApplySoftCap(PlayerEntity player, float movespeed) {
-        float softCapPercent = Float.valueOf(ModuleRegistry.getByClass(Squake.class).softCap.getValue().toString());
+        float softCapPercent = Float.parseFloat(ModuleRegistry.getByClass(Squake.class).softCap.getValue().toString());
         float softCapDegen = 0.65f;
 
         if (ModuleRegistry.getByClass(Squake.class).uncappedBunnyhop.getValue()) {
@@ -602,7 +608,7 @@ public class QuakeClientPlayer {
         if (ModuleRegistry.getByClass(Squake.class).uncappedBunnyhop.getValue())
             return;
 
-        float hardCapPercent = Float.valueOf(ModuleRegistry.getByClass(Squake.class).hardCap.getValue().toString());
+        float hardCapPercent = Float.parseFloat(ModuleRegistry.getByClass(Squake.class).hardCap.getValue().toString());
 
         float speed = (float) (getSpeed(player));
         float hardCap = movespeed * hardCapPercent;

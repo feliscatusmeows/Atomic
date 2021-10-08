@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.clickgui;
 
 import com.google.common.collect.Lists;
@@ -8,13 +13,18 @@ import me.zeroX150.atomic.feature.gui.screen.FastTickable;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.ModuleType;
-import me.zeroX150.atomic.feature.module.impl.external.ClientConfig;
+import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
 import me.zeroX150.atomic.helper.Transitions;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.*;
+import net.minecraft.client.render.BufferBuilder;
+import net.minecraft.client.render.BufferRenderer;
+import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.Tessellator;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -22,7 +32,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -37,7 +47,6 @@ public class ClickGUI extends Screen implements FastTickable {
     public ConfigWidget currentConfig = null;
     public String searchTerm = "";
     long lastRender = System.currentTimeMillis();
-    boolean alreadyInitialized = false;
     int currentSortMode = 0;
     boolean closed = false;
     double aProg = 1.0;
@@ -159,13 +168,11 @@ public class ClickGUI extends Screen implements FastTickable {
             return;
         }
         closed = true;
-        alreadyInitialized = false;
 
     }
 
     @Override
     protected void init() {
-        alreadyInitialized = true;
         aProg = 1;
         closed = false;
         int off = 21;
@@ -257,8 +264,6 @@ public class ClickGUI extends Screen implements FastTickable {
         RenderSystem.disableBlend();
         float scaleInv = (float) Transitions.easeOutBack(Math.abs(1 - aProg));
         float api = 1 - scaleInv;
-        //RenderSystem.colorMask(true,true,true,false);
-        //RenderSystem.setShaderColor(1,1,1,(float) aProg);
         matrices.translate(-api * width, 0, 0);
         //matrices.scale(scaleInv, scaleInv, 1);
         if (System.currentTimeMillis() - lastRender > 1) lastRender = System.currentTimeMillis();
@@ -280,8 +285,6 @@ public class ClickGUI extends Screen implements FastTickable {
         matrices.push();
         for (Draggable container : containers) {
             matrices.push();
-            //matrices.translate((api * width) / 2f, (api * height) / 2f, 0);
-            //matrices.scale(scaleInv, scaleInv, 1);
             container.render(matrices, delta, api, 0);
             matrices.pop();
         }

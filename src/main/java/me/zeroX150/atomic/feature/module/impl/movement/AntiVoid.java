@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.movement;
 
 import me.zeroX150.atomic.Atomic;
@@ -56,7 +61,7 @@ public class AntiVoid extends Module {
     @Override
     public void onWorldRender(MatrixStack matrices) {
         if (lastOnGround != null && Objects.requireNonNull(Atomic.client.player).fallDistance > 2) {
-            Renderer.line(Atomic.client.player.getPos(), lastOnGround, Utils.getCurrentRGB(), matrices);
+            Renderer.R3D.line(Atomic.client.player.getPos(), lastOnGround, Utils.getCurrentRGB(), matrices);
         }
     }
 

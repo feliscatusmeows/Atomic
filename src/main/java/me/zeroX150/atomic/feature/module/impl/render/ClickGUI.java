@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.render;
 
 import me.zeroX150.atomic.Atomic;
@@ -13,7 +18,6 @@ import net.minecraft.client.util.math.MatrixStack;
 public class ClickGUI extends Module {
     public static SliderValue logoSize;
     public static SliderValue smooth;
-    public static SliderValue dragFactor;
     public static BooleanValue enableTails;
     public static SliderValue tailSize;
     public static BooleanValue instant;
@@ -27,7 +31,6 @@ public class ClickGUI extends Module {
         super("ClickGUI", "Opens the click gui", ModuleType.RENDER);
         logoSize = (SliderValue) this.config.create("Logo size", 0.28, 0, 1, 2).description("The size of the logo at the top (0 to disable)");
         smooth = (SliderValue) this.config.create("Movement smooth", 10, 10, 30, 1).description("The factor to smooth movements of the tabs by");
-        dragFactor = (SliderValue) this.config.create("Drag factor", 0.5, 0, 3, 1).description("The factor to rotate the tab by when you move it (0 to disable)");
         enableTails = (BooleanValue) this.config.create("Enable tails", false).description("Whether or not to enable tails");
         tailSize = (SliderValue) this.config.create("Tail size", 30, 10, 200, 0).description("The length of the tails");
         theme = (MultiValue) this.config.create("Theme", "Atomic", "Atomic", "Dark", "Walmart Sigma", "Custom").description("The theme of the clickgui");

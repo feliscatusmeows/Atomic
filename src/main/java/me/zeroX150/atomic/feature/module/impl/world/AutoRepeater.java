@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.world;
 
 import me.zeroX150.atomic.Atomic;
@@ -82,7 +87,7 @@ public class AutoRepeater extends Module {
     public void onWorldRender(MatrixStack matrices) {
         for (BlockPos blockPos : new ArrayList<>(bps)) {
             Vec3d v = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-            Renderer.renderFilled(v, new Vec3d(1, 0.2, 1), Utils.getCurrentRGB(), matrices);
+            Renderer.R3D.renderFilled(v, new Vec3d(1, 0.2, 1), Utils.getCurrentRGB(), matrices);
         }
     }
 

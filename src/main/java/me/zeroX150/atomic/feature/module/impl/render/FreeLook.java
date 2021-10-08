@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.render;
 
 import me.zeroX150.atomic.Atomic;
@@ -20,11 +25,11 @@ public class FreeLook extends Module {
     final BooleanValue spin = (BooleanValue) this.config.create("Spinbot", false).description("hvh toggle rage nn noob");
     final SliderValue spinSpeed = this.config.create("Spin Speed", 1f, 0.1f, 6f, 1);
     Perspective before = Perspective.FIRST_PERSON;
-    float ey, ep;
+    float newyaw, newpitch, oldyaw, oldpitch;
     Keybind kb;
 
     public FreeLook() {
-        super("FreeLook", "looks around yourself without you looking", ModuleType.MISC);
+        super("FreeLook", "looks around yourself without you looking", ModuleType.RENDER);
         spinSpeed.showOnlyIf(spin::getValue);
     }
 
@@ -32,8 +37,8 @@ public class FreeLook extends Module {
     public void tick() {
         if (kb == null) return;
         if (!kb.isHeld() && hold.getValue()) this.setEnabled(false);
-        Rotations.setClientPitch(ep);
-        Rotations.setClientYaw(ey);
+        Rotations.setClientPitch(newpitch);
+        Rotations.setClientYaw(newyaw);
     }
 
     @SuppressWarnings("unchecked")
@@ -41,16 +46,18 @@ public class FreeLook extends Module {
     public void enable() {
         kb = new Keybind(((DynamicValue<Integer>) this.config.get("Keybind")).getValue());
         before = Atomic.client.options.getPerspective();
-        ey = Objects.requireNonNull(Atomic.client.player).getYaw();
-        if (spin.getValue()) ep = 90;
-        else ep = Atomic.client.player.getPitch();
+        oldyaw = Objects.requireNonNull(Atomic.client.player).getYaw();
+        oldpitch = Atomic.client.player.getPitch();
+        newyaw = Atomic.client.player.getYaw();
+        if (spin.getValue()) newpitch = 90;
+        else newpitch = Atomic.client.player.getPitch();
     }
 
     @Override
     public void disable() {
         Atomic.client.options.setPerspective(before);
-        Objects.requireNonNull(Atomic.client.player).setYaw(ey);
-        Atomic.client.player.setPitch(ep);
+        Objects.requireNonNull(Atomic.client.player).setYaw(oldyaw);
+        Atomic.client.player.setPitch(oldpitch);
     }
 
     @Override
@@ -71,8 +78,8 @@ public class FreeLook extends Module {
     @Override
     public void onFastTick() {
         if (!spin.getValue()) return;
-        ey = (float) MathHelper.wrapDegrees(ey + spinSpeed.getValue());
-        Objects.requireNonNull(Atomic.client.getNetworkHandler()).sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(ey, ep, Objects.requireNonNull(Atomic.client.player).isOnGround()));
+        newyaw = (float) MathHelper.wrapDegrees(newyaw + spinSpeed.getValue());
+        Objects.requireNonNull(Atomic.client.getNetworkHandler()).sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(newyaw, newpitch, Objects.requireNonNull(Atomic.client.player).isOnGround()));
     }
 }
 

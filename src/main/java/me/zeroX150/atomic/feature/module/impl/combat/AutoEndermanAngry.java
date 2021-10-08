@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.module.impl.combat;
 
 import me.zeroX150.atomic.Atomic;
@@ -12,7 +17,7 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.util.math.Vec3d;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -65,8 +70,8 @@ public class AutoEndermanAngry extends Module {
     public void onWorldRender(MatrixStack matrices) {
         if (e != null) {
             Vec3d dim = new Vec3d(e.getWidth() / 2, 0.05, e.getWidth() / 2);
-            Renderer.renderOutline(e.getEyePos().subtract(dim), dim.multiply(2), Color.RED, matrices);
-            Renderer.line(Renderer.getCrosshairVector(), e.getEyePos(), Color.WHITE, matrices);
+            Renderer.R3D.renderOutline(e.getEyePos().subtract(dim), dim.multiply(2), Color.RED, matrices);
+            Renderer.R3D.line(Renderer.R3D.getCrosshairVector(), e.getEyePos(), Color.WHITE, matrices);
         }
     }
 

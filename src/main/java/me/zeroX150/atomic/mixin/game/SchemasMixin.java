@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game;
 
 import com.mojang.datafixers.DataFixerBuilder;
@@ -13,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Schemas.class)
 public class SchemasMixin {
     @Redirect(method = "create", at = @At(value = "NEW", target = "com/mojang/datafixers/DataFixerBuilder"))
-    private static DataFixerBuilder create$replaceBuilder(int dataVersion) {
+    private static DataFixerBuilder replaceBuilder(int dataVersion) {
         return new LazyDataFixerBuilder(dataVersion);
     }
 }

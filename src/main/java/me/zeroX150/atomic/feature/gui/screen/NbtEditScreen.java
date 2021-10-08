@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.screen;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -15,7 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.math.MathHelper;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -205,7 +210,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
         int height = LINE_HEIGHT * lines.size() + 2;
         matrices.push();
         matrices.translate(0, -trackedScroll, 0);
-        Renderer.fill(matrices, new Color(0, 0, 0, 100), 5, 11, width - 110, 11 + height);
+        Renderer.R2D.fill(matrices, new Color(0, 0, 0, 100), 5, 11, width - 110, 11 + height);
         int yOffset = 12;
         for (String line : lines) {
             Atomic.monoFontRenderer.drawString(matrices, line, 6, yOffset, 0xFFFFFF);
@@ -226,7 +231,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
         lastCursorPosY = rCY;
         rCX = renderCursorPosX;
         rCY = renderCursorPosY;
-        Renderer.fill(matrices, Color.WHITE, rCX + 6, rCY + 12, rCX + 7, rCY + 11 + LINE_HEIGHT);
+        Renderer.R2D.fill(matrices, Color.WHITE, rCX + 6, rCY + 12, rCX + 7, rCY + 11 + LINE_HEIGHT);
         matrices.pop();
         super.render(matrices, mouseX, mouseY, delta);
     }

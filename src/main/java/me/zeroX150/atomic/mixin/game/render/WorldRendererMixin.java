@@ -1,9 +1,14 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.render;
 
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.feature.module.impl.external.NoRender;
 import me.zeroX150.atomic.feature.module.impl.render.ESP;
+import me.zeroX150.atomic.feature.module.impl.render.NoRender;
 import me.zeroX150.atomic.helper.Friends;
 import me.zeroX150.atomic.helper.Utils;
 import net.minecraft.client.render.LightmapTextureManager;
@@ -18,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.awt.*;
+import java.awt.Color;
 import java.util.Objects;
 
 @Mixin(WorldRenderer.class)
@@ -31,7 +36,7 @@ public class WorldRendererMixin {
     }
 
     @Inject(method = "renderEntity", at = @At("HEAD"))
-    void bruh(Entity entity, double cameraX, double cameraY, double cameraZ, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
+    void setShaderEspColor(Entity entity, double cameraX, double cameraY, double cameraZ, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, CallbackInfo ci) {
         ESP e = ModuleRegistry.getByClass(ESP.class);
         if (Objects.requireNonNull(e).isEnabled() && vertexConsumers instanceof OutlineVertexConsumerProvider provider && e.shouldRenderEntity(entity) && e.outlineMode.getValue().equalsIgnoreCase("shader")) {
             Color c = Utils.getCurrentRGB();

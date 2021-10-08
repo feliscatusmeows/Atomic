@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.mixin.game.render;
 
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
@@ -12,20 +17,20 @@ import java.util.Objects;
 
 @Mixin(Deadmau5FeatureRenderer.class)
 public class Deadmau5FeatureRendererMixin {
-    @Redirect(method = "render", at = @At(
+    @Redirect(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/client/network/AbstractClientPlayerEntity;FFFFFF)V", at = @At(
             value = "INVOKE",
             target = "Ljava/lang/String;equals(Ljava/lang/Object;)Z"
     ))
-    boolean bruh(String s, Object anObject) {
+    boolean doesNameMatchDeadmau5(String s, Object anObject) {
         if (Objects.requireNonNull(ModuleRegistry.getByClass(Deadmau5.class)).isEnabled()) return true;
         return s.equals(anObject);
     }
 
-    @Redirect(method = "render", at = @At(
+    @Redirect(method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/client/network/AbstractClientPlayerEntity;FFFFFF)V", at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;hasSkinTexture()Z"
     ))
-    boolean bruh1(AbstractClientPlayerEntity abstractClientPlayerEntity) {
+    boolean doesPlayerHaveSkin(AbstractClientPlayerEntity abstractClientPlayerEntity) {
         if (Objects.requireNonNull(ModuleRegistry.getByClass(Deadmau5.class)).isEnabled()) return true;
         return abstractClientPlayerEntity.hasSkinTexture();
     }

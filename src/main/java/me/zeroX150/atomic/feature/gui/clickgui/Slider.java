@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.clickgui;
 
 import me.zeroX150.atomic.Atomic;
@@ -29,8 +34,8 @@ public class Slider extends ClickableWidget {
 
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        Renderer.fill(matrices, ClickGUI.currentActiveTheme.inactive(), (x + (width * getValue())), y, x + width, y + height);
-        Renderer.fill(matrices, ClickGUI.currentActiveTheme.active(), x, y, (x + (width * getValue())), y + height);
+        Renderer.R2D.fill(matrices, ClickGUI.currentActiveTheme.inactive(), (x + (width * getValue())), y, x + width, y + height);
+        Renderer.R2D.fill(matrices, ClickGUI.currentActiveTheme.active(), x, y, (x + (width * getValue())), y + height);
         Atomic.fontRenderer.drawCenteredString(matrices, Utils.Math.roundToDecimal(value, prec) + "", x + width / 2f, y + height / 2f - 8 / 2f, ClickGUI.currentActiveTheme.fontColor().getRGB());
         //drawCenteredText(matrices, Atomic.client.textRenderer, Client.roundToN(value, prec) + "", x + (width / 2), y + (height / 2 - (9 / 2)), 0xFFFFFF);
     }

@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 package me.zeroX150.atomic.feature.gui.clickgui;
 
 import me.zeroX150.atomic.Atomic;
@@ -11,7 +16,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class ColorConfig extends ClickableWidget {
     final ColorValue prop;
@@ -30,7 +35,7 @@ public class ColorConfig extends ClickableWidget {
             public void setValue(Object value) {
                 super.setValue(value);
                 Color v = orig.getColor();
-                orig.setValue(Renderer.modify(v, (int) Math.floor(this.getValue()), -1, -1, -1).getRGB() + (orig.isRGB() ? ";" : ""));
+                orig.setValue(Renderer.Util.modify(v, (int) Math.floor(this.getValue()), -1, -1, -1).getRGB() + (orig.isRGB() ? ";" : ""));
             }
         }) {
             @Override
@@ -46,7 +51,7 @@ public class ColorConfig extends ClickableWidget {
             public void setValue(Object value) {
                 super.setValue(value);
                 Color v = orig.getColor();
-                orig.setValue(Renderer.modify(v, -1, (int) Math.floor(this.getValue()), -1, -1).getRGB() + (orig.isRGB() ? ";" : ""));
+                orig.setValue(Renderer.Util.modify(v, -1, (int) Math.floor(this.getValue()), -1, -1).getRGB() + (orig.isRGB() ? ";" : ""));
             }
         }) {
             @Override
@@ -62,7 +67,7 @@ public class ColorConfig extends ClickableWidget {
             public void setValue(Object value) {
                 super.setValue(value);
                 Color v = orig.getColor();
-                orig.setValue(Renderer.modify(v, -1, -1, (int) Math.floor(this.getValue()), -1).getRGB() + (orig.isRGB() ? ";" : ""));
+                orig.setValue(Renderer.Util.modify(v, -1, -1, (int) Math.floor(this.getValue()), -1).getRGB() + (orig.isRGB() ? ";" : ""));
             }
         }) {
             @Override
@@ -103,7 +108,7 @@ public class ColorConfig extends ClickableWidget {
                 this.selected = false;
             }
 
-            Renderer.fill(matrices, ClickGUI.currentActiveTheme.h_exp(), x - width - padding * 2, y - 36 - padding, x, y + height + padding);
+            Renderer.R2D.fill(matrices, ClickGUI.currentActiveTheme.h_exp(), x - width - padding * 2, y - 36 - padding, x, y + height + padding);
             red.x = x - width + 10 - padding;
             red.y = y - 12 - 12 - 12;
             green.x = x - width + 10 - padding;
@@ -116,13 +121,13 @@ public class ColorConfig extends ClickableWidget {
             green.render(matrices, mouseX, mouseY, delta);
             blue.render(matrices, mouseX, mouseY, delta);
             isRGB.render(matrices, mouseX, mouseY, delta);
-            Renderer.fill(matrices, ClickGUI.currentActiveTheme.h_ret(), x - width - padding, y - 36, x - width - padding + 10, y + height);
+            Renderer.R2D.fill(matrices, ClickGUI.currentActiveTheme.h_ret(), x - width - padding, y - 36, x - width - padding + 10, y + height);
             Atomic.monoFontRenderer.drawCenteredString(matrices, "R", red.x - 4.5f, red.y + 2, 0xFFAAAA);
             Atomic.monoFontRenderer.drawCenteredString(matrices, "G", green.x - 4.5f, green.y + 2, 0xAAFFAA);
             Atomic.monoFontRenderer.drawCenteredString(matrices, "B", blue.x - 4.5f, blue.y + 2, 0xAAAAFF);
             Atomic.monoFontRenderer.drawCenteredString(matrices, "C", isRGB.x - 4.5f, isRGB.y + 2, Utils.getCurrentRGB().getRGB());
         }
-        Renderer.fill(matrices, c, x, y, x + width, y + height);
+        Renderer.R2D.fill(matrices, c, x, y, x + width, y + height);
         String rHex = Integer.toHexString(c.getRed());
         String gHex = Integer.toHexString(c.getGreen());
         String bHex = Integer.toHexString(c.getBlue());
