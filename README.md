@@ -11,7 +11,7 @@ a bit stale, so I decided to start this.
 
 ## Support
 
-[discor](https://discord.gg/V2KSkrDVQy)
+[discor](https://discord.gg/rvk4YjszQx)
 
 ## Downloading
 
