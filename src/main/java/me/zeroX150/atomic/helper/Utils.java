@@ -17,6 +17,7 @@ import me.zeroX150.atomic.mixin.game.IMinecraftClientAccessor;
 import me.zeroX150.atomic.mixin.game.IRenderTickCounterAccessor;
 import net.minecraft.client.network.ServerInfo;
 import net.minecraft.client.util.Session;
+import net.minecraft.entity.Entity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -25,7 +26,10 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.Text;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.RaycastContext;
+import net.minecraft.world.World;
 import org.apache.logging.log4j.Level;
 
 import java.awt.Color;
@@ -64,7 +68,7 @@ public class Utils {
     }
 
     public static Color getCurrentRGB() {
-        return new Color(Color.HSBtoRGB((System.currentTimeMillis() % 4750) / 4750f, 0.7f, 1));
+        return new Color(Color.HSBtoRGB((System.currentTimeMillis() % 4750) / 4750f, 0.5f, 1));
     }
 
     public static String[] splitLinesToWidth(String input, double maxWidth, FontRenderer rendererUsed) {
@@ -230,6 +234,12 @@ public class Utils {
         public static void sendMessage(String n) {
             if (Atomic.client.player == null) return;
             Atomic.client.player.sendMessage(Text.of("[§9A§r] " + n), false);
+        }
+
+        public static boolean isABObstructed(Vec3d a, Vec3d b, World world, Entity requester) {
+            RaycastContext rcc = new RaycastContext(a, b, RaycastContext.ShapeType.OUTLINE, RaycastContext.FluidHandling.NONE, requester);
+            BlockHitResult bhr = world.raycast(rcc);
+            return !bhr.getPos().equals(b);
         }
 
     }

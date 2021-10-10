@@ -24,7 +24,7 @@ public class AutoLogin extends Module {
     final DynamicValue<String> toggle = this.config.create("Toggle", "login").description("The trigger for the module");
 
     public AutoLogin() {
-        super("AutoLogin", "Logins on servers with a custom password", ModuleType.MISC);
+        super("Auto Login", "Logins on servers with a custom password", ModuleType.MISC);
         Events.registerEventHandler(EventType.PACKET_SEND, event -> {
             if (!this.isEnabled()) return;
             PacketEvent pe = (PacketEvent) event;

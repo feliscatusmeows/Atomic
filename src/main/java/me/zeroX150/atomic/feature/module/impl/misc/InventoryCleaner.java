@@ -25,7 +25,7 @@ public class InventoryCleaner extends Module {
     final DynamicValue<String> saved = this.config.create("_", "");
 
     public InventoryCleaner() {
-        super("InventoryCleaner", "Cleans inventory from useless stuff", ModuleType.MISC);
+        super("Inv Cleaner", "Cleans inventory from useless stuff", ModuleType.MISC);
         saved.showOnlyIf(() -> false);
     }
 

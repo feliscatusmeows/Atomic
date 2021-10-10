@@ -11,7 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class FastUse extends Module {
     public FastUse() {
-        super("FastUse", "uses shit faster", ModuleType.WORLD);
+        super("Fast Use", "uses shit faster", ModuleType.WORLD);
     }
 
     @Override

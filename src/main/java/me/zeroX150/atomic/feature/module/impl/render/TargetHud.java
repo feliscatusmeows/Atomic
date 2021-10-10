@@ -47,7 +47,7 @@ public class TargetHud extends Module {
     double trackedMaxHp = 0;
 
     public TargetHud() {
-        super("TargetHud", "the bruh", ModuleType.RENDER);
+        super("Target Hud", "the bruh", ModuleType.RENDER);
     }
 
     boolean isApplicable(Entity check) {

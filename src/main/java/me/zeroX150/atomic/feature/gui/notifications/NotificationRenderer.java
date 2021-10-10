@@ -51,8 +51,9 @@ public class NotificationRenderer {
         int currentYOffset = 5;
         float minWidth = 50;
         long c = System.currentTimeMillis();
-        topBarNotifications.sort(Comparator.comparingDouble(value -> -Atomic.fontRenderer.getStringWidth(String.join(" ", value.contents))));
-        for (Notification notification : topBarNotifications.toArray(new Notification[0])) {
+        ArrayList<Notification> nf = new ArrayList<>(topBarNotifications);
+        nf.sort(Comparator.comparingDouble(value -> -Atomic.fontRenderer.getStringWidth(String.join(" ", value.contents))));
+        for (Notification notification : nf) {
             double timeRemaining = Math.abs(c - notification.creationDate - notification.duration) / (double) notification.duration;
             timeRemaining = MathHelper.clamp(timeRemaining, 0, 1);
             boolean notificationExpired = notification.creationDate + notification.duration < c;
@@ -112,7 +113,7 @@ public class NotificationRenderer {
         int baseX = Atomic.client.getWindow().getScaledWidth() - 160;
         int baseY = Atomic.client.getWindow().getScaledHeight() - 50;
         long c = System.currentTimeMillis();
-        for (Notification notification : notifications.toArray(new Notification[0])) {
+        for (Notification notification : new ArrayList<>(notifications)) {
             double timeRemaining = Math.abs(c - notification.creationDate - notification.duration) / (double) notification.duration;
             timeRemaining = MathHelper.clamp(timeRemaining, 0, 1);
             boolean notificationExpired = notification.creationDate + notification.duration < c;

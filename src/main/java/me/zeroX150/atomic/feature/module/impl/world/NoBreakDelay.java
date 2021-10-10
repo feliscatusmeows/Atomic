@@ -11,7 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class NoBreakDelay extends Module {
     public NoBreakDelay() {
-        super("NoBreakDelay", "removes break delay", ModuleType.WORLD);
+        super("No Break Delay", "removes break delay", ModuleType.WORLD);
     }
 
     @Override

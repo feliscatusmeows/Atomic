@@ -105,11 +105,11 @@ public class Killaura extends Module {
     public void tick() {
         if (Atomic.client.world == null || Atomic.client.player == null || Atomic.client.interactionManager == null)
             return;
-        boolean delayHasPassed = true;
-        if (delayPassed < getDelay()) {
-            delayPassed++;
+        boolean delayHasPassed;
+        if (delayPassed > 0) {
+            delayPassed--;
             delayHasPassed = false;
-        } else delayPassed = 0;
+        } else delayHasPassed = true;
         if (attackOnlyCombatPartner.getValue()) {
             if (AttackManager.getLastAttackInTimeRange() != null)
                 combatPartner = (AttackManager.getLastAttackInTimeRange());
@@ -124,6 +124,7 @@ public class Killaura extends Module {
             if (delayHasPassed) {
                 Atomic.client.interactionManager.attackEntity(Atomic.client.player, combatPartner);
                 Atomic.client.player.swingHand(Hand.MAIN_HAND);
+                delayPassed = getDelay();
             }
             return;
         }
@@ -189,6 +190,7 @@ public class Killaura extends Module {
             if (delayHasPassed) {
                 Atomic.client.interactionManager.attackEntity(Atomic.client.player, tar);
                 Atomic.client.player.swingHand(Hand.MAIN_HAND);
+                delayPassed = getDelay();
             }
             return;
         }
@@ -198,8 +200,8 @@ public class Killaura extends Module {
             if (delayHasPassed) {
                 Atomic.client.interactionManager.attackEntity(Atomic.client.player, attack);
                 Atomic.client.player.swingHand(Hand.MAIN_HAND);
+                delayPassed = getDelay();
             }
-//            if (mode.getValue().equalsIgnoreCase("single")) break;
         }
     }
 

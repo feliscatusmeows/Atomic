@@ -28,7 +28,7 @@ public class ClickNuke extends Module {
     final BooleanValue destroy = (BooleanValue) this.config.create("Destroy particles", false).description("Makes particles appear when a block gets destroyed");
 
     public ClickNuke() {
-        super("ClickNuke", "Nukes whatever you click at [REQUIRES OP]", ModuleType.WORLD);
+        super("Click Nuke", "Nukes whatever you click at [REQUIRES OP]", ModuleType.WORLD);
         Events.registerEventHandler(EventType.MOUSE_EVENT, event -> {
             if (!this.isEnabled()) return;
             if (Atomic.client.player == null) return;

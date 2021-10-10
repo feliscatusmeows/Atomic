@@ -33,7 +33,7 @@ public class GodBridge extends Module {
     Notification isReady = null;
 
     public GodBridge() {
-        super("GodBridge", "YOOOO MF HAS SKILL!!!!", ModuleType.WORLD);
+        super("God Bridge", "YOOOO MF HAS SKILL!!!!", ModuleType.WORLD);
     }
 
     boolean isReady() {

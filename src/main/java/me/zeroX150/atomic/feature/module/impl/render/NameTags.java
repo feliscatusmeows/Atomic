@@ -26,7 +26,7 @@ public class NameTags extends Module {
     final Map<UUID, Double> trackedProgress = new HashMap<>();
 
     public NameTags() {
-        super("NameTags", "big nametag.mp4", ModuleType.RENDER);
+        super("Name Tags", "big nametag.mp4", ModuleType.RENDER);
     }
 
     public void renderTag(Entity entity, MatrixStack matrices, EntityRenderDispatcher dispatcher) {

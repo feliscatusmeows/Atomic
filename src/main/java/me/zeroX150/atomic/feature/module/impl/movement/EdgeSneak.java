@@ -15,9 +15,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
-public class AutoSneak extends Module {
-    public AutoSneak() {
-        super("AutoSneak", "Sneaks automatically at the edges of blocks", ModuleType.MOVEMENT);
+public class EdgeSneak extends Module {
+    public EdgeSneak() {
+        super("Edge Sneak", "Sneaks automatically at the edges of blocks", ModuleType.MOVEMENT);
     }
 
     @Override
@@ -26,7 +26,6 @@ public class AutoSneak extends Module {
         Box bounding = Atomic.client.player.getBoundingBox();
         bounding = bounding.offset(0, -1, 0);
         bounding = bounding.expand(0.3);
-        //bounding = bounding.contract(0.3);
         boolean sneak = false;
         for (int x = -1; x < 2; x++) {
             for (int z = -1; z < 2; z++) {

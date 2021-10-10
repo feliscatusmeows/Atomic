@@ -23,7 +23,7 @@ public class EntityFly extends Module {
     Entity lastRide = null;
 
     public EntityFly() {
-        super("EntityFly", "boatfly but yes", ModuleType.MOVEMENT);
+        super("Entity Fly", "boatfly but yes", ModuleType.MOVEMENT);
     }
 
     @Override

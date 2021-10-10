@@ -28,7 +28,7 @@ public class ArrowJuke extends Module {
     final List<Vec3d> bruhMoments = new ArrayList<>();
 
     public ArrowJuke() {
-        super("ArrowAvoid", "fuck skeletons", ModuleType.MOVEMENT);
+        super("Arrow Juke", "fuck skeletons", ModuleType.MOVEMENT);
     }
 
     @Override

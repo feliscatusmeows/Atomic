@@ -55,11 +55,12 @@ import me.zeroX150.atomic.feature.module.impl.movement.AirJump;
 import me.zeroX150.atomic.feature.module.impl.movement.AntiVoid;
 import me.zeroX150.atomic.feature.module.impl.movement.ArrowJuke;
 import me.zeroX150.atomic.feature.module.impl.movement.AutoElytra;
-import me.zeroX150.atomic.feature.module.impl.movement.AutoSneak;
 import me.zeroX150.atomic.feature.module.impl.movement.AutoWalk;
 import me.zeroX150.atomic.feature.module.impl.movement.Blink;
 import me.zeroX150.atomic.feature.module.impl.movement.Boost;
 import me.zeroX150.atomic.feature.module.impl.movement.ClickFly;
+import me.zeroX150.atomic.feature.module.impl.movement.EdgeJump;
+import me.zeroX150.atomic.feature.module.impl.movement.EdgeSneak;
 import me.zeroX150.atomic.feature.module.impl.movement.EntityFly;
 import me.zeroX150.atomic.feature.module.impl.movement.Flight;
 import me.zeroX150.atomic.feature.module.impl.movement.IgnoreWorldBorder;
@@ -130,7 +131,7 @@ public class ModuleRegistry {
         modules.add(new ClickGUI());
         modules.add(new AirJump());
         modules.add(new ArrowJuke());
-        modules.add(new AutoSneak());
+        modules.add(new EdgeSneak());
         modules.add(new Blink());
         modules.add(new EntityFly());
         modules.add(new Hud());
@@ -237,6 +238,7 @@ public class ModuleRegistry {
         modules.add(new SpinAutism());
         modules.add(new NoLevitation());
         modules.add(new EntityFullbright());
+        modules.add(new EdgeJump());
 
         modules.sort(Comparator.comparingDouble(value -> -Atomic.fontRenderer.getStringWidth(value.getName())));
     }

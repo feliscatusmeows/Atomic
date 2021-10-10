@@ -25,7 +25,7 @@ public class NoFall extends Module {
     final SliderValue fallDist = (SliderValue) this.config.create("Fall distance", 3, 0, 10, 1).description("The distance to fall for to enable the module");
 
     public NoFall() {
-        super("NoFall", "no fall damage", ModuleType.MOVEMENT);
+        super("No Fall", "no fall damage", ModuleType.MOVEMENT);
 
         mode = this.config.create("Mode", "OnGround", "OnGround", "Packet", "BreakFall");
         mode.description("The mode of the module");

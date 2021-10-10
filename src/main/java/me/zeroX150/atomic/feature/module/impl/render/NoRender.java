@@ -31,7 +31,7 @@ public class NoRender extends Module {
     final BooleanValue armorStands = (BooleanValue) this.config.create("Armor stands", true).description("Doesnt render armor stands");
 
     public NoRender() {
-        super("NoRender", "doesnt render shit", ModuleType.RENDER);
+        super("No Render", "doesnt render shit", ModuleType.RENDER);
         Events.registerEventHandler(EventType.ENTITY_RENDER, event1 -> {
             if (!this.isEnabled()) return;
             EntityRenderEvent event = (EntityRenderEvent) event1;

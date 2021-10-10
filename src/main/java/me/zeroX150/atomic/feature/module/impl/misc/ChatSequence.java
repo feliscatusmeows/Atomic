@@ -21,7 +21,7 @@ public class ChatSequence extends Module {
     Thread runner = null;
 
     public ChatSequence() {
-        super("ChatSequence", "Follows a script and sends every message in chat", ModuleType.MISC);
+        super("Chat Sequence", "Follows a script and sends every message in chat", ModuleType.MISC);
     }
 
     @Override

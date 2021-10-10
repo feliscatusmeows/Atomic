@@ -21,6 +21,7 @@ import me.zeroX150.atomic.feature.command.impl.Invsee;
 import me.zeroX150.atomic.feature.command.impl.ItemStorage;
 import me.zeroX150.atomic.feature.command.impl.LoadConfig;
 import me.zeroX150.atomic.feature.command.impl.Panic;
+import me.zeroX150.atomic.feature.command.impl.RageQuit;
 import me.zeroX150.atomic.feature.command.impl.Rename;
 import me.zeroX150.atomic.feature.command.impl.Say;
 import me.zeroX150.atomic.feature.command.impl.Socket;
@@ -59,6 +60,7 @@ public class CommandRegistry {
         commands.add(new ItemStorage());
         commands.add(new LoadConfig());
         commands.add(new Invsee());
+        commands.add(new RageQuit());
     }
 
     public static List<Command> getCommands() {

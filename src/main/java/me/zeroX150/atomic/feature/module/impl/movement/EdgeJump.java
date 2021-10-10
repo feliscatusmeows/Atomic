@@ -9,17 +9,23 @@ import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.Box;
 
-public class MoonGravity extends Module {
-    public MoonGravity() {
-        super("Moon Gravity", "what would you do if you'd be on the moon?", ModuleType.MOVEMENT);
+public class EdgeJump extends Module {
+    public EdgeJump() {
+        super("Edge Jump", "Jumps automatically at the edges of blocks", ModuleType.MOVEMENT);
     }
 
     @Override
     public void tick() {
-        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
-        Atomic.client.player.addVelocity(0, 0.0568000030517578, 0);
-        // yea thats literally it
+        if (Atomic.client.player == null || Atomic.client.world == null) return;
+        if (!Atomic.client.player.isOnGround() || Atomic.client.player.isSneaking()) return;
+
+        Box bounding = Atomic.client.player.getBoundingBox();
+        bounding = bounding.offset(0, -0.5, 0);
+        bounding = bounding.expand(-0.001, 0, -0.001);
+        if (Atomic.client.world.getBlockCollisions(Atomic.client.player, bounding).findAny().isEmpty())
+            Atomic.client.player.jump();
     }
 
     @Override
@@ -47,4 +53,3 @@ public class MoonGravity extends Module {
 
     }
 }
-

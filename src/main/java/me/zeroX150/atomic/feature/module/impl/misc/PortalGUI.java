@@ -11,7 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class PortalGUI extends Module {
     public PortalGUI() {
-        super("PortalGUI", "Allows you to open GUIs while being inside a portal", ModuleType.MISC);
+        super("Portal GUI", "Allows you to open GUIs while being inside a portal", ModuleType.MISC);
     }
 
     @Override

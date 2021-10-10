@@ -19,7 +19,7 @@ import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 
 public class NoTitles extends Module {
     public NoTitles() {
-        super("NoTitles", "Completely removes any titles from rendering", ModuleType.MISC);
+        super("No Titles", "Completely removes any titles from rendering", ModuleType.MISC);
         Events.registerEventHandler(EventType.PACKET_RECEIVE, event -> {
             if (!this.isEnabled()) return;
             PacketEvent pe = (PacketEvent) event;

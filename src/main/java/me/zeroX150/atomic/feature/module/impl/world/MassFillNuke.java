@@ -31,7 +31,7 @@ public class MassFillNuke extends Module {
     volatile boolean run = false;
 
     public MassFillNuke() {
-        super("MassFillNuke", "Erases your whole render distance one by one [REQUIRES OP]", ModuleType.WORLD);
+        super("Mass Fill Nuke", "Erases your whole render distance one by one [REQUIRES OP]", ModuleType.WORLD);
     }
 
     @Override

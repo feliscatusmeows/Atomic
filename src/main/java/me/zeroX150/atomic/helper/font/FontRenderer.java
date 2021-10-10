@@ -173,25 +173,25 @@ public class FontRenderer {
         RenderSystem.disableTexture();
         String text2 = stripControlCodes(text);
         switch (fontType) {
-            case NORMAL:
+            case OUTLINE_THIN:
                 drawer(matrixStack, text2, x + 0.5F, y, color2);
                 drawer(matrixStack, text2, x - 0.5F, y, color2);
                 drawer(matrixStack, text2, x, y + 0.5F, color2);
                 drawer(matrixStack, text2, x, y - 0.5F, color2);
                 break;
-            case SHADOW_THICK:
+            case SHADOW_THIN:
                 drawer(matrixStack, text2, x + 0.5F, y + 0.5F, color2);
                 break;
-            case SHADOW_THIN:
+            case SHADOW_THICK:
                 drawer(matrixStack, text2, x + 0.5F, y + 1.0F, color2);
                 break;
-            case OUTLINE_THIN:
+            case EMBOSS_BOTTOM:
                 drawer(matrixStack, text2, x, y + 0.5F, color2);
                 break;
             case EMBOSS_TOP:
                 drawer(matrixStack, text2, x, y - 0.5F, color2);
                 break;
-            case EMBOSS_BOTTOM:
+            case NORMAL:
                 break;
         }
 

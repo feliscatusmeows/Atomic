@@ -24,7 +24,7 @@ public class LeverAura extends Module {
     final SliderValue amount = this.config.create("Clicks per tick", 1, 1, 50, 0);
 
     public LeverAura() {
-        super("LeverAura", "has a spasm around levers in the area", ModuleType.WORLD);
+        super("Lever Aura", "has a spasm around levers in the area", ModuleType.WORLD);
     }
 
     @Override

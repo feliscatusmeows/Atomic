@@ -29,7 +29,7 @@ public class FreeLook extends Module {
     Keybind kb;
 
     public FreeLook() {
-        super("FreeLook", "looks around yourself without you looking", ModuleType.RENDER);
+        super("Free Look", "looks around yourself without you looking", ModuleType.RENDER);
         spinSpeed.showOnlyIf(spin::getValue);
     }
 

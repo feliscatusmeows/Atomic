@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class NoJumpCooldown extends Module {
     public NoJumpCooldown() {
-        super("NoJumpCooldown", "hold it and jump beneath a 2 block space to confuse chinese anticheats", ModuleType.MOVEMENT);
+        super("No Jump Cool", "hold it and jump beneath a 2 block space to confuse chinese anticheats", ModuleType.MOVEMENT);
     }
 
     @Override

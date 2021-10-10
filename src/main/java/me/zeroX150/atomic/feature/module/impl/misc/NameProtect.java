@@ -15,7 +15,7 @@ public class NameProtect extends Module {
     final DynamicValue<String> replacer = this.config.create("Replace name with", "Me");
 
     public NameProtect() {
-        super("NameProtect", "Replaces your username with something else", ModuleType.MISC);
+        super("Name Protect", "Replaces your username with something else", ModuleType.MISC);
     }
 
     public String protect(String n) {

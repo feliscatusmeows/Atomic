@@ -20,7 +20,7 @@ import java.util.Objects;
 
 public class AutoTool extends Module {
     public AutoTool() {
-        super("AutoTool", "Automatically selects the best tool for the job", ModuleType.WORLD);
+        super("Auto Tool", "Automatically selects the best tool for the job", ModuleType.WORLD);
     }
 
     public static void pick(BlockState state) {

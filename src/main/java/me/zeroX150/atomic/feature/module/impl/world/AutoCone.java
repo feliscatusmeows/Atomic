@@ -36,7 +36,7 @@ public class AutoCone extends Module {
     List<BlockPos> cached = new ArrayList<>();
 
     public AutoCone() {
-        super("AutoCone", "All hail the cones", ModuleType.WORLD);
+        super("Auto Cone", "All hail the cones", ModuleType.WORLD);
     }
 
     @Override

@@ -34,7 +34,6 @@ public class Draggable {
     boolean expanded;
     boolean dragged = false;
     long lastRender = System.currentTimeMillis();
-    double lrXDiff = 0;
     double scroll = -1;
     double trackedScroll = -1;
     double maxScroll = 0;
@@ -74,8 +73,6 @@ public class Draggable {
         if (Math.abs(nyDiff) < 0.02) nyDiff = yDiff;
         lastRenderX -= nxDiff;
         lastRenderY -= nyDiff;
-        if (trackedLastRenderX == -1) trackedLastRenderX = lastRenderX;
-        lrXDiff = lastRenderX - trackedLastRenderX;
         trackedLastRenderX = lastRenderX;
     }
 
@@ -131,11 +128,7 @@ public class Draggable {
         if (lastRenderX == -1) lastRenderX = posX;
         if (lastRenderY == -1) lastRenderY = posY;
         stack.translate(lastRenderX - getMargin() - getPaddingX(), lastRenderY - getMargin(), 0);
-        double rotation = MathHelper.clamp(lrXDiff, -50, 50) * 0; // disable that for now i wanna test shit
-        if (me.zeroX150.atomic.feature.module.impl.render.ClickGUI.doOpenAnimation.getValue())
-            rotation += Math.sin(openAnimationInter * Math.PI * 2) * 4;
-        stack.multiply(new Quaternion(new Vec3f(0, 0, 1), (float) (rotation), true));
-        PositionD v = new PositionD(lastRenderX - getMargin() - getPaddingX(), lastRenderY - getMargin(), rotation);
+        PositionD v = new PositionD(lastRenderX - getMargin() - getPaddingX(), lastRenderY - getMargin(), 0);
         if (!recordedPositions.contains(v)) recordedPositions.add(v);
         else recordedPositions.add(null);
         while (recordedPositions.size() > me.zeroX150.atomic.feature.module.impl.render.ClickGUI.tailSize.getValue())

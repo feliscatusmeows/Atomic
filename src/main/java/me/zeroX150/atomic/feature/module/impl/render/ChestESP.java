@@ -33,7 +33,7 @@ public class ChestESP extends Module {
 
     @SuppressWarnings("BusyWait")
     public ChestESP() {
-        super("ChestESP", "shows all chests", ModuleType.RENDER);
+        super("Chest ESP", "shows all chests", ModuleType.RENDER);
         renders.put(Blocks.CHEST, new Color(1, 161, 182));
         renders.put(Blocks.ENDER_CHEST, new Color(83, 3, 196));
         renders.put(Blocks.HOPPER, new Color(47, 66, 62));

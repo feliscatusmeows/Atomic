@@ -32,7 +32,7 @@ public class ClickFly extends Module {
     boolean tpInProgress = false;
 
     public ClickFly() {
-        super("ClickFly", "Flies you to whereever you look at", ModuleType.MOVEMENT);
+        super("Click Fly", "Flies you to whereever you look at", ModuleType.MOVEMENT);
         color.setRGB(true);
         this.config.getAll().add(color);
     }

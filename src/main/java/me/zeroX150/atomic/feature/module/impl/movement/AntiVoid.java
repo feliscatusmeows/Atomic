@@ -22,7 +22,7 @@ public class AntiVoid extends Module {
     Vec3d lastOnGround = null;
 
     public AntiVoid() {
-        super("AntiFall", "Prevents you from falling too far", ModuleType.MOVEMENT);
+        super("Anti Fall", "Prevents you from falling too far", ModuleType.MOVEMENT);
     }
 
     @Override

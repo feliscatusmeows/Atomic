@@ -24,7 +24,7 @@ public class WindowCustomization extends Module {
     final DynamicValue<String> pathToImage = this.config.create("Image", "").description("The path to the window icon (leave blank for default, HAS TO BE 1:1 ASPECT)");
 
     public WindowCustomization() {
-        super("BetterWindow", "Allows you to change aspects of the minecraft window", ModuleType.MISC);
+        super("Better Window", "Allows you to change aspects of the minecraft window", ModuleType.MISC);
         title.addChangeListener(() -> {
             if (Atomic.client.getWindow() != null) Atomic.client.updateWindowTitle();
         });

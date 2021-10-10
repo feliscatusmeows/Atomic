@@ -21,6 +21,23 @@ repositories {
 	maven { url 'https://jitpack.io' }
 }
 
+def excludedFiles(Collection<File> files) {
+	List<String> classes = new ArrayList<>()
+	files.each { file ->
+		if (file.isDirectory()) {
+			excludedFiles(Arrays.asList(file.listFiles()))
+		}
+		else {
+			if (file.text.contains("@NonPublic") && file.text.contains("import me.zeroX150.atomic.helper.NonPublic")) {
+				classes += file.getName()
+			}
+		}
+	}
+	return classes
+}
+
+
+
 dependencies {
 	//to change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -53,6 +70,11 @@ processResources {
 	}
 }
 
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021. 0x150 and contributors
+ */
+
 // ensure that the encoding is set to UTF-8, no matter what the system default is
 // this fixes some edge cases with special characters not displaying correctly
 // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
@@ -69,6 +91,12 @@ task sourcesJar(type: Jar, dependsOn: classes) {
 }
 
 task execBuild(dependsOn: build) {
+	if (project.isPrivate != "true") {
+		List<String> v = excludedFiles(sourceSets.main.allSource.files)
+		if (!v.isEmpty()) {
+			throw new IllegalStateException("Non-public features are present in:\n  "+String.join("\n  ", v)+"\n")
+		}
+	}
 	doLast {
 		file("./build/libs/atomic-1.0.0.jar").renameTo(file("./builds/latest.jar"))
 	}
@@ -77,7 +105,9 @@ task execBuild(dependsOn: build) {
 jar {
 	from "LICENSE"
 	manifest {
-		attributes "Main-Class": "me.zeroX150.atomic.Main"
+		attributes(
+				"Main-Class": "me.zeroX150.atomic.Main"
+		)
 	}
 }
 

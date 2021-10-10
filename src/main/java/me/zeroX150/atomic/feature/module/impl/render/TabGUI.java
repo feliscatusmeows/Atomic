@@ -39,7 +39,7 @@ public class TabGUI extends Module {
     double trackedSelected = 0;
 
     public TabGUI() {
-        super("TabGUI", "Renders a small module manager top left", ModuleType.RENDER);
+        super("Tab GUI", "Renders a small module manager top left", ModuleType.RENDER);
         Events.registerEventHandler(EventType.KEYBOARD, event -> {
             if (!this.isEnabled()) return;
             KeyboardEvent ke = (KeyboardEvent) event;

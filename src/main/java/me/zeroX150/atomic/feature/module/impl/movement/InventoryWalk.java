@@ -11,7 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 
 public class InventoryWalk extends Module {
     public InventoryWalk() {
-        super("InventoryWalk", "walks while inventory is open", ModuleType.MOVEMENT);
+        super("Inventory Walk", "walks while inventory is open", ModuleType.MOVEMENT);
     }
 
     @Override

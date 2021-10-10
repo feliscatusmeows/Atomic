@@ -16,7 +16,7 @@ public class AutoLog extends Module {
     final DynamicValue<Integer> hpAmount = this.config.create("Health", 3).description("The amount of HP needed to issue a disconnect");
 
     public AutoLog() {
-        super("AutoLog", "automatically leaves after a certain health is reached", ModuleType.COMBAT);
+        super("Auto Log", "automatically leaves after a certain health is reached", ModuleType.COMBAT);
     }
 
     @Override

@@ -21,14 +21,13 @@ public class ClickGUI extends Module {
     public static BooleanValue enableTails;
     public static SliderValue tailSize;
     public static BooleanValue instant;
-    public static BooleanValue doOpenAnimation;
 
     public static ColorValue cInactive, cActive, cHighlight, cHRet, cHExp, cFont, cTitle;
 
     public static MultiValue theme;
 
     public ClickGUI() {
-        super("ClickGUI", "Opens the click gui", ModuleType.RENDER);
+        super("Click GUI", "Opens the click gui", ModuleType.RENDER);
         logoSize = (SliderValue) this.config.create("Logo size", 0.28, 0, 1, 2).description("The size of the logo at the top (0 to disable)");
         smooth = (SliderValue) this.config.create("Movement smooth", 10, 10, 30, 1).description("The factor to smooth movements of the tabs by");
         enableTails = (BooleanValue) this.config.create("Enable tails", false).description("Whether or not to enable tails");
@@ -36,7 +35,6 @@ public class ClickGUI extends Module {
         theme = (MultiValue) this.config.create("Theme", "Atomic", "Atomic", "Dark", "Walmart Sigma", "Custom").description("The theme of the clickgui");
         tailSize.showOnlyIf(() -> enableTails.getValue());
         instant = (BooleanValue) this.config.create("Skip animation", false).description("Disables the animation and shows the clickgui instantly");
-        doOpenAnimation = (BooleanValue) this.config.create("Open animation", true).description("Disables the little wobble effect when you toggle a category container");
 
         Themes.Palette p = Themes.Theme.DARK.getPalette();
         cInactive = (ColorValue) this.config.create("Inactive", p.inactive(), false).description("The color for inactive stuff");

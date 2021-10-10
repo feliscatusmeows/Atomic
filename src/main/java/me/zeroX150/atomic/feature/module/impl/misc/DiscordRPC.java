@@ -23,7 +23,7 @@ public class DiscordRPC extends Module {
     long lastUpdateTime = 0;
 
     public DiscordRPC() {
-        super("DiscordRPC", "A configurable discord RPC", ModuleType.MISC);
+        super("Discord RPC", "A configurable discord RPC", ModuleType.MISC);
     }
 
     String getIP() {

@@ -94,7 +94,7 @@ public class EntitySpawnInfo extends Module {
     };
 
     public EntitySpawnInfo() {
-        super("EntitySpawnInfo", "Shows info about items that spawn entities (spawn eggs, armor stands, etc)", ModuleType.RENDER);
+        super("Entity Spawn Info", "Shows info about items that spawn entities (spawn eggs, armor stands, etc)", ModuleType.RENDER);
         Events.registerEventHandler(EventType.LORE_QUERY, event -> {
             if (!this.isEnabled()) return;
             LoreQueryEvent ev = (LoreQueryEvent) event;

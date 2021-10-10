@@ -47,6 +47,7 @@ public class Rotations {
     public static void lookAtV3(Vec3d target) {
         targetV3 = target;
         lastModificationTime = System.currentTimeMillis();
+        update();
     }
 
     public static void lookAtPositionSmooth(Vec3d target, double laziness) {
