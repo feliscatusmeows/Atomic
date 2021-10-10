@@ -11,13 +11,13 @@ a bit stale, so I decided to start this.
 
 ## Support
 
-[discor](https://discord.gg/V2KSkrDVQy)
+[discor](https://discord.gg/rvk4YjszQx)
 
 ## Downloading
 
 You can download this from the `builds` folder. The latest jarfile will always be called "latest.jar". Download and drag
 into your 1.17+ mods folder to use. Download in the `builds` folder,
-or [here](https://github.com/cornos/AtomicPrivate/raw/master/builds/latest.jar) for a direct download link
+or [here](https://github.com/cornos/Atomic/raw/master/builds/latest.jar) for a direct download link
 
 ## Installation
 
