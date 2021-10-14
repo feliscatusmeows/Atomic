@@ -1,6 +1,6 @@
 /*
  * This file is part of the atomic client distribution.
- * Copyright (c) 2021. 0x150 and contributors
+ * Copyright (c) 2021-2021 0x150.
  */
 
 package me.zeroX150.atomic.mixin.game.entity;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Objects;
 
 @SuppressWarnings("EqualsBetweenInconvertibleTypes")
-@Mixin(LivingEntity.class)
+@Mixin(value = LivingEntity.class)
 public class LivingEntityMixin {
     @Inject(method = "canWalkOnFluid", at = @At("HEAD"), cancellable = true)
     public void canWalkOnFluid(Fluid fluid, CallbackInfoReturnable<Boolean> cir) {
@@ -54,10 +54,10 @@ public class LivingEntityMixin {
         }
     }
 
-    @Redirect(method = "travel", at = @At(
+    @Redirect(method = "travel", require = 0, at = @At(
             value = "INVOKE",
             target = "net/minecraft/entity/LivingEntity.hasStatusEffect(Lnet/minecraft/entity/effect/StatusEffect;)Z"
-    ), require = 0)
+    ))
     boolean preventLevitationEffect(LivingEntity instance, StatusEffect effect) {
         if (instance.equals(Atomic.client.player) && ModuleRegistry.getByClass(NoLevitation.class).isEnabled() && effect == StatusEffects.LEVITATION)
             return false;

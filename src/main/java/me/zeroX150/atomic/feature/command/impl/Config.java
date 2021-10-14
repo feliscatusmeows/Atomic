@@ -1,6 +1,6 @@
 /*
  * This file is part of the atomic client distribution.
- * Copyright (c) 2021. 0x150 and contributors
+ * Copyright (c) 2021-2021 0x150.
  */
 
 package me.zeroX150.atomic.feature.command.impl;
@@ -22,11 +22,11 @@ public class Config extends Command {
     public void onExecute(String[] args) {
         if (args.length == 0) {
             Utils.Client.sendMessage("Syntax: .config (module) <key> <value>");
-            Utils.Client.sendMessage("For a key with spaces, use - as a seperator");
-            Utils.Client.sendMessage("Example: \".config blockspammer times-per-tick 11\" to set the \"times per tick\" property to 11");
+            Utils.Client.sendMessage("For a module or key with spaces, use - as a seperator");
+            Utils.Client.sendMessage("Example: \".config block-spammer times-per-tick 11\" to set the \"times per tick\" property to 11");
             return;
         }
-        Module target = ModuleRegistry.getByName(args[0]);
+        Module target = ModuleRegistry.getByName(args[0].replaceAll("-", " "));
         if (target == null) {
             Utils.Client.sendMessage("Module not found");
             return;

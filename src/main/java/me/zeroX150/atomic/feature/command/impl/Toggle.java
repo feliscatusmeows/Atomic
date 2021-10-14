@@ -1,6 +1,6 @@
 /*
  * This file is part of the atomic client distribution.
- * Copyright (c) 2021. 0x150 and contributors
+ * Copyright (c) 2021-2021 0x150.
  */
 
 package me.zeroX150.atomic.feature.command.impl;
@@ -21,7 +21,7 @@ public class Toggle extends Command {
             Utils.Client.sendMessage("ima need the module name");
             return;
         }
-        Module m = ModuleRegistry.getByName(args[0].toLowerCase());
+        Module m = ModuleRegistry.getByName(String.join(" ", args));
         if (m == null) {
             Utils.Client.sendMessage("Module not found bruh");
         } else m.toggle();

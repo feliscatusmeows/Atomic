@@ -1,26 +1,32 @@
 /*
  * This file is part of the atomic client distribution.
- * Copyright (c) 2021. 0x150 and contributors
+ * Copyright (c) 2021-2021 0x150.
  */
 
 package me.zeroX150.atomic.feature.gui.widget;
 
 import me.zeroX150.atomic.Atomic;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
 
-public class SimpleTextWidget implements Element, Drawable {
+public class SimpleTextWidget extends ClickableWidget {
     double x, y;
     int color;
     String text;
     boolean center = false;
 
     public SimpleTextWidget(double x, double y, String text, int color) {
+        super((int) x, (int) y, (int) Atomic.fontRenderer.getStringWidth(text), 8, Text.of(""));
         this.x = x;
         this.y = y;
         this.text = text;
         this.color = color;
+    }
+
+    @Override public void appendNarrations(NarrationMessageBuilder builder) {
+
     }
 
     public void setColor(int color) {

@@ -1,12 +1,12 @@
 /*
  * This file is part of the atomic client distribution.
- * Copyright (c) 2021. 0x150 and contributors
+ * Copyright (c) 2021-2021 0x150.
  */
 
 package me.zeroX150.atomic.mixin.game.screen;
 
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.feature.gui.screen.ItemExploitsScreen;
+import me.zeroX150.atomic.feature.gui.screen.ItemsScreen;
 import me.zeroX150.atomic.feature.gui.screen.NbtEditScreen;
 import me.zeroX150.atomic.helper.Utils;
 import net.minecraft.client.gui.screen.Screen;
@@ -37,7 +37,10 @@ public class CreativeInventoryScreenMixin extends Screen {
             }
             Atomic.client.setScreen(new NbtEditScreen(hand.getOrCreateNbt()));
         });
-        ButtonWidget itemExploits = new ButtonWidget(5, 30, 100, 20, Text.of("Items"), button -> Atomic.client.setScreen(new ItemExploitsScreen(this)));
+        ButtonWidget itemExploits = new ButtonWidget(5, 30, 100, 20, Text.of("Items"), button -> {
+            ItemsScreen i = ItemsScreen.INSTANCE == null ? new ItemsScreen() : ItemsScreen.INSTANCE;
+            Atomic.client.setScreen(i);
+        });
         addDrawableChild(nbtEditor);
         addDrawableChild(itemExploits);
     }
