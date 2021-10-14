@@ -57,7 +57,7 @@ public class LivingEntityMixin {
     @Redirect(method = "travel", at = @At(
             value = "INVOKE",
             target = "net/minecraft/entity/LivingEntity.hasStatusEffect(Lnet/minecraft/entity/effect/StatusEffect;)Z"
-    ))
+    ), require = 0)
     boolean preventLevitationEffect(LivingEntity instance, StatusEffect effect) {
         if (instance.equals(Atomic.client.player) && ModuleRegistry.getByClass(NoLevitation.class).isEnabled() && effect == StatusEffects.LEVITATION)
             return false;
