@@ -7,7 +7,7 @@ package me.zeroX150.atomic.feature.command.impl;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.command.Command;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtByteArray;

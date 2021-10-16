@@ -7,8 +7,8 @@ package me.zeroX150.atomic.feature.gui.screen;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.helper.Transitions;
 import me.zeroX150.atomic.helper.render.Renderer;
+import me.zeroX150.atomic.helper.util.Transitions;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;

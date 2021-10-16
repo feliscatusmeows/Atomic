@@ -6,7 +6,7 @@
 package me.zeroX150.atomic.mixin.game;
 
 import com.mojang.datafixers.DataFixerBuilder;
-import me.zeroX150.atomic.helper.LazyDataFixerBuilder;
+import me.zeroX150.atomic.helper.LazyDFB;
 import net.minecraft.datafixer.Schemas;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -19,6 +19,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class SchemasMixin {
     @Redirect(method = "create", at = @At(value = "NEW", target = "com/mojang/datafixers/DataFixerBuilder"))
     private static DataFixerBuilder replaceBuilder(int dataVersion) {
-        return new LazyDataFixerBuilder(dataVersion);
+        return new LazyDFB(dataVersion);
     }
 }

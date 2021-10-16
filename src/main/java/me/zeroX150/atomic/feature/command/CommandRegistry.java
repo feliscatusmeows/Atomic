@@ -6,9 +6,9 @@
 package me.zeroX150.atomic.feature.command;
 
 import me.zeroX150.atomic.feature.command.impl.Baritone;
-import me.zeroX150.atomic.feature.command.impl.BaritoneOreSim;
 import me.zeroX150.atomic.feature.command.impl.ChatSequence;
 import me.zeroX150.atomic.feature.command.impl.Config;
+import me.zeroX150.atomic.feature.command.impl.ConfigUtils;
 import me.zeroX150.atomic.feature.command.impl.DecodeUUID;
 import me.zeroX150.atomic.feature.command.impl.Drop;
 import me.zeroX150.atomic.feature.command.impl.Effect;
@@ -19,16 +19,15 @@ import me.zeroX150.atomic.feature.command.impl.Hologram;
 import me.zeroX150.atomic.feature.command.impl.InventoryCleaner;
 import me.zeroX150.atomic.feature.command.impl.Invsee;
 import me.zeroX150.atomic.feature.command.impl.ItemStorage;
-import me.zeroX150.atomic.feature.command.impl.LoadConfig;
+import me.zeroX150.atomic.feature.command.impl.OreSimAutomine;
 import me.zeroX150.atomic.feature.command.impl.Panic;
 import me.zeroX150.atomic.feature.command.impl.RageQuit;
 import me.zeroX150.atomic.feature.command.impl.Rename;
 import me.zeroX150.atomic.feature.command.impl.Say;
-import me.zeroX150.atomic.feature.command.impl.Socket;
 import me.zeroX150.atomic.feature.command.impl.Test;
 import me.zeroX150.atomic.feature.command.impl.Toggle;
 import me.zeroX150.atomic.feature.command.impl.ViewNbt;
-import me.zeroX150.atomic.feature.command.impl.WaypointManager;
+import me.zeroX150.atomic.feature.command.impl.Waypoints;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,15 +49,14 @@ public class CommandRegistry {
         commands.add(new Rename());
         commands.add(new ViewNbt());
         commands.add(new ChatSequence());
-        commands.add(new BaritoneOreSim());
+        commands.add(new OreSimAutomine());
         commands.add(new Baritone());
         commands.add(new Say());
         commands.add(new InventoryCleaner());
         commands.add(new DecodeUUID());
-        commands.add(new Socket());
-        commands.add(new WaypointManager());
+        commands.add(new Waypoints());
         commands.add(new ItemStorage());
-        commands.add(new LoadConfig());
+        commands.add(new ConfigUtils());
         commands.add(new Invsee());
         commands.add(new RageQuit());
     }

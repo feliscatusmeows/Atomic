@@ -8,7 +8,7 @@ package me.zeroX150.atomic.mixin.game.screen;
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.screen.ItemsScreen;
 import me.zeroX150.atomic.feature.gui.screen.NbtEditScreen;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;

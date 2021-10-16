@@ -60,6 +60,9 @@ public class NoRender extends Module {
         hurtAnimation = (BooleanValue) this.config.create("Hurt animation", true).description("Doesnt render the hurt animation");
         waterOverlay = (BooleanValue) this.config.create("Water overlay", true).description("Doesnt render the water overlay");
         fire = (BooleanValue) this.config.create("Fire overlay", true).description("Doesnt render if you're on fire");
+        this.config.createPropGroup("Entities", armorStands, items);
+        this.config.createPropGroup("Blocks", observers, this.trapdoors);
+        this.config.createPropGroup("Visual", fire, waterOverlay, hurtAnimation, weather);
     }
 
     @Override

@@ -9,7 +9,7 @@ import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.screen.HomeScreen;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.helper.Transitions;
+import me.zeroX150.atomic.helper.util.Transitions;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.BackgroundHelper;
 import net.minecraft.client.gui.screen.Overlay;

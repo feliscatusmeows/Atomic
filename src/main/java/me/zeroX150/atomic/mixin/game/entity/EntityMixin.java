@@ -11,7 +11,9 @@ import me.zeroX150.atomic.feature.module.impl.movement.Squake;
 import me.zeroX150.atomic.feature.module.impl.render.ESP;
 import me.zeroX150.atomic.helper.squake.QuakeClientPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.collection.ReusableStream;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.shape.VoxelShape;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -25,12 +27,14 @@ import java.util.stream.Stream;
 @Mixin(Entity.class)
 public class EntityMixin {
     @Redirect(method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;", at = @At(
-            value = "INVOKE",
-            target = "Ljava/util/stream/Stream;concat(Ljava/util/stream/Stream;Ljava/util/stream/Stream;)Ljava/util/stream/Stream;"
-    )) <T> Stream<T> disableWBCollision(Stream<? extends T> a, Stream<? extends T> b) {
-        if (Objects.requireNonNull(ModuleRegistry.getByClass(IgnoreWorldBorder.class)).isEnabled())
-            return Stream.empty();
-        else return Stream.concat(a, b);
+            value = "NEW",
+            target = "Lnet/minecraft/util/collection/ReusableStream;<init>"
+    ))
+    private ReusableStream<VoxelShape> disableWBCollision(Stream<VoxelShape> stream) {
+        if (Objects.requireNonNull(ModuleRegistry.getByClass(IgnoreWorldBorder.class)).isEnabled()) {
+            return new ReusableStream<>(Stream.empty());
+        }
+        return new ReusableStream<>(stream);
     }
 
     @Inject(method = "isGlowing", at = @At("HEAD"), cancellable = true)

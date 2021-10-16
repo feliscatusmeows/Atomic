@@ -6,7 +6,7 @@
 package me.zeroX150.atomic.feature.module;
 
 public enum ModuleType {
-    MOVEMENT("Movement"), RENDER("Render"), MISC("Miscellaneous"), COMBAT("Combat"), WORLD("World"), EXPLOIT("Exploit"), HIDDEN(""), FUN("Fun");
+    RENDER("Render"), MOVEMENT("Movement"), MISC("Miscellaneous"), COMBAT("Combat"), WORLD("World"), EXPLOIT("Exploit"), HIDDEN(""), FUN("Fun");
 
 
     final String name;

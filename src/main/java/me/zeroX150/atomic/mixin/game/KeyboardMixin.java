@@ -7,11 +7,11 @@ package me.zeroX150.atomic.mixin.game;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.event.EventType;
 import me.zeroX150.atomic.helper.event.Events;
 import me.zeroX150.atomic.helper.event.events.KeyboardEvent;
 import me.zeroX150.atomic.helper.keybind.KeybindManager;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.Keyboard;
 import net.minecraft.client.MinecraftClient;
 import org.spongepowered.asm.mixin.Final;

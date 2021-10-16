@@ -6,12 +6,11 @@
 package me.zeroX150.atomic.feature.command.impl;
 
 import me.zeroX150.atomic.feature.command.Command;
-import me.zeroX150.atomic.feature.gui.clickgui.ClickGUI;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.config.DynamicValue;
-import me.zeroX150.atomic.helper.TypeConverter;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.TypeConverter;
+import me.zeroX150.atomic.helper.util.Utils;
 
 public class Config extends Command {
     public Config() {
@@ -54,11 +53,6 @@ public class Config extends Command {
                 return;
             }
             val.setValue(newValue);
-            if (ClickGUI.INSTANCE != null) {
-                if (ClickGUI.INSTANCE.currentConfig != null && ClickGUI.INSTANCE.currentConfig.parent == target) {
-                    ClickGUI.INSTANCE.showModuleConfig(target);
-                }
-            }
         }
     }
 }

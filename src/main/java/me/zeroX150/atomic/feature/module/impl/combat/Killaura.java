@@ -11,13 +11,14 @@ import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.feature.module.config.MultiValue;
+import me.zeroX150.atomic.feature.module.config.PropGroup;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
-import me.zeroX150.atomic.helper.AttackManager;
-import me.zeroX150.atomic.helper.Friends;
-import me.zeroX150.atomic.helper.Packets;
-import me.zeroX150.atomic.helper.Rotations;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.manager.AttackManager;
 import me.zeroX150.atomic.helper.render.Renderer;
+import me.zeroX150.atomic.helper.util.Friends;
+import me.zeroX150.atomic.helper.util.Packets;
+import me.zeroX150.atomic.helper.util.Rotations;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
@@ -30,6 +31,7 @@ import net.minecraft.entity.passive.PassiveEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Hand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -55,10 +57,19 @@ public class Killaura extends Module {
     final BooleanValue attackPassive = (BooleanValue) this.config.create("Attack passive", true).description("Whether or not to attack animals");
     final BooleanValue attackEverything = (BooleanValue) this.config.create("Attack everything", true).description("Attack everything that does not apply to previous filters");
 
+    final BooleanValue enableConfuse = (BooleanValue) this.config.create("Enable Confuse", false).description("Various settings");
+    final MultiValue confuseMode = this.config.create("Confuse Mode", "TP", "Behind", "TP", "Circle");
+    final BooleanValue confuseAllowClip = (BooleanValue) this.config.create("Move into solid", false).description("Allow confuse to tp into block");
+
     final BooleanValue attackOnlyCombatPartner = (BooleanValue) this.config.create("Attack combat", true).description("Whether or not to only attack the combat partner (if in combat)");
     final BooleanValue ignoreFriends = (BooleanValue) this.config.create("Ignore friends", true).description("Whether or not to ignore friends");
+
+    PropGroup confuse = this.config.createPropGroup("Confuse", enableConfuse, confuseMode, confuseAllowClip);
+    PropGroup entities = this.config.createPropGroup("Entities", attackEverything, attackHostile, attackNeutral, attackPassive, attackPlayers, attackOnlyCombatPartner);
+
     Entity combatPartner;
     int delayPassed = 0;
+    double circleProg = 0;
 
     public Killaura() {
         super("Killaura", "anime", ModuleType.COMBAT);
@@ -75,6 +86,9 @@ public class Killaura extends Module {
         attackPassive.showOnlyIf(() -> !attackOnlyCombatPartner.getValue());
         attackEverything.showOnlyIf(() -> !attackOnlyCombatPartner.getValue());
         prio.showOnlyIf(() -> mode.getValue().equalsIgnoreCase("single") && !attackOnlyCombatPartner.getValue());
+        enableConfuse.showOnlyIf(() -> mode.getValue().equalsIgnoreCase("single"));
+        confuseMode.showOnlyIf(() -> enableConfuse.getValue() && mode.getValue().equalsIgnoreCase("single"));
+        confuseAllowClip.showOnlyIf(() -> enableConfuse.getValue() && mode.getValue().equalsIgnoreCase("single"));
     }
 
     int getDelay() {
@@ -101,6 +115,30 @@ public class Killaura extends Module {
         else return range.getValue();
     }
 
+    void doConfuse(Entity e) { // This also contains a range check
+        Vec3d updatePos = Atomic.client.player.getPos();
+        switch (confuseMode.getValue()) {
+            case "Behind" -> {
+                Vec3d p = e.getRotationVecClient();
+                p = new Vec3d(p.x, 0, p.z).normalize().multiply(1.5);
+                updatePos = e.getPos().add(p.multiply(-1));
+            }
+            case "TP" -> updatePos = new Vec3d(e.getX() + (Math.random() * 4 - 2), e.getY(), e.getZ() + (Math.random() * 4 - 2));
+            case "Circle" -> {
+                circleProg += 20;
+                circleProg %= 360;
+                double radians = Math.toRadians(circleProg);
+                double sin = Math.sin(radians) * 2;
+                double cos = Math.cos(radians) * 2;
+                updatePos = new Vec3d(e.getX() + sin, e.getY(), e.getZ() + cos);
+            }
+        }
+        if (!confuseAllowClip.getValue() && Atomic.client.world.getBlockState(new BlockPos(updatePos)).getMaterial().blocksMovement())
+            return;
+        if (e.getPos().distanceTo(updatePos) <= getRange())
+            Atomic.client.player.updatePosition(updatePos.x, updatePos.y, updatePos.z);
+    }
+
     @Override
     public void tick() {
         if (Atomic.client.world == null || Atomic.client.player == null || Atomic.client.interactionManager == null)
@@ -118,6 +156,7 @@ public class Killaura extends Module {
             if (!combatPartner.isAttackable()) return;
             if (combatPartner.equals(Atomic.client.player)) return;
             if (!combatPartner.isAlive()) return;
+            if (enableConfuse.getValue()) doConfuse(combatPartner);
             if (combatPartner.getPos().distanceTo(Atomic.client.player.getPos()) > getRange()) return;
             Packets.sendServerSideLook(combatPartner.getEyePos());
             Rotations.lookAtV3(combatPartner.getPos().add(0, combatPartner.getHeight() / 2, 0));
@@ -185,6 +224,8 @@ public class Killaura extends Module {
                 })).sorted(Comparator.comparingDouble(value -> value.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()))).collect(Collectors.toList()).get(0);
             }
             if (tar == null) return;
+            if (enableConfuse.getValue()) doConfuse(tar);
+            if (tar.getPos().distanceTo(Atomic.client.player.getPos()) > getRange()) return;
             Packets.sendServerSideLook(tar.getEyePos());
             Rotations.lookAtV3(tar.getPos().add(0, tar.getHeight() / 2, 0));
             if (delayHasPassed) {
@@ -218,7 +259,7 @@ public class Killaura extends Module {
 
     @Override
     public String getContext() {
-        return null;
+        return mode.getValue();
     }
 
     @Override

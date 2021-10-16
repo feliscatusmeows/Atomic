@@ -10,7 +10,7 @@ import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.DynamicValue;
-import me.zeroX150.atomic.helper.DiscordRPCManager;
+import me.zeroX150.atomic.helper.manager.DiscordRPCManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 

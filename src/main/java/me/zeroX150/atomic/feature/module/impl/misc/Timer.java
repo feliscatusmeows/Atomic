@@ -8,7 +8,7 @@ package me.zeroX150.atomic.feature.module.impl.misc;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class Timer extends Module {

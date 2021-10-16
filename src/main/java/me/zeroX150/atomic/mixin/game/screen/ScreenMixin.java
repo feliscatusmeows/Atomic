@@ -10,11 +10,12 @@ import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.command.Command;
 import me.zeroX150.atomic.feature.command.CommandRegistry;
 import me.zeroX150.atomic.feature.gui.screen.MessageScreen;
+import me.zeroX150.atomic.feature.gui.screen.NonClearingInit;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
 import me.zeroX150.atomic.feature.module.impl.render.CleanGUI;
-import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.render.Renderer;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -39,7 +40,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @Mixin(Screen.class)
-public class ScreenMixin extends DrawableHelper {
+public abstract class ScreenMixin extends DrawableHelper {
     @Shadow
     public int width;
     @Shadow
@@ -47,6 +48,8 @@ public class ScreenMixin extends DrawableHelper {
     @Shadow
     @Nullable
     protected MinecraftClient client;
+
+    @Shadow protected abstract void clearChildren();
 
     @Inject(method = "sendMessage(Ljava/lang/String;Z)V", at = @At("HEAD"), cancellable = true)
     public void sendMessage(String message, boolean toHud, CallbackInfo ci) {
@@ -142,5 +145,13 @@ public class ScreenMixin extends DrawableHelper {
             }
         }, MessageScreen.ScreenType.YESNO);
         Utils.TickManager.runInNTicks(0, () -> Atomic.client.setScreen(confirmScreen));
+    }
+
+    @Redirect(method = "init(Lnet/minecraft/client/MinecraftClient;II)V", at = @At(
+            value = "INVOKE",
+            target = "net/minecraft/client/gui/screen/Screen.clearChildren()V"
+    ))
+    void e(Screen instance) {
+        if (!(instance instanceof NonClearingInit)) this.clearChildren();
     }
 }

@@ -10,7 +10,7 @@ import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.impl.exploit.AntiReducedDebugInfo;
 import me.zeroX150.atomic.feature.module.impl.misc.WindowCustomization;
 import me.zeroX150.atomic.feature.module.impl.world.FastUse;
-import me.zeroX150.atomic.helper.ConfigManager;
+import me.zeroX150.atomic.helper.util.ConfigManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import org.objectweb.asm.Opcodes;

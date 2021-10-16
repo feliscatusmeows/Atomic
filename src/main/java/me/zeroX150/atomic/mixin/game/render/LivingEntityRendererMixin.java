@@ -6,7 +6,7 @@
 package me.zeroX150.atomic.mixin.game.render;
 
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.helper.Rotations;
+import me.zeroX150.atomic.helper.util.Rotations;
 import net.minecraft.client.render.entity.LivingEntityRenderer;
 import net.minecraft.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;

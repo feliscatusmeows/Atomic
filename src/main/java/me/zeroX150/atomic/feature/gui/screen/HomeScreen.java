@@ -8,11 +8,10 @@ package me.zeroX150.atomic.feature.gui.screen;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.feature.gui.clickgui.ClickGUI;
 import me.zeroX150.atomic.feature.gui.overlay.WelcomeOverlay;
-import me.zeroX150.atomic.feature.gui.particles.flow.FlowParticleManager;
+import me.zeroX150.atomic.feature.gui.particles.FlowParticleManager;
 import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -48,7 +47,7 @@ public class HomeScreen extends Screen {
         addDrawableChild(createCentered("Realms", height / 2, button -> Atomic.client.setScreen(new RealmsMainScreen(this))));
         addDrawableChild(new ButtonWidget(width / 2 - 75, height / 2 + 25, 70, 20, Text.of("Options"), button -> Atomic.client.setScreen(new OptionsScreen(this, Atomic.client.options))));
         addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 25, 70, 20, Text.of("Quit"), button -> Atomic.client.stop()));
-        addDrawableChild(new ButtonWidget(width / 2 - (150 / 2), height / 2 + 25 + 25, 150, 20, Text.of("Alts"), button -> Atomic.client.setScreen(new AltManager())));
+        addDrawableChild(new ButtonWidget(width / 2 - (150 / 2), height / 2 + 25 + 25, 150, 20, Text.of("Alts"), button -> Atomic.client.setScreen(new AltManagerScreen())));
         addDrawableChild(new ButtonWidget(1, 1, 130, 20, Text.of("Vanilla home screen"), button -> {
             ClientConfig.customMainMenu.setValue(false);
             Atomic.client.setScreen(null);
@@ -76,7 +75,7 @@ public class HomeScreen extends Screen {
         renderBackgroundTexture(0);
         pm.render();
         double logoSize = 0.3;
-        RenderSystem.setShaderTexture(0, ClickGUI.LOGO);
+        RenderSystem.setShaderTexture(0, ClickGUIScreen.LOGO);
         RenderSystem.enableBlend();
         RenderSystem.blendEquation(32774);
         RenderSystem.blendFunc(770, 1);

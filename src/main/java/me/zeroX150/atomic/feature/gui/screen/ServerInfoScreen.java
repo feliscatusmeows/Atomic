@@ -6,8 +6,8 @@
 package me.zeroX150.atomic.feature.gui.screen;
 
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.render.Renderer;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;

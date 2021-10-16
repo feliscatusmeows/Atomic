@@ -10,11 +10,11 @@ import me.zeroX150.atomic.feature.ItemExploits;
 import me.zeroX150.atomic.feature.gui.widget.ItemExploitConfigRenderer;
 import me.zeroX150.atomic.feature.gui.windowed.Window;
 import me.zeroX150.atomic.feature.gui.windowed.WindowScreen;
-import me.zeroX150.atomic.helper.PrettyPrintTextFormatter;
-import me.zeroX150.atomic.helper.RGBColorText;
-import me.zeroX150.atomic.helper.Transitions;
-import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.render.Renderer;
+import me.zeroX150.atomic.helper.util.PrettyPrintTextFormatter;
+import me.zeroX150.atomic.helper.util.RGBColorText;
+import me.zeroX150.atomic.helper.util.Transitions;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -33,6 +33,7 @@ import java.util.List;
 public class ItemsScreen extends WindowScreen {
     public static ItemsScreen INSTANCE;
     Window config, itemExploits, exploitPreviewRenderer;
+
     ItemExploits.ItemExploit currentlySelected;
 
     public ItemsScreen() {
@@ -175,7 +176,6 @@ class NbtEditorWidget extends ClickableWidget implements FastTickable {
             xOffset -= 5;
         }
         double maxLength = maxInset - width;
-        //System.out.println(maxLength);
         maxLength = Math.max(0, maxLength);
         xOffset = MathHelper.clamp(xOffset, 0, maxLength);
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -203,7 +203,7 @@ class ItemExploitDisplayWidget extends ClickableWidget implements FastTickable {
                         + 8 // title height
                         + 2 // padding
                         + description.size() * 8 // description height
-                        + 5, // padding
+                        + 2, // padding
                 140,
                 20,
                 Text.of("Generate"),

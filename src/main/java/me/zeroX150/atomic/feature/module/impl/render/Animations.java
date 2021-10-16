@@ -26,6 +26,9 @@ public class Animations extends Module {
 
     public Animations() {
         super("Animations", "Does a funny when you use an item", ModuleType.RENDER);
+        this.config.createPropGroup("Scale", scaleX, scaleY, scaleZ);
+        this.config.createPropGroup("Rotation", rotateX, rotateY, rotateZ);
+        this.config.createPropGroup("Offset", offsetX, offsetY, offsetZ);
     }
 
     @Override

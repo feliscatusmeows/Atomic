@@ -7,7 +7,7 @@ package me.zeroX150.atomic.feature.command.impl;
 
 import me.zeroX150.atomic.feature.command.Command;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;

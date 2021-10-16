@@ -7,7 +7,7 @@ package me.zeroX150.atomic.feature.gui.widget;
 
 import com.google.common.collect.Lists;
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.feature.gui.clickgui.ClickGUI;
+import me.zeroX150.atomic.feature.gui.clickgui.Themes;
 import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
@@ -104,7 +104,7 @@ public class SimpleCustomTextFieldWidget extends ClickableWidget implements Draw
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Atomic.client.keyboard.setRepeatEvents(true);
         cursorIndex = MathHelper.clamp(cursorIndex, 0, text.isEmpty() ? 0 : (text.length()));
-        Renderer.R2D.fill(matrices, ClickGUI.currentActiveTheme.inactive(), x, y, x + width, y + height);
+        Renderer.R2D.fill(matrices, Themes.currentActiveTheme.inactive(), x, y, x + width, y + height);
         while (rStartIndex > cursorIndex) {
             rStartIndex--;
         }
@@ -115,7 +115,7 @@ public class SimpleCustomTextFieldWidget extends ClickableWidget implements Draw
             if (v1.isEmpty()) break;
             v1 = v1.substring(0, v1.length() - 1);
         }
-        Color c = ClickGUI.currentActiveTheme.inactive();
+        Color c = Themes.currentActiveTheme.inactive();
         Color c1 = new Color((int) Math.floor(Math.abs(255 - c.getRed())), (int) Math.floor(Math.abs(255 - c.getGreen())), (int) Math.floor(Math.abs(255 - c.getBlue())), 255);
         Atomic.monoFontRenderer.drawString(matrices, v1, x + 1, y + (height / 2f) - (8 / 2f), c1.getRGB());
         float w = text.isEmpty() ? 0 : Atomic.monoFontRenderer.getStringWidth(text.substring(rStartIndex, cursorIndex));

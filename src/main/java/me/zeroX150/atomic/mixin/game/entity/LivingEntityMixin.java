@@ -10,7 +10,7 @@ import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.impl.movement.Jesus;
 import me.zeroX150.atomic.feature.module.impl.movement.NoLevitation;
 import me.zeroX150.atomic.feature.module.impl.movement.NoPush;
-import me.zeroX150.atomic.helper.AttackManager;
+import me.zeroX150.atomic.helper.manager.AttackManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.effect.StatusEffect;

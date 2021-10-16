@@ -6,8 +6,8 @@
 package me.zeroX150.atomic.feature.gui.widget;
 
 import me.zeroX150.atomic.feature.gui.screen.FastTickable;
-import me.zeroX150.atomic.helper.Transitions;
 import me.zeroX150.atomic.helper.render.Renderer;
+import me.zeroX150.atomic.helper.util.Transitions;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;

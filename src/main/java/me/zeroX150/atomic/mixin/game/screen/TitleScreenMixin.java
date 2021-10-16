@@ -6,7 +6,7 @@
 package me.zeroX150.atomic.mixin.game.screen;
 
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.feature.gui.screen.AltManager;
+import me.zeroX150.atomic.feature.gui.screen.AltManagerScreen;
 import me.zeroX150.atomic.feature.gui.screen.HomeScreen;
 import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
 import net.minecraft.client.gui.screen.Screen;
@@ -27,7 +27,7 @@ public class TitleScreenMixin extends Screen {
 
     @Inject(method = "init", at = @At("TAIL"))
     public void init(CallbackInfo ci) {
-        ButtonWidget alts = new ButtonWidget(1, 22, 130, 20, Text.of("Alt manager"), button -> Atomic.client.setScreen(new AltManager()));
+        ButtonWidget alts = new ButtonWidget(1, 22, 130, 20, Text.of("Alt manager"), button -> Atomic.client.setScreen(new AltManagerScreen()));
         ButtonWidget customScreen = new ButtonWidget(1, 1, 130, 20, Text.of("Custom home screen"), button -> {
             ClientConfig.customMainMenu.setValue(true);
             Atomic.client.setScreen(null);

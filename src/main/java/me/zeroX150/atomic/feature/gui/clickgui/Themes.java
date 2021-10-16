@@ -8,6 +8,7 @@ package me.zeroX150.atomic.feature.gui.clickgui;
 import java.awt.Color;
 
 public class Themes {
+    public static Themes.Palette currentActiveTheme = Themes.Theme.ATOMIC.getPalette();
     public enum Theme {
         ATOMIC(
                 new Palette(

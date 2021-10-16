@@ -11,11 +11,11 @@ import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.feature.module.config.MultiValue;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
-import me.zeroX150.atomic.helper.AttackManager;
-import me.zeroX150.atomic.helper.Friends;
-import me.zeroX150.atomic.helper.Rotations;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.manager.AttackManager;
 import me.zeroX150.atomic.helper.render.Renderer;
+import me.zeroX150.atomic.helper.util.Friends;
+import me.zeroX150.atomic.helper.util.Rotations;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
@@ -53,6 +53,8 @@ public class AimAssist extends Module {
         attackPassive.showOnlyIf(() -> !aimAtCombatPartner.getValue());
         attackEverything.showOnlyIf(() -> !aimAtCombatPartner.getValue());
         laziness.showOnlyIf(() -> !aimInstant.getValue());
+        this.config.createPropGroup("Targets", attackEverything, attackHostile, attackPlayers, attackNeutral, attackPassive, aimAtCombatPartner, ignoreFriends);
+        this.config.createPropGroup("Aim config", prio, laziness, aimInstant);
     }
 
     @Override

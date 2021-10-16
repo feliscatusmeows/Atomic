@@ -7,10 +7,10 @@ package me.zeroX150.atomic.feature.gui.screen;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.helper.Transitions;
-import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.render.Color;
 import me.zeroX150.atomic.helper.render.Renderer;
+import me.zeroX150.atomic.helper.util.Transitions;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;

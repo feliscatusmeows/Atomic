@@ -5,7 +5,7 @@
 
 package me.zeroX150.atomic.helper.render;
 
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.Utils;
 
 @SuppressWarnings("unused") public class Color extends java.awt.Color {
     final int alpha;

@@ -5,7 +5,7 @@
 
 package me.zeroX150.atomic.feature.module.config;
 
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.Utils;
 
 import java.awt.Color;
 

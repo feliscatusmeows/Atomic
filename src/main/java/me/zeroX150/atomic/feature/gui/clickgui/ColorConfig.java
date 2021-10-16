@@ -9,8 +9,8 @@ import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.feature.module.config.ColorValue;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
-import me.zeroX150.atomic.helper.Utils;
 import me.zeroX150.atomic.helper.render.Renderer;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -100,6 +100,7 @@ public class ColorConfig extends ClickableWidget {
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Color c = prop.getColor();
         if (selected) {
+            int width = 100;
             int x1 = this.x - width - padding * 2;
             int y1 = this.y - 36 - padding;
             int endX1 = this.x + 7;
@@ -108,7 +109,7 @@ public class ColorConfig extends ClickableWidget {
                 this.selected = false;
             }
 
-            Renderer.R2D.fill(matrices, ClickGUI.currentActiveTheme.h_exp(), x - width - padding * 2, y - 36 - padding, x, y + height + padding);
+            Renderer.R2D.fill(matrices, Themes.currentActiveTheme.h_exp(), x - width - padding * 2, y - 36 - padding, x, y + height + padding);
             red.x = x - width + 10 - padding;
             red.y = y - 12 - 12 - 12;
             green.x = x - width + 10 - padding;
@@ -121,7 +122,7 @@ public class ColorConfig extends ClickableWidget {
             green.render(matrices, mouseX, mouseY, delta);
             blue.render(matrices, mouseX, mouseY, delta);
             isRGB.render(matrices, mouseX, mouseY, delta);
-            Renderer.R2D.fill(matrices, ClickGUI.currentActiveTheme.h_ret(), x - width - padding, y - 36, x - width - padding + 10, y + height);
+            Renderer.R2D.fill(matrices, Themes.currentActiveTheme.h_ret(), x - width - padding, y - 36, x - width - padding + 10, y + height);
             Atomic.monoFontRenderer.drawCenteredString(matrices, "R", red.x - 4.5f, red.y + 2, 0xFFAAAA);
             Atomic.monoFontRenderer.drawCenteredString(matrices, "G", green.x - 4.5f, green.y + 2, 0xAAFFAA);
             Atomic.monoFontRenderer.drawCenteredString(matrices, "B", blue.x - 4.5f, blue.y + 2, 0xAAAAFF);

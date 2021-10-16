@@ -16,7 +16,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NWordCounter extends Module {
-    final Pattern nwordPattern = Pattern.compile("nig(g(a|er)|let)");
+    final Pattern nwordPattern = Pattern.compile("n[ei](g+)([eoau]r|r[ae]|uh|a|)(s+|ette|)");
     int count = 0;
 
     public NWordCounter() {

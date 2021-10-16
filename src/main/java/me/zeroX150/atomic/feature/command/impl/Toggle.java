@@ -8,7 +8,7 @@ package me.zeroX150.atomic.feature.command.impl;
 import me.zeroX150.atomic.feature.command.Command;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.Utils;
 
 public class Toggle extends Command {
     public Toggle() {

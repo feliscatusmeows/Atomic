@@ -8,7 +8,7 @@ package me.zeroX150.atomic.mixin.game.entity;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.impl.combat.ProtectFriends;
 import me.zeroX150.atomic.feature.module.impl.world.NoBreakDelay;
-import me.zeroX150.atomic.helper.Friends;
+import me.zeroX150.atomic.helper.util.Friends;
 import net.minecraft.client.network.ClientPlayerInteractionManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;

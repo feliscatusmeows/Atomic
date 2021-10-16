@@ -6,7 +6,7 @@
 package me.zeroX150.atomic.feature.command.impl;
 
 import me.zeroX150.atomic.feature.command.Command;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.Utils;
 
 public class Drop extends Command {
     public Drop() {

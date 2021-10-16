@@ -8,7 +8,7 @@ package me.zeroX150.atomic.feature.command.impl;
 import baritone.api.BaritoneAPI;
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.command.Command;
-import me.zeroX150.atomic.helper.Utils;
+import me.zeroX150.atomic.helper.util.Utils;
 
 import java.util.Objects;
 

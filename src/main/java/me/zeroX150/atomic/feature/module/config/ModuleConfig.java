@@ -13,6 +13,7 @@ import java.util.List;
 
 public class ModuleConfig {
     final List<DynamicValue<?>> config = new ArrayList<>();
+    final List<PropGroup> groups = new ArrayList<>();
     public boolean organizeClickGUIList = true;
 
     public void addProxy(DynamicValue<?> v) {
@@ -43,6 +44,21 @@ public class ModuleConfig {
         cv.setRGB(rgb);
         addProxy(cv);
         return cv;
+    }
+
+    public void addGroup(PropGroup group) {
+        this.groups.add(group);
+    }
+
+    public List<PropGroup> getGroups() {
+        return groups;
+    }
+
+    public PropGroup createPropGroup(String name, DynamicValue<?>... children) {
+        PropGroup e = new PropGroup(name);
+        e.addAll(children);
+        addGroup(e);
+        return e;
     }
 
     public MultiValue create(String key, String value, String... possible) {
