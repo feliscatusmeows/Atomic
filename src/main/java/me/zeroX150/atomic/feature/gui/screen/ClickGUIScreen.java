@@ -538,6 +538,7 @@ class ModuleDisplay extends ClearButton implements FastTickable {
     boolean isSelected;
     Module module;
     ConfigDisplay configDisplay;
+    double animProg = 0;
 
     public ModuleDisplay(int x, int y, Module module) {
         super(x, y, (int) MODULE_WIDTH, (int) MODULE_HEIGHT, module.getName(), () -> {
@@ -546,6 +547,14 @@ class ModuleDisplay extends ClearButton implements FastTickable {
         this.configDisplay = new ConfigDisplay((int) (this.x + MODULE_WIDTH), SOURCE_Y, module);
         this.active = new Color(31 + 10, 42 + 10, 48 + 10, 230);
         this.inactive = new Color(0, 0, 0, 0);
+    }
+
+    @Override public void onFastTick() {
+        configDisplay.onFastTick();
+        double y = 0.04;
+        if (!module.isEnabled()) y *= -1;
+        animProg += y;
+        animProg = MathHelper.clamp(animProg, 0, 1);
     }
 
     static boolean nameMatches(String name, String search) {
@@ -559,19 +568,19 @@ class ModuleDisplay extends ClearButton implements FastTickable {
         return isGood;
     }
 
-    @Override public void onFastTick() {
-        configDisplay.onFastTick();
-    }
-
     @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (isOnButton(mouseX, mouseY)) {
+        double animProg = Transitions.easeOutExpo(this.animProg);
+        boolean onButton = isOnButton(mouseX, mouseY);
+        double absX = Utils.Mouse.getMouseX();
+        double absY = Utils.Mouse.getMouseY();
+        if (!(absX > SOURCE_X && absX < SOURCE_X + MAX_WIDTH && absY > SOURCE_Y && absY < SOURCE_Y + MAX_HEIGHT))
+            onButton = false;
+        if (onButton) {
             ClickGUIScreen.getInstance().renderDescription(module.getDescription());
         }
-        Color toUse = isOnButton(mouseX, mouseY) ? active : inactive;
+        Color toUse = onButton ? active : inactive;
         Renderer.R2D.fill(matrices, toUse, this.x, this.y, this.x + width, this.y + height);
-        if (module.isEnabled()) {
-            Renderer.R2D.fill(matrices, Utils.getCurrentRGB(), this.x, this.y, this.x + 1, this.y + height);
-        }
+        Renderer.R2D.fill(matrices, Utils.getCurrentRGB(), this.x, this.y, this.x + 1, this.y + (animProg * height));
         double centerY = this.y + this.height / 2d;
         int color = getInstance().searchTerm.isEmpty() || nameMatches(module.getName(), getInstance().searchTerm) ? 0xFFFFFF : 0x555555;
         Atomic.fontRenderer.drawString(matrices, text, this.x + 5, centerY - 4, color);
@@ -586,6 +595,10 @@ class ModuleDisplay extends ClearButton implements FastTickable {
             configDisplay.mouseClicked(Utils.Mouse.getMouseX(), Utils.Mouse.getMouseY(), button); // using absolute values here
         }
         boolean v = super.mouseClicked(mouseX, mouseY, button);
+        double absX = Utils.Mouse.getMouseX();
+        double absY = Utils.Mouse.getMouseY();
+        if (!(absX > SOURCE_X && absX < SOURCE_X + MAX_WIDTH && absY > SOURCE_Y && absY < SOURCE_Y + MAX_HEIGHT))
+            return false;
         if (v && button == 0) module.toggle();
         else return v && button == 1;
         return false;

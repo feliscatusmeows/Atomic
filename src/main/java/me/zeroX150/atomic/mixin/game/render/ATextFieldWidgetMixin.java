@@ -56,7 +56,6 @@ public abstract class ATextFieldWidgetMixin extends ClickableWidget {
             isSpecial = true;
             this.setDrawsBackground(false);
             this.setEditableColor(0xFFFFFF);
-
         }
     }
 

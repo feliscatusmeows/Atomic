@@ -66,6 +66,7 @@ import me.zeroX150.atomic.feature.module.impl.movement.Flight;
 import me.zeroX150.atomic.feature.module.impl.movement.IgnoreWorldBorder;
 import me.zeroX150.atomic.feature.module.impl.movement.InventoryWalk;
 import me.zeroX150.atomic.feature.module.impl.movement.Jesus;
+import me.zeroX150.atomic.feature.module.impl.movement.LongJump;
 import me.zeroX150.atomic.feature.module.impl.movement.MoonGravity;
 import me.zeroX150.atomic.feature.module.impl.movement.NoFall;
 import me.zeroX150.atomic.feature.module.impl.movement.NoJumpCooldown;
@@ -239,6 +240,7 @@ public class ModuleRegistry {
         modules.add(new NoLevitation());
         modules.add(new EntityFullbright());
         modules.add(new EdgeJump());
+        modules.add(new LongJump());
 
         modules.sort(Comparator.comparingDouble(value -> -Atomic.fontRenderer.getStringWidth(value.getName())));
     }

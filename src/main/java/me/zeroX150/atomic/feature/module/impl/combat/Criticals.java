@@ -7,8 +7,10 @@ package me.zeroX150.atomic.feature.module.impl.combat;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.Module;
+import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.MultiValue;
+import me.zeroX150.atomic.feature.module.impl.movement.NoFall;
 import me.zeroX150.atomic.helper.event.EventType;
 import me.zeroX150.atomic.helper.event.Events;
 import me.zeroX150.atomic.helper.event.events.PacketEvent;
@@ -27,6 +29,7 @@ public class Criticals extends Module {
             if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
             if (event.getPacket() instanceof PlayerInteractEntityC2SPacket && this.isEnabled()) {
                 Vec3d ppos = Atomic.client.player.getPos();
+                ModuleRegistry.getByClass(NoFall.class).enabled = false; // disable nofall modifying packets when we send these
                 switch (mode.getValue().toLowerCase()) {
                     case "packet" -> {
                         PlayerMoveC2SPacket.PositionAndOnGround p1 = new PlayerMoveC2SPacket.PositionAndOnGround(ppos.x, ppos.y + 0.2, ppos.z, true);
@@ -45,6 +48,7 @@ public class Criticals extends Module {
                         Atomic.client.getNetworkHandler().sendPacket(p6);
                     }
                 }
+                ModuleRegistry.getByClass(NoFall.class).enabled = true; // re-enable nofall
             }
         });
 

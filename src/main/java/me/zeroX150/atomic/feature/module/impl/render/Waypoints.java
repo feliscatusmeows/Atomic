@@ -94,8 +94,10 @@ public class Waypoints extends Module {
                         current.get("name").getAsString());
                 waypoints.add(w);
             }
-        } catch (IOException e) {
-            Atomic.log(Level.ERROR, "Failed to read waypoints file!");
+        } catch (Exception e) {
+            Atomic.log(Level.ERROR, "Failed to read waypoints file! Is it corrupted?");
+            boolean s = WAYPOINTS_FILE.delete();
+            if (!s) Atomic.log(Level.ERROR, "Also failed to delete the file, what is going on?");
         }
     }
 

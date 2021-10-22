@@ -5,7 +5,9 @@
 
 package me.zeroX150.atomic.mixin.game.entity;
 
+import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
+import me.zeroX150.atomic.feature.module.impl.movement.LongJump;
 import me.zeroX150.atomic.feature.module.impl.movement.Squake;
 import me.zeroX150.atomic.helper.event.EventType;
 import me.zeroX150.atomic.helper.event.Events;
@@ -90,5 +92,12 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IsJumpin
     @Inject(at = @At("RETURN"), method = "handleFallDamage(FFLnet/minecraft/entity/damage/DamageSource;)Z")
     private void postHandleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         if (!world.isClient) velocityModified = velocityHack;
+    }
+
+    @Inject(method = "jump", at = @At("RETURN"))
+    void r(CallbackInfo ci) {
+        if (!this.equals(Atomic.client.player)) return;
+        if (ModuleRegistry.getByClass(LongJump.class).isEnabled())
+            ModuleRegistry.getByClass(LongJump.class).applyLongJumpVelocity();
     }
 }
