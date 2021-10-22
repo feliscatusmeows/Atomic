@@ -40,7 +40,7 @@ or [here](https://github.com/cornos/Atomic/raw/master/builds/latest.jar) for a d
 The default launcher should already choose java 16 for the runtime, so you're free from steps 1-3
 
 1. Install [fabric](https://fabricmc.net/use/) for 1.17
-2. Drag the .jar into the `%appdata%/.minecraft/mods` folder, no libraries required
+2. Drag the .jar into the `%appdata%/.minecraft/mods` folder, Fabric API is required
 3. Launch fabric loader for 1.17 via the minecraft launcher
 
 ### Mac
