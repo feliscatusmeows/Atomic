@@ -11,7 +11,7 @@ a bit stale, so I decided to start this.
 
 ## Support
 
-[discor](https://discord.gg/rvk4YjszQx)
+0x150 the 2nd#0194, old discord got memed literally a few mins ago
 
 ## Downloading
 
