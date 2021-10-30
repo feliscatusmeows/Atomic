@@ -7,6 +7,7 @@ package me.zeroX150.atomic.feature.gui.screen;
 
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.zeroX150.atomic.Atomic;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Transitions;
 import net.minecraft.SharedConstants;
@@ -71,7 +72,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
                 List<String> splitContent = new ArrayList<>();
                 StringBuilder line = new StringBuilder();
                 for (char c : s.toCharArray()) {
-                    if (Atomic.monoFontRenderer.getStringWidth(line + " " + c) >= maxWidth) {
+                    if (FontRenderers.mono.getStringWidth(line + " " + c) >= maxWidth) {
                         splitContent.add(line.toString());
                         line = new StringBuilder();
                     }
@@ -100,7 +101,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
                     List<String> splitContent = new ArrayList<>();
                     StringBuilder line = new StringBuilder();
                     for (char c : s.toCharArray()) {
-                        if (Atomic.monoFontRenderer.getStringWidth(line + " " + c) >= maxWidth) {
+                        if (FontRenderers.mono.getStringWidth(line + " " + c) >= maxWidth) {
                             splitContent.add(line.toString());
                             line = new StringBuilder();
                         }
@@ -124,7 +125,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
                         List<String> splitContent = new ArrayList<>();
                         StringBuilder line = new StringBuilder();
                         for (char c : s.toCharArray()) {
-                            if (Atomic.monoFontRenderer.getStringWidth(line + " " + c) >= maxWidth) {
+                            if (FontRenderers.mono.getStringWidth(line + " " + c) >= maxWidth) {
                                 splitContent.add(line.toString());
                                 line = new StringBuilder();
                             }
@@ -156,7 +157,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
                     List<String> splitContent = new ArrayList<>();
                     StringBuilder line = new StringBuilder();
                     for (char c : s.toCharArray()) {
-                        if (Atomic.monoFontRenderer.getStringWidth(line + " " + c) >= maxWidth) {
+                        if (FontRenderers.mono.getStringWidth(line + " " + c) >= maxWidth) {
                             splitContent.add(line.toString());
                             line = new StringBuilder();
                         }
@@ -198,7 +199,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
         if (System.currentTimeMillis() - lastMsgDisplay > 6000) {
             errorMessage = "";
         }
-        Atomic.fontRenderer.drawString(matrices, errorMessage, 5, 1, 0xFFFFFF);
+        FontRenderers.normal.drawString(matrices, errorMessage, 5, 1, 0xFFFFFF);
         List<String> lines = new ArrayList<>(this.lines); // to make a backup for rendering
         if (lines.size() == 0) {
             lines.add("{");
@@ -213,15 +214,15 @@ public class NbtEditScreen extends Screen implements FastTickable {
         Renderer.R2D.fill(matrices, new Color(0, 0, 0, 100), 5, 11, width - 110, 11 + height);
         int yOffset = 12;
         for (String line : lines) {
-            Atomic.monoFontRenderer.drawString(matrices, line, 6, yOffset, 0xFFFFFF);
-            yOffset += 10;
+            FontRenderers.mono.drawString(matrices, line, 6, yOffset, 0xFFFFFF);
+            yOffset += FontRenderers.mono.getFontHeight() + 1;
         }
         double rCX;
         double rCY;
         if (lines.size() != 0) {
             cursorY = MathHelper.clamp(cursorY, 0, lines.size() - 1); // start from 0 here, gotta shift everything down
             cursorX = MathHelper.clamp(cursorX, 0, lines.get(cursorY).length()); // start from 1 here because fucking substring
-            rCX = Atomic.monoFontRenderer.getStringWidth(lines.get(cursorY).substring(0, cursorX));
+            rCX = FontRenderers.mono.getStringWidth(lines.get(cursorY).substring(0, cursorX));
             rCY = cursorY * LINE_HEIGHT;
         } else {
             cursorY = cursorX = 0;

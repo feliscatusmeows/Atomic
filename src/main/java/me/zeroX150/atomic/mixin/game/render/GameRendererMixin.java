@@ -25,7 +25,7 @@ import java.util.Objects;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
-    final Module noRender = ModuleRegistry.getByClass(NoRender.class);
+    Module noRender;
     private boolean vb;
     private boolean dis;
 
@@ -48,6 +48,7 @@ public class GameRendererMixin {
 
     @Inject(method = "bobViewWhenHurt", at = @At("HEAD"), cancellable = true)
     public void hurtCam(MatrixStack matrices, float f, CallbackInfo ci) {
+        if (noRender == null) noRender = ModuleRegistry.getByClass(NoRender.class);
         if (Objects.requireNonNull(noRender).isEnabled() && NoRender.hurtAnimation.getValue()) ci.cancel();
     }
 

@@ -8,9 +8,11 @@ package me.zeroX150.atomic.feature.gui.screen;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.zeroX150.atomic.Atomic;
+import me.zeroX150.atomic.feature.gui.clickgui.ClickGUIScreen;
 import me.zeroX150.atomic.feature.gui.overlay.WelcomeOverlay;
 import me.zeroX150.atomic.feature.gui.particles.FlowParticleManager;
 import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.util.Utils;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -24,16 +26,28 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
+import org.apache.commons.io.IOUtils;
 import org.lwjgl.opengl.GL11;
+
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public class HomeScreen extends Screen {
     static boolean shownWelcome = false;
     final FlowParticleManager pm = new FlowParticleManager(100);
-    final String t = "Atomic, made by ";
+    String t;
     boolean isMeteorLoaded = false;
 
     public HomeScreen() {
         super(Text.of("a"));
+        InputStream is = HomeScreen.class.getClassLoader().getResourceAsStream("VERSION");
+        try {
+            String version = IOUtils.toString(Objects.requireNonNull(is), StandardCharsets.UTF_8);
+            t = "Atomic b" + version + ", made by ";
+        } catch (Exception ignored) {
+            t = "Atomic (build unknown), made by ";
+        }
     }
 
     @Override
@@ -47,7 +61,7 @@ public class HomeScreen extends Screen {
         addDrawableChild(createCentered("Realms", height / 2, button -> Atomic.client.setScreen(new RealmsMainScreen(this))));
         addDrawableChild(new ButtonWidget(width / 2 - 75, height / 2 + 25, 70, 20, Text.of("Options"), button -> Atomic.client.setScreen(new OptionsScreen(this, Atomic.client.options))));
         addDrawableChild(new ButtonWidget(width / 2 + 5, height / 2 + 25, 70, 20, Text.of("Quit"), button -> Atomic.client.stop()));
-        addDrawableChild(new ButtonWidget(width / 2 - (150 / 2), height / 2 + 25 + 25, 150, 20, Text.of("Alts"), button -> Atomic.client.setScreen(new AltManagerScreen())));
+        addDrawableChild(new ButtonWidget(width / 2 - (150 / 2), height / 2 + 25 + 25, 150, 20, Text.of("Alts"), button -> Atomic.client.setScreen(NewAltManagerScreen.getInstance())));
         addDrawableChild(new ButtonWidget(1, 1, 130, 20, Text.of("Vanilla home screen"), button -> {
             ClientConfig.customMainMenu.setValue(false);
             Atomic.client.setScreen(null);
@@ -86,11 +100,8 @@ public class HomeScreen extends Screen {
         drawTexture(matrices, (int) (width / 2 - (504 * logoSize / 2)), 10, 0, 0, 0, (int) (504 * logoSize), (int) (130 * logoSize), (int) (130 * logoSize), (int) (504 * logoSize));
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
-        if (isMeteorLoaded) {
-            Atomic.fontRenderer.drawString(matrices, "Fuck meteor edition", 1, 1, 0xFFFFFF);
-        }
-        Atomic.fontRenderer.drawString(matrices, t, 1, height - 10, 0xFFFFFF);
-        Atomic.fontRenderer.drawString(matrices, "0x150", 1 + Atomic.fontRenderer.getStringWidth(t), height - 10, Utils.getCurrentRGB().getRGB());
+        FontRenderers.normal.drawString(matrices, t, 1, height - FontRenderers.normal.getFontHeight(), 0xFFFFFF);
+        FontRenderers.normal.drawString(matrices, "0x150", 1 + FontRenderers.normal.getStringWidth(t), height - FontRenderers.normal.getFontHeight(), Utils.getCurrentRGB().getRGB());
         super.render(matrices, mouseX, mouseY, delta);
     }
 
@@ -100,8 +111,8 @@ public class HomeScreen extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        float width = Atomic.fontRenderer.getStringWidth(t);
-        float mwidth = width + Atomic.fontRenderer.getStringWidth("0x150");
+        float width = FontRenderers.normal.getStringWidth(t);
+        float mwidth = width + FontRenderers.normal.getStringWidth("0x150");
         float h = height - 10;
         float m = height - 1;
         if (mouseX >= width && mouseX <= mwidth && mouseY >= h && mouseY <= m) {

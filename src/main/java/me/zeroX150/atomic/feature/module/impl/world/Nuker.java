@@ -25,7 +25,10 @@ import net.minecraft.util.math.Vec3d;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Nuker extends Module {
     final List<BlockPos> renders = new ArrayList<>();
@@ -47,6 +50,8 @@ public class Nuker extends Module {
             Blocks.STRIPPED_DARK_OAK_LOG,
             Blocks.STRIPPED_JUNGLE_LOG, Blocks.STRIPPED_OAK_LOG, Blocks.STRIPPED_SPRUCE_LOG
     };
+    MultiValue mv = (MultiValue) this.config.create("Sort", "Out -> In", "Out -> In", "In -> Out", "Strength", "Random").description("How to sort");
+    BooleanValue ignoreUnbreakable = (BooleanValue) this.config.create("Ignore unbreakable", true).description("Ignore survival unbreakable blocks");
     int delayPassed = 0;
 
     public Nuker() {
@@ -76,30 +81,61 @@ public class Nuker extends Module {
         BlockPos ppos1 = Atomic.client.player.getBlockPos();
         int blocksBroken = 0;
         renders.clear();
+        List<BlockPos> toHit = new ArrayList<>();
         for (double y = range.getValue(); y > -range.getValue() - 1; y--) {
             for (double x = -range.getValue(); x < range.getValue() + 1; x++) {
                 for (double z = -range.getValue(); z < range.getValue() + 1; z++) {
-                    if (blocksBroken >= blocksPerTick.getValue()) break;
                     BlockPos vp = new BlockPos(x, y, z);
                     BlockPos np = ppos1.add(vp);
-                    Vec3d vp1 = new Vec3d(np.getX(), np.getY(), np.getZ());
-                    if (vp1.distanceTo(Atomic.client.player.getPos()) >= Atomic.client.interactionManager.getReachDistance() - 0.2)
+                    Vec3d vp1 = Vec3d.of(np).add(.5, .5, .5);
+                    if (vp1.distanceTo(Atomic.client.player.getEyePos()) >= Atomic.client.interactionManager.getReachDistance())
                         continue;
-                    BlockState bs = Atomic.client.world.getBlockState(np);
-                    boolean b = !ignoreXray.getValue() || !XRAY.blocks.contains(bs.getBlock());
-                    if (!bs.isAir() && bs.getBlock() != Blocks.WATER && bs.getBlock() != Blocks.LAVA && bs.getBlock() != Blocks.BEDROCK && b && Atomic.client.world.getWorldBorder().contains(np) && isBlockApplicable(bs.getBlock())) {
-                        renders.add(np);
-                        if (autoTool.getValue()) AutoTool.pick(bs);
-                        Atomic.client.player.swingHand(Hand.MAIN_HAND);
-                        if (!Atomic.client.player.getAbilities().creativeMode) {
-                            Atomic.client.interactionManager.updateBlockBreakingProgress(np, Direction.DOWN);
-                        } else Atomic.client.interactionManager.attackBlock(np, Direction.DOWN);
-                        Rotations.lookAtV3(new Vec3d(np.getX() + .5, np.getY() + .5, np.getZ() + .5));
-                        blocksBroken++;
-                    }
+                    toHit.add(np);
                 }
             }
         }
+        toHit = toHit.stream().sorted(Comparator.comparingDouble(value1 -> {
+            Vec3d value = Vec3d.of(value1).add(new Vec3d(.5, .5, .5));
+            return switch (mv.getValue().toLowerCase()) {
+                case "out -> in":
+                    yield value.distanceTo(Atomic.client.player.getPos()) * -1;
+                case "in -> out":
+                    yield value.distanceTo(Atomic.client.player.getPos());
+                case "strength":
+                    yield Atomic.client.world.getBlockState(value1).getBlock().getHardness();
+                default:
+                    yield 1;
+            };
+        })).collect(Collectors.toList());
+        if (mv.getValue().equals("Random")) {
+            Collections.shuffle(toHit);
+        }
+        for (BlockPos np : toHit) {
+            if (blocksBroken >= blocksPerTick.getValue()) break;
+            BlockState bs = Atomic.client.world.getBlockState(np);
+            boolean b = !ignoreXray.getValue() || !XRAY.blocks.contains(bs.getBlock());
+            if (!bs.isAir()
+                    && bs.getBlock() != Blocks.WATER
+                    && bs.getBlock() != Blocks.LAVA
+                    && !isUnbreakable(bs.getBlock())
+                    && b
+                    && Atomic.client.world.getWorldBorder().contains(np)
+                    && isBlockApplicable(bs.getBlock())) {
+                renders.add(np);
+                if (autoTool.getValue()) AutoTool.pick(bs);
+                Atomic.client.player.swingHand(Hand.MAIN_HAND);
+                if (!Atomic.client.player.getAbilities().creativeMode) {
+                    Atomic.client.interactionManager.updateBlockBreakingProgress(np, Direction.DOWN);
+                } else Atomic.client.interactionManager.attackBlock(np, Direction.DOWN);
+                Rotations.lookAtV3(new Vec3d(np.getX() + .5, np.getY() + .5, np.getZ() + .5));
+                blocksBroken++;
+            }
+        }
+    }
+
+    boolean isUnbreakable(Block b) {
+        if (!ignoreUnbreakable.getValue()) return false;
+        return b.getHardness() == -1;
     }
 
     @Override

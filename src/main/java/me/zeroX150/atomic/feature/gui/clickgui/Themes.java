@@ -5,37 +5,50 @@
 
 package me.zeroX150.atomic.feature.gui.clickgui;
 
+import me.zeroX150.atomic.feature.module.impl.render.ClickGUI;
+import me.zeroX150.atomic.helper.util.Transitions;
+
 import java.awt.Color;
 
 public class Themes {
     public static Themes.Palette currentActiveTheme = Themes.Theme.ATOMIC.getPalette();
+
+    private static Palette getActivePalette() {
+        return switch (ClickGUI.theme.getValue()) {
+            case "Dark" -> Theme.DARK.getPalette();
+            case "Custom" -> new Palette(ClickGUI.cCategories.getColor(), ClickGUI.cModules.getColor(), ClickGUI.cConfig.getColor(), ClickGUI.cFont.getColor(), ClickGUI.cOpacity.getValue());
+            default -> Theme.ATOMIC.getPalette();
+        };
+    }
+
+    public static void tickThemes() {
+        Palette newTheme = getActivePalette();
+        currentActiveTheme = new Palette(
+                Transitions.transition(currentActiveTheme.left, newTheme.left, 7),
+                Transitions.transition(currentActiveTheme.center, newTheme.center, 7),
+                Transitions.transition(currentActiveTheme.right, newTheme.right, 7),
+                Transitions.transition(currentActiveTheme.fontColor, newTheme.fontColor, 7),
+                Transitions.transition(currentActiveTheme.backgroundOpacity, newTheme.backgroundOpacity, 7)
+        );
+    }
+
     public enum Theme {
         ATOMIC(
                 new Palette(
-                        new Color(17, 17, 17, 220),
-                        new Color(40, 40, 40, 220),
-                        new Color(0, 194, 111, 220),
-                        new Color(38, 38, 38, 255),
-                        new Color(49, 49, 49, 255),
-                        Color.WHITE, Color.WHITE, 4, 2, true, 9)),
-        SIGMA(
-                new Palette(
-                        new Color(0xfafafa),
-                        new Color(0x28a6fc),
-                        new Color(0x28a6fc),
-                        new Color(0xf2f2f2),
-                        new Color(0xf2f2f2),
-                        new Color(10, 10, 10),
-                        new Color(0x7d7d7d),
-                        4, 0, false, 14)),
+                        new Color(37, 50, 56, 230),
+                        new Color(47, 60, 66, 230),
+                        new Color(23, 29, 32, 230),
+                        Color.WHITE,
+                        1d
+                )),
         DARK(
                 new Palette(
-                        new Color(10, 10, 10, 220),
-                        new Color(30, 30, 30, 220),
-                        new Color(255, 255, 255, 220),
-                        new Color(20, 20, 20, 255),
-                        new Color(25, 25, 25, 255),
-                        Color.WHITE, Color.WHITE, 4, 1, true, 9)
+                        new Color(44, 43, 43, 255),
+                        new Color(31, 31, 31, 255),
+                        new Color(17, 17, 17, 255),
+                        Color.WHITE,
+                        1d
+                )
         );
         final Palette p;
 
@@ -48,9 +61,7 @@ public class Themes {
         }
     }
 
-    public static record Palette(Color inactive, Color active, Color l_highlight, Color h_ret, Color h_exp,
-                                 Color fontColor, Color titleColor, double h_margin, double h_paddingX,
-                                 boolean centerText, double titleHeight) {
+    public static record Palette(Color left, Color center, Color right, Color fontColor, double backgroundOpacity) {
 
     }
 }

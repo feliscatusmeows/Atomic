@@ -16,7 +16,8 @@ import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.helper.event.EventType;
 import me.zeroX150.atomic.helper.event.Events;
-import me.zeroX150.atomic.helper.render.Color;
+import me.zeroX150.atomic.helper.font.FontRenderers;
+import me.zeroX150.atomic.helper.render.CustomColor;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.gui.hud.BackgroundHelper;
@@ -136,20 +137,20 @@ public class Waypoints extends Module {
             int b = BackgroundHelper.ColorMixer.getBlue(waypoint.color);
             Vec3d vv = new Vec3d(waypoint.posX + .5, c.getPos().y, waypoint.posZ + .5);
             if (tracers.getValue())
-                Renderer.R3D.line(vv, Renderer.R3D.getCrosshairVector(), new Color(r, g, b), matrices);
+                Renderer.R3D.line(vv, Renderer.R3D.getCrosshairVector(), new CustomColor(r, g, b), matrices);
             Vec3d screenSpaceCenter = Renderer.R2D.getScreenSpaceCoordinate(vv);
             double distance = vv.distanceTo(ppos);
             int a = 255;
             if (distance < 10) {
                 a = (int) ((distance / 10) * 255);
             }
-            Renderer.R3D.renderFilled(v, new Vec3d(1, Atomic.client.world.getHeight(), 1), new Color(r, g, b, a), matrices);
+            Renderer.R3D.renderFilled(v, new Vec3d(1, Atomic.client.world.getHeight(), 1), new CustomColor(r, g, b, a), matrices);
             if (Renderer.R2D.isOnScreen(screenSpaceCenter)) {
                 Utils.TickManager.runOnNextRender(() -> {
-                    float w = Atomic.monoFontRenderer.getStringWidth(waypoint.name);
+                    float w = FontRenderers.mono.getStringWidth(waypoint.name);
                     float pad = 2;
-                    Renderer.R2D.fill(Themes.Theme.ATOMIC.getPalette().inactive(), screenSpaceCenter.x - w / 2 - pad, screenSpaceCenter.y - pad, screenSpaceCenter.x + w / 2 + pad, screenSpaceCenter.y + 8 + pad);
-                    Atomic.monoFontRenderer.drawCenteredString(Renderer.R3D.getEmptyMatrixStack(), waypoint.name, screenSpaceCenter.x, screenSpaceCenter.y, 0xFFFFFF);
+                    Renderer.R2D.fill(Themes.Theme.ATOMIC.getPalette().left(), screenSpaceCenter.x - w / 2 - pad, screenSpaceCenter.y - pad, screenSpaceCenter.x + w / 2 + pad, screenSpaceCenter.y + FontRenderers.mono.getFontHeight() + pad);
+                    FontRenderers.mono.drawCenteredString(Renderer.R3D.getEmptyMatrixStack(), waypoint.name, screenSpaceCenter.x, screenSpaceCenter.y, 0xFFFFFF);
                 });
             }
         }

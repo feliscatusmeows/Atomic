@@ -10,6 +10,7 @@ import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.feature.module.config.DynamicValue;
+import me.zeroX150.atomic.feature.module.config.MultiValue;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
 import me.zeroX150.atomic.helper.keybind.Keybind;
 import me.zeroX150.atomic.helper.util.Rotations;
@@ -22,15 +23,24 @@ import java.util.Objects;
 
 public class FreeLook extends Module {
     final BooleanValue hold = (BooleanValue) this.config.create("Hold", true).description("Whether or not to disable the module when the keybind is unpressed");
-    final BooleanValue spin = (BooleanValue) this.config.create("Spinbot", false).description("hvh toggle rage nn noob");
-    final SliderValue spinSpeed = this.config.create("Spin Speed", 1f, 0.1f, 6f, 1);
+    final BooleanValue enableAA = (BooleanValue) this.config.create("Enable Anti-Aim", false).description("hvh toggle rage nn noob");
+    final MultiValue aaMode = this.config.create("AA mode", "Spin", "Spin", "Jitter", "Sway");
+    final SliderValue aaSpeed = this.config.create("Anti-Aim Speed", 1f, 0.1f, 6f, 1);
+    final SliderValue jitterRange = this.config.create("Jitter Range", 90, 15, 90, 0);
+    final SliderValue swayRange = this.config.create("Sway Range", 45, 15, 60, 0);
     Perspective before = Perspective.FIRST_PERSON;
     float newyaw, newpitch, oldyaw, oldpitch;
     Keybind kb;
 
+    int jittertimer = 0;
+    int swayYaw = 0;
+
     public FreeLook() {
         super("Free Look", "looks around yourself without you looking", ModuleType.RENDER);
-        spinSpeed.showOnlyIf(spin::getValue);
+        aaMode.showOnlyIf(enableAA::getValue);
+        aaSpeed.showOnlyIf(() -> !aaMode.getValue().equals("Jitter") && enableAA.getValue());
+        jitterRange.showOnlyIf(() -> aaMode.getValue().equals("Jitter") && enableAA.getValue());
+        swayRange.showOnlyIf(() -> aaMode.getValue().equals("Sway") && enableAA.getValue());
     }
 
     @Override
@@ -49,7 +59,7 @@ public class FreeLook extends Module {
         oldyaw = Objects.requireNonNull(Atomic.client.player).getYaw();
         oldpitch = Atomic.client.player.getPitch();
         newyaw = Atomic.client.player.getYaw();
-        if (spin.getValue()) newpitch = 90;
+        if (enableAA.getValue()) newpitch = 90;
         else newpitch = Atomic.client.player.getPitch();
     }
 
@@ -77,8 +87,25 @@ public class FreeLook extends Module {
 
     @Override
     public void onFastTick() {
-        if (!spin.getValue()) return;
-        newyaw = (float) MathHelper.wrapDegrees(newyaw + spinSpeed.getValue());
+        if (!enableAA.getValue()) return;
+        if (aaMode.getValue().equals("Spin")) newyaw = (float) MathHelper.wrapDegrees(newyaw + aaSpeed.getValue());
+        else if (aaMode.getValue().equals("Jitter")) {
+            int temp = (int) (jitterRange.getValue() + 0);
+            if (jittertimer == 1)
+                temp *= -1;
+            if (jittertimer >= 1)
+                jittertimer = -1;
+            jittertimer++;
+            newyaw = MathHelper.wrapDegrees(Atomic.client.player.getYaw() + 180 + temp);
+        } else if (aaMode.getValue().equals("Sway")) {
+            int temp = swayYaw;
+            if (temp >= swayRange.getValue() * 2)
+                temp = (int) (swayRange.getValue() + 0) - (swayYaw - (int) (swayRange.getValue() * 2));
+            else temp = (int) (swayRange.getValue() * -1) + swayYaw;
+            if (swayYaw >= swayRange.getValue() * 4) swayYaw = 0;
+            swayYaw += aaSpeed.getValue();
+            newyaw = MathHelper.wrapDegrees(Atomic.client.player.getYaw() + 180 + temp);
+        }
         Objects.requireNonNull(Atomic.client.getNetworkHandler()).sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(newyaw, newpitch, Objects.requireNonNull(Atomic.client.player).isOnGround()));
     }
 }

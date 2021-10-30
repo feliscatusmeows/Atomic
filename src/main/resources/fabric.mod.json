@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "atomic",
-  "version": "${version}",
+  "version": "1.0.0",
   "name": "Atomic client",
   "description": "based client for 1.17",
   "authors": [

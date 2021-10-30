@@ -7,36 +7,36 @@ package me.zeroX150.atomic.helper.render;
 
 import me.zeroX150.atomic.helper.util.Utils;
 
-@SuppressWarnings("unused") public class Color extends java.awt.Color {
+@SuppressWarnings("unused") public class CustomColor extends java.awt.Color {
     final int alpha;
     private boolean isChroma = false;
 
-    public Color(int r, int g, int b, boolean isChroma) {
+    public CustomColor(int r, int g, int b, boolean isChroma) {
         this(r, g, b);
         this.isChroma = isChroma;
     }
 
-    public Color(int r, int g, int b) {
+    public CustomColor(int r, int g, int b) {
         super(r, g, b);
         alpha = 255;
     }
 
-    public Color(int r, int g, int b, int a, boolean isChroma) {
+    public CustomColor(int r, int g, int b, int a, boolean isChroma) {
         this(r, g, b, a);
         this.isChroma = isChroma;
     }
 
-    public Color(int r, int g, int b, int a) {
+    public CustomColor(int r, int g, int b, int a) {
         super(r, g, b, a);
         alpha = a;
     }
 
-    public Color(int rgb, boolean isChroma) {
+    public CustomColor(int rgb, boolean isChroma) {
         this(rgb);
         this.isChroma = isChroma;
     }
 
-    public Color(int rgb) {
+    public CustomColor(int rgb) {
         super(rgb);
         alpha = (rgb >> 24) & 0xFF;
     }
@@ -53,7 +53,7 @@ import me.zeroX150.atomic.helper.util.Utils;
     public int getRGB() {
         if (isChroma) {
             java.awt.Color chroma = Utils.getCurrentRGB();
-            return new Color(chroma.getRed(), chroma.getGreen(), chroma.getBlue(), alpha).getRGB();
+            return new CustomColor(chroma.getRed(), chroma.getGreen(), chroma.getBlue(), alpha).getRGB();
         }
         return super.getRGB();
     }

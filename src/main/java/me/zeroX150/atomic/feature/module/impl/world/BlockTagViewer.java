@@ -8,7 +8,8 @@ package me.zeroX150.atomic.feature.module.impl.world;
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
-import me.zeroX150.atomic.helper.render.Color;
+import me.zeroX150.atomic.helper.font.FontRenderers;
+import me.zeroX150.atomic.helper.render.CustomColor;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Transitions;
 import net.minecraft.block.BlockState;
@@ -92,7 +93,7 @@ public class BlockTagViewer extends Module {
     @Override
     public void onHudRender() {
         List<Entry> l = new ArrayList<>(entries);
-        l.sort(Comparator.comparingDouble(value -> -Atomic.monoFontRenderer.getStringWidth(value.v)));
+        l.sort(Comparator.comparingDouble(value -> -FontRenderers.mono.getStringWidth(value.v)));
         entries = l;
         if (l.isEmpty()) return;
         float w = Atomic.client.getWindow().getScaledWidth() / 2f;
@@ -103,7 +104,7 @@ public class BlockTagViewer extends Module {
         float r = 0;
         for (Entry entry : l) {
             if (!entry.removed) {
-                r = Atomic.monoFontRenderer.getStringWidth(entry.v) + 4;
+                r = FontRenderers.mono.getStringWidth(entry.v) + 4;
                 break;
             }
         }
@@ -116,10 +117,10 @@ public class BlockTagViewer extends Module {
         for (Entry entry : l.toArray(new Entry[0])) {
             s.push();
             double prog = e(entry.animProg);
-            double c = prog * 10;
+            double c = prog * FontRenderers.mono.getFontHeight();
             s.scale(1, (float) prog, 1);
-            Renderer.R2D.fill(s, new Color(0, 0, 0, (int) (prog * 100)), 0, 0, mw, 10);
-            Atomic.monoFontRenderer.drawString(s, entry.v, 2, 0.5f, new Color(255, 255, 255, (int) (prog * 255)).getRGB());
+            Renderer.R2D.fill(s, new CustomColor(0, 0, 0, (int) (prog * 100)), 0, 0, mw, 10);
+            FontRenderers.mono.drawString(s, entry.v, 2, 0.5f, new CustomColor(255, 255, 255, (int) (prog * 255)).getRGB());
             s.pop();
             s.translate(0, c, 0);
         }

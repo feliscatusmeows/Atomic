@@ -19,8 +19,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Objects;
-
 @Mixin(ClientConnection.class)
 public class ClientConnectionMixin {
     @Inject(method = "handlePacket", at = @At("HEAD"), cancellable = true)
@@ -30,7 +28,7 @@ public class ClientConnectionMixin {
 
     @Inject(method = "exceptionCaught", at = @At("HEAD"), cancellable = true)
     public void exceptionCaught(ChannelHandlerContext context, Throwable ex, CallbackInfo ci) {
-        if (Objects.requireNonNull(ModuleRegistry.getByClass(AntiPacketKick.class)).isEnabled()) ci.cancel();
+        if (ModuleRegistry.getByClass(AntiPacketKick.class).isEnabled()) ci.cancel();
     }
 
     @Inject(method = "send(Lnet/minecraft/network/Packet;)V", cancellable = true, at = @At("HEAD"))

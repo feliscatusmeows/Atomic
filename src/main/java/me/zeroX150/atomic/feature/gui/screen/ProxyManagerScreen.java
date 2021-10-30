@@ -7,6 +7,7 @@ package me.zeroX150.atomic.feature.gui.screen;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.clickgui.Themes;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Transitions;
 import net.minecraft.client.gui.DrawableHelper;
@@ -113,9 +114,9 @@ public class ProxyManagerScreen extends Screen implements FastTickable {
         matrices.translate(pw, ph, 0);
         matrices.scale((float) m, (float) m, 1);
         DrawableHelper.fill(matrices, 0, 0, width, height, new Color(0, 0, 0, 50).getRGB());
-        DrawableHelper.fill(matrices, getW() - 100, getH() - 75, getW() + 100, getH() + 75, Renderer.Util.modify(Themes.currentActiveTheme.inactive(), -1, -1, -1, 170).getRGB());
+        DrawableHelper.fill(matrices, getW() - 100, getH() - 75, getW() + 100, getH() + 75, Renderer.Util.modify(Themes.currentActiveTheme.center(), -1, -1, -1, 170).getRGB());
 
-        Atomic.fontRenderer.drawCenteredString(matrices, "Proxy manager" + (currentProxy == null ? "" : " (Using proxy)"), getW(), getH() - 70, 0xFFFFFF);
+        FontRenderers.normal.drawCenteredString(matrices, "Proxy manager" + (currentProxy == null ? "" : " (Using proxy)"), getW(), getH() - 70, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
     }
 

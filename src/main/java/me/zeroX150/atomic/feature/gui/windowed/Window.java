@@ -8,6 +8,7 @@ package me.zeroX150.atomic.feature.gui.windowed;
 import com.google.common.collect.Lists;
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.screen.FastTickable;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Transitions;
 import net.minecraft.client.gui.Element;
@@ -86,9 +87,9 @@ public class Window implements FastTickable {
         stack.translate(posX, posY, 0);
 
         Renderer.R2D.fill(stack, new Color(20, 20, 20, 100), 0, 0, width, height); // frame
-        Atomic.fontRenderer.drawCenteredString(stack, title, width / 2, titlePadding, 0xFFFFFF); // title
+        FontRenderers.normal.drawCenteredString(stack, title, width / 2, titlePadding, 0xFFFFFF); // title
         if (isCloseable)
-            Atomic.fontRenderer.drawString(stack, "X", width - Atomic.fontRenderer.getStringWidth("X") - inset, titlePadding, 0xFFFFFF);
+            FontRenderers.normal.drawString(stack, "X", width - FontRenderers.normal.getStringWidth("X") - inset, titlePadding, 0xFFFFFF);
         Renderer.R2D.fill(stack, new Color(20, 20, 20, 20), inset, titlePadding * 2 + 8, width - inset, height - inset);
         stack.translate(inset, titlePadding * 2 + 8, 0);
 
@@ -131,7 +132,7 @@ public class Window implements FastTickable {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         boolean isInWindow = mouseX >= posX && mouseX <= posX + width && mouseY >= posY && mouseY <= posY + height;
         boolean isInContent = mouseX >= posX + inset && mouseX <= posX + width - inset && mouseY >= posY + titlePadding * 2 + 8 && mouseY <= posY + height - inset;
-        boolean isOnX = mouseX >= posX + width - Atomic.fontRenderer.getStringWidth("X") - inset && mouseX <= posX + width && mouseY >= posY + titlePadding && mouseY <= posY + titlePadding + 8;
+        boolean isOnX = mouseX >= posX + width - FontRenderers.normal.getStringWidth("X") - inset && mouseX <= posX + width && mouseY >= posY + titlePadding && mouseY <= posY + titlePadding + 8;
         if (isOnX && isCloseable) {
             discarded = true;
             return true;

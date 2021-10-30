@@ -5,74 +5,60 @@
 
 package me.zeroX150.atomic.feature.module.impl.render;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.feature.gui.clickgui.Themes;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
-import net.minecraft.client.render.entity.EntityRenderDispatcher;
+import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.opengl.GL11;
+import net.minecraft.util.math.Vec3d;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.awt.Color;
 
 public class NameTags extends Module {
-    final Map<UUID, Double> trackedProgress = new HashMap<>();
 
     public NameTags() {
         super("Name Tags", "big nametag.mp4", ModuleType.RENDER);
     }
 
-    public void renderTag(Entity entity, MatrixStack matrices, EntityRenderDispatcher dispatcher) {
-        RenderSystem.enableDepthTest();
-        RenderSystem.disableBlend();
-        RenderSystem.depthFunc(GL11.GL_ALWAYS);
-        if (Atomic.client.player == null) return;
-        double d = dispatcher.getSquaredDistanceToCamera(entity);
-        if (d > 4096) return;
-        if (entity.getUuid() == Atomic.client.player.getUuid()) return;
-        String name = entity.getEntityName();
-        float f = entity.getHeight() + 0.5f;
-        matrices.push();
-        float scale = 3f;
-        scale /= 50f;
-        scale *= 0.55f;
-        if (Atomic.client.player.distanceTo(entity) > 10) scale *= Atomic.client.player.distanceTo(entity) / 10;
-        matrices.translate(0, f + (scale * 6), 0f);
-        matrices.multiply(dispatcher.getRotation());
-        matrices.scale(-scale, -scale, scale);
-        int health = (int) ((PlayerEntity) entity).getHealth();
-        double hp = (((PlayerEntity) entity).getHealth() / ((PlayerEntity) entity).getMaxHealth());
-        hp = MathHelper.clamp(hp, 0, 1);
-        if (!trackedProgress.containsKey(entity.getUuid())) trackedProgress.put(entity.getUuid(), 0d);
-        String t = name + " ";
-        if (hp > 0.75) t += "§a";
-        else if (hp > 0.5) t += "§e";
-        else if (hp > 0.25) t += "§c";
-        else t += "§4";
-        t += health;
-        float width = Atomic.client.textRenderer.getWidth(t) / 2f;
-        double tp = trackedProgress.get(entity.getUuid());
-        double trackDiff = hp - tp;
-        trackDiff /= 10d;
-        tp += trackDiff;
-        RenderSystem.polygonOffset(1, -15000000);
-        RenderSystem.enablePolygonOffset();
-        Renderer.R2D.fill(matrices, Themes.Theme.ATOMIC.getPalette().active(), -width - 4, 8 + 2, width + 4, 1);
-        Renderer.R2D.fill(matrices, Themes.Theme.ATOMIC.getPalette().l_highlight(), -width - 4, 8 + 2, (width + 4) * (tp * 2 - 1), 8 + 1);
-        trackedProgress.put(entity.getUuid(), tp);
-        Atomic.client.textRenderer.draw(matrices, t, -Atomic.client.textRenderer.getWidth(t) / 2f, f - 0.75f, 0xFFFFFF);
-        matrices.pop();
-        RenderSystem.disableDepthTest();
-        RenderSystem.enableBlend();
-        RenderSystem.polygonOffset(1, 15000000);
-        RenderSystem.disablePolygonOffset();
+    public boolean renderTag(Entity entity, MatrixStack stack) {
+        if (!(entity instanceof LivingEntity le)) return false;
+        if (Atomic.client.player == null || entity.isInvisible() || !entity.shouldRenderName()) return false;
+        if (!Utils.Players.isPlayerNameValid(le.getEntityName())) return false;
+        if (entity.getUuid() == Atomic.client.player.getUuid()) return false;
+        Vec3d eSource = new Vec3d(MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevX, entity.getX()),
+                MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevY, entity.getY()),
+                MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevZ, entity.getZ()));
+        Vec3d sourcePos = eSource.add(0, (entity.getHeight() + .5) * 2, 0);
+        Vec3d screenSpace = Renderer.R2D.getScreenSpaceCoordinate(sourcePos, stack);
+        if (Renderer.R2D.isOnScreen(screenSpace)) {
+            Utils.TickManager.runOnNextRender(() -> {
+                String name = entity.getEntityName();
+                float health = le.getHealth();
+                double healthRounded = Utils.Math.roundToDecimal(health, 1);
+                String entireDisplay = name + healthRounded;
+                float w = FontRenderers.normal.getStringWidth(entireDisplay) + 7 + 2;
+                //w = Math.max(w, Atomic.fontRenderer.getStringWidth("a".repeat(16)) + 2);
+                float wh = w / 2f;
+
+                float maxHealth = le.getMaxHealth();
+                float hPer = health / maxHealth;
+                hPer = MathHelper.clamp(hPer, 0, 1);
+                Color GREEN = new Color(100, 255, 20);
+                Color RED = new Color(255, 50, 20);
+                Color MID_END = Renderer.Util.lerp(GREEN, RED, hPer);
+                MatrixStack empty = Renderer.R3D.getEmptyMatrixStack();
+                Renderer.R2D.fill(new Color(20, 20, 20, 100), screenSpace.x - wh, screenSpace.y - FontRenderers.normal.getFontHeight() - 1, screenSpace.x + wh, screenSpace.y + 1.5);
+                FontRenderers.normal.drawString(empty, name, screenSpace.x - wh + 2, screenSpace.y - FontRenderers.normal.getFontHeight(), 0xFFFFFF);
+                FontRenderers.normal.drawString(empty, healthRounded + "", screenSpace.x + wh - 2 - FontRenderers.normal.getStringWidth(healthRounded + ""), screenSpace.y - FontRenderers.normal.getFontHeight(), MID_END.getRGB());
+                Renderer.R2D.fillGradientH(empty, RED, MID_END, screenSpace.x - wh, screenSpace.y, screenSpace.x - wh + (wh * 2 * hPer), screenSpace.y + 1.5);
+            });
+        }
+        return true;
     }
 
     @Override

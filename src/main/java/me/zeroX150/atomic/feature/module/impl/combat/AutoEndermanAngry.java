@@ -18,7 +18,7 @@ import net.minecraft.entity.mob.EndermanEntity;
 import net.minecraft.util.math.Vec3d;
 
 import java.awt.Color;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -40,12 +40,9 @@ public class AutoEndermanAngry extends Module {
         } else return;
         this.e = null;
         List<Entity> e1 = StreamSupport.stream(Objects.requireNonNull(Atomic.client.world).getEntities().spliterator(), false).filter(entity -> entity.getType() == EntityType.ENDERMAN && entity.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()) < 100 && !((EndermanEntity) entity).isProvoked() && this.e != entity).collect(Collectors.toList());
-        List<Entity> e = new ArrayList<>();
-        for (Entity entity : e1) {
-            e.add((int) Math.floor(Math.random() * e.size()), entity);
-        }
-        if (e.size() > 0) {
-            this.e = e.get(0);
+        Collections.shuffle(e1);
+        if (e1.size() > 0) {
+            this.e = e1.get(0);
             Packets.sendServerSideLook(this.e.getEyePos());
             Rotations.lookAtV3(this.e.getEyePos());
         }

@@ -170,7 +170,7 @@ class SingleManager extends Screen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         parent.render(matrices, 0, 0, delta);
-        Renderer.R2D.fill(matrices, Themes.Theme.ATOMIC.getPalette().inactive(), width / 2d - 75, height / 2d + 40 + 30 + 25 + 20, width / 2d + 75, height / 2d + 40 - 25 - 25 - 25 - 25 - 25 - 5);
+        Renderer.R2D.fill(matrices, Themes.Theme.ATOMIC.getPalette().left(), width / 2d - 75, height / 2d + 40 + 30 + 25 + 20, width / 2d + 75, height / 2d + 40 - 25 - 25 - 25 - 25 - 25 - 5);
         super.render(matrices, mouseX, mouseY, delta);
     }
 }

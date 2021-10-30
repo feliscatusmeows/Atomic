@@ -5,9 +5,9 @@
 
 package me.zeroX150.atomic.feature.gui.notifications;
 
-import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.impl.render.Hud;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,7 +69,7 @@ public class Notification {
         List<String> splitContent = new ArrayList<>();
         StringBuilder line = new StringBuilder();
         for (String c : split.split(" +")) {
-            if (Atomic.fontRenderer.getStringWidth(line + " " + c) >= 145) {
+            if (FontRenderers.normal.getStringWidth(line + " " + c) >= 145) {
                 splitContent.add(line.toString());
                 line = new StringBuilder();
             }

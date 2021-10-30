@@ -3,15 +3,12 @@
  * Copyright (c) 2021 0x150.
  */
 
-package me.zeroX150.atomic.feature.gui.screen;
+package me.zeroX150.atomic.feature.gui.clickgui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.feature.gui.clickgui.ButtonMultiSelectable;
-import me.zeroX150.atomic.feature.gui.clickgui.ColorConfig;
-import me.zeroX150.atomic.feature.gui.clickgui.KeyListenerButton;
-import me.zeroX150.atomic.feature.gui.clickgui.Slider;
-import me.zeroX150.atomic.feature.gui.clickgui.Toggleable;
+import me.zeroX150.atomic.feature.gui.screen.FastTickable;
+import me.zeroX150.atomic.feature.gui.screen.NonClearingInit;
 import me.zeroX150.atomic.feature.gui.widget.SimpleCustomTextFieldWidget;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
@@ -24,8 +21,7 @@ import me.zeroX150.atomic.feature.module.config.MultiValue;
 import me.zeroX150.atomic.feature.module.config.PropGroup;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
 import me.zeroX150.atomic.feature.module.impl.render.ClickGUI;
-import me.zeroX150.atomic.helper.font.FontRenderer;
-import me.zeroX150.atomic.helper.render.Color;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Transitions;
 import me.zeroX150.atomic.helper.util.Utils;
@@ -47,6 +43,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Matrix4f;
 import org.lwjgl.glfw.GLFW;
 
+import java.awt.Color;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,7 +53,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static me.zeroX150.atomic.feature.gui.screen.ClickGUIScreen.*;
+import static me.zeroX150.atomic.feature.gui.clickgui.ClickGUIScreen.*;
 
 public class ClickGUIScreen extends Screen implements FastTickable, NonClearingInit {
     public static final Identifier LOGO = new Identifier("atomic", "logo.png");
@@ -148,6 +145,7 @@ public class ClickGUIScreen extends Screen implements FastTickable, NonClearingI
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
         Matrix4f matrices4 = matrices.peek().getModel();
         int a = (int) Math.floor(Math.abs(animProgE) * 150);
+        a *= Themes.currentActiveTheme.backgroundOpacity();
         float offset = (float) ((System.currentTimeMillis() % 3000) / 3000d);
         float hsv2p = 0.25f + offset;
         float hsv3p = 0.5f + offset;
@@ -171,8 +169,9 @@ public class ClickGUIScreen extends Screen implements FastTickable, NonClearingI
         RenderSystem.enableBlend();
         RenderSystem.blendEquation(32774);
         RenderSystem.blendFunc(770, 1);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1F, 1F);
+        RenderSystem.setShaderColor(1, 1, 1, 1);
         drawTexture(matrices, 10, 10, 0, 0, 0, (int) (504 * 0.28), (int) (130 * 0.28), (int) (130 * 0.28), (int) (504 * 0.28));
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
@@ -187,12 +186,12 @@ public class ClickGUIScreen extends Screen implements FastTickable, NonClearingI
         double addX = (1 - animProgE) * (MAX_WIDTH / 2d);
         double addY = (1 - animProgE) * (MAX_HEIGHT / 2d);
         if (!searchTerm.isEmpty())
-            Atomic.monoFontRenderer.drawString(matrices, searchTerm + " (esc to clear)", SOURCE_X + addX, SOURCE_Y + addY - 10, FontRenderer.FontType.NORMAL, new Color(255, 255, 255, 100).getRGB());
+            FontRenderers.mono.drawString(matrices, searchTerm + " (esc to clear)", (float) (SOURCE_X + addX), (float) (SOURCE_Y + addY - 10), new Color(255, 255, 255, 100).getRGB(), false);
         Renderer.R2D.scissor(SOURCE_X + addX, SOURCE_Y + addY, animProgE * MAX_WIDTH, animProgE * MAX_HEIGHT);
         super.render(matrices, mouseX, mouseY, delta);
         Renderer.R2D.unscissor();
 
-        Atomic.fontRenderer.drawCenteredString(matrices, desc, width / 2f, height - 20, 0xFFFFFF);
+        FontRenderers.normal.drawCenteredString(matrices, desc, width / 2f, height - 20, Themes.currentActiveTheme.fontColor().getRGB());
         desc = "";
     }
 
@@ -281,7 +280,7 @@ class ClearButton extends ClickableWidget {
         Renderer.R2D.fill(matrices, toUse, this.x, this.y, this.x + width, this.y + height);
         double centerX = this.x + this.width / 2d;
         double centerY = this.y + this.height / 2d;
-        Atomic.fontRenderer.drawCenteredString(matrices, text, centerX, centerY - 4, 0xFFFFFF);
+        FontRenderers.normal.drawCenteredString(matrices, text, centerX, centerY - FontRenderers.normal.getFontHeight() / 2f, Themes.currentActiveTheme.fontColor().getRGB());
     }
 
     @Override public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -406,25 +405,25 @@ class ConfigDisplay extends ClickableWidget implements FastTickable {
 
     @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         mouseY += trackedScroll;
-        Renderer.R2D.fill(matrices, new Color(23, 29, 32, 230), this.x, this.y, this.x + width, this.y + height);
+        Renderer.R2D.fill(matrices, Themes.currentActiveTheme.right(), this.x, this.y, this.x + width, this.y + height);
         int yOffset = 14;
         matrices.translate(0, -trackedScroll, 0);
-        Atomic.fontRenderer.drawString(matrices, p.getName() + " config", this.x + 5, this.y + yOffset / 2f - 8 / 2f, 0xFFFFFF);
+        FontRenderers.normal.drawString(matrices, p.getName() + " config", this.x + 5, this.y + yOffset / 2f - FontRenderers.normal.getFontHeight() / 2f, Themes.currentActiveTheme.fontColor().getRGB());
         for (PropGroup propGroup : widgets.keySet()) {
             boolean showsAnything = false;
             for (Map.Entry<DynamicValue<?>, ClickableWidget> dynamicValueClickableWidgetEntry : widgets.get(propGroup)) {
                 if (dynamicValueClickableWidgetEntry.getKey().shouldShow()) showsAnything = true;
             }
             if (!propGroup.getName().isEmpty() && showsAnything) {
-                Atomic.fontRenderer.drawCenteredString(matrices, propGroup.getName(), this.x + this.width / 2f, this.y + yOffset + 2, 0xFFFFFF);
-                yOffset += 11;
+                FontRenderers.normal.drawCenteredString(matrices, propGroup.getName(), this.x + this.width / 2f, this.y + yOffset - 1, Themes.currentActiveTheme.fontColor().getRGB());
+                yOffset += FontRenderers.normal.getFontHeight() + 2;
             }
             for (Map.Entry<DynamicValue<?>, ClickableWidget> dynamicValueClickableWidgetEntry : widgets.get(propGroup)) {
                 dynamicValueClickableWidgetEntry.getValue().y = this.y + yOffset;
                 dynamicValueClickableWidgetEntry.getValue().x = this.x + width / 2;
                 if (!dynamicValueClickableWidgetEntry.getKey().shouldShow()) continue;
+                FontRenderers.normal.drawString(matrices, dynamicValueClickableWidgetEntry.getKey().getKey(), this.x + padding, this.y + yOffset + FontRenderers.normal.getFontHeight() / 2f, Themes.currentActiveTheme.fontColor().getRGB());
                 dynamicValueClickableWidgetEntry.getValue().render(matrices, mouseX, mouseY, delta);
-                Atomic.fontRenderer.drawString(matrices, dynamicValueClickableWidgetEntry.getKey().getKey(), this.x + padding, this.y + yOffset + 1, 0xFFFFFF);
                 yOffset += dynamicValueClickableWidgetEntry.getValue().getHeight();
             }
         }
@@ -545,16 +544,6 @@ class ModuleDisplay extends ClearButton implements FastTickable {
         });
         this.module = module;
         this.configDisplay = new ConfigDisplay((int) (this.x + MODULE_WIDTH), SOURCE_Y, module);
-        this.active = new Color(31 + 10, 42 + 10, 48 + 10, 230);
-        this.inactive = new Color(0, 0, 0, 0);
-    }
-
-    @Override public void onFastTick() {
-        configDisplay.onFastTick();
-        double y = 0.04;
-        if (!module.isEnabled()) y *= -1;
-        animProg += y;
-        animProg = MathHelper.clamp(animProg, 0, 1);
     }
 
     static boolean nameMatches(String name, String search) {
@@ -568,7 +557,17 @@ class ModuleDisplay extends ClearButton implements FastTickable {
         return isGood;
     }
 
+    @Override public void onFastTick() {
+        configDisplay.onFastTick();
+        double y = 0.04;
+        if (!module.isEnabled()) y *= -1;
+        animProg += y;
+        animProg = MathHelper.clamp(animProg, 0, 1);
+    }
+
     @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        this.active = Themes.currentActiveTheme.center().brighter();
+        this.inactive = new Color(0, 0, 0, 0);
         double animProg = Transitions.easeOutExpo(this.animProg);
         boolean onButton = isOnButton(mouseX, mouseY);
         double absX = Utils.Mouse.getMouseX();
@@ -582,8 +581,8 @@ class ModuleDisplay extends ClearButton implements FastTickable {
         Renderer.R2D.fill(matrices, toUse, this.x, this.y, this.x + width, this.y + height);
         Renderer.R2D.fill(matrices, Utils.getCurrentRGB(), this.x, this.y, this.x + 1, this.y + (animProg * height));
         double centerY = this.y + this.height / 2d;
-        int color = getInstance().searchTerm.isEmpty() || nameMatches(module.getName(), getInstance().searchTerm) ? 0xFFFFFF : 0x555555;
-        Atomic.fontRenderer.drawString(matrices, text, this.x + 5, centerY - 4, color);
+        int color = getInstance().searchTerm.isEmpty() || nameMatches(module.getName(), getInstance().searchTerm) ? Themes.currentActiveTheme.fontColor().getRGB() : 0x555555;
+        FontRenderers.normal.drawString(matrices, text, this.x + 5, centerY - FontRenderers.normal.getFontHeight() / 2f, color);
         MatrixStack s = Renderer.R3D.getEmptyMatrixStack();
         if (isSelected) {
             configDisplay.render(s, (int) Utils.Mouse.getMouseX(), (int) Utils.Mouse.getMouseY(), delta);
@@ -674,8 +673,6 @@ class CategoryDisplay extends ClearButton implements FastTickable {
                 yOffset += md.getHeight();
             }
         }
-        this.active = new Color(37 + 10, 50 + 10, 56 + 10, 230);
-        this.inactive = new Color(37, 50, 56, 230);
     }
 
     List<ModuleDisplay> getModules() {
@@ -770,22 +767,24 @@ class CategoryDisplay extends ClearButton implements FastTickable {
     }
 
     @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        this.active = Themes.currentActiveTheme.left().brighter();
+        this.inactive = Themes.currentActiveTheme.left();
         Color toUse = isOnButton(mouseX, mouseY) ? active : inactive;
-        if (isSelected) toUse = new Color(37 + 10, 50 + 10, 56 + 10, 230);
+        if (isSelected) toUse = Themes.currentActiveTheme.center();
         Renderer.R2D.fill(matrices, toUse, this.x, this.y, this.x + width, this.y + height);
         double centerY = this.y + this.height / 2d;
-        int c = 0xFFFFFF;
+        int c = Themes.currentActiveTheme.fontColor().getRGB();
         if (!getInstance().searchTerm.isEmpty()) {
             int found = 0;
             for (ModuleDisplay module : getModules()) {
                 if (ModuleDisplay.nameMatches(module.text, getInstance().searchTerm)) found++;
             }
             if (found == 0) c = 0x555555;
-            Atomic.fontRenderer.drawString(matrices, found + "", this.x + this.width - Atomic.fontRenderer.getStringWidth(found + "") - 5, centerY - 4, found == 0 ? c : 0xAAFFAA);
+            FontRenderers.normal.drawString(matrices, found + "", this.x + this.width - FontRenderers.normal.getStringWidth(found + "") - 5, centerY - FontRenderers.normal.getFontHeight() / 2f, found == 0 ? c : 0xAAFFAA);
         }
-        Atomic.fontRenderer.drawString(matrices, text, this.x + 5, centerY - 4, c);
+        FontRenderers.normal.drawString(matrices, text, this.x + 5, centerY - FontRenderers.normal.getFontHeight() / 2f, c);
         if (isSelected) {
-            Renderer.R2D.fill(matrices, new Color(37 + 10, 50 + 10, 56 + 10, 230), this.x + this.width, SOURCE_Y, this.x + this.width + MODULE_WIDTH, SOURCE_Y + MAX_HEIGHT);
+            Renderer.R2D.fill(matrices, Themes.currentActiveTheme.center(), this.x + this.width, SOURCE_Y, this.x + this.width + MODULE_WIDTH, SOURCE_Y + MAX_HEIGHT);
         }
         matrices.push();
         matrices.translate(0, -trackedScroll, 0);

@@ -1,3 +1,8 @@
+/*
+ * This file is part of the atomic client distribution.
+ * Copyright (c) 2021-2021 0x150.
+ */
+
 plugins {
 	id 'fabric-loom' version '0.9-SNAPSHOT'
 	id 'maven-publish'
@@ -58,7 +63,6 @@ dependencies {
 		include name: 'baritone-api-1.7.0'
 	}
 	implementation (include('com.github.19MisterX98.SeedcrackerX:seedcrackerx-api:e09c8bed96d233d53c6bf726252bed8be0c796cc')) {transitive = false}
-
 	implementation(include("club.minnced:java-discord-rpc:2.0.1"))
 }
 
@@ -69,11 +73,6 @@ processResources {
 		expand "version": project.version
 	}
 }
-
-/*
- * This file is part of the atomic client distribution.
- * Copyright (c) 2021. 0x150 and contributors
- */
 
 // ensure that the encoding is set to UTF-8, no matter what the system default is
 // this fixes some edge cases with special characters not displaying correctly
@@ -98,12 +97,36 @@ task execBuild(dependsOn: build) {
 		}
 	}
 	doLast {
-		file("./build/libs/atomic-1.0.0.jar").renameTo(file("./builds/latest.jar"))
+		String filename = "./builds/atomic"
+		if (project.isPrivate == "true") {
+			filename += "-private"
+		}
+
+		// clear build folder
+		File builds = new File("./builds")
+		for(File f : builds.listFiles()) {
+			f.delete()
+		}
+		//builds.mkdir()
+
+		filename += "_b"
+		File versionFile = new File("./src/main/resources/VERSION") // store it in resources so its available to be used in game too
+		String currentVersion = versionFile.text
+		filename += currentVersion+".jar"
+		file("./build/libs/atomic-1.0.0.jar").renameTo(file(filename))
+		Integer versionNum = currentVersion as Integer
+		versionNum = versionNum+1
+		versionFile.write(versionNum+"")
 	}
 }
 
 jar {
 	from "LICENSE"
+	/*from {
+		configurations.include.collect {
+			it.isDirectory() ? it : zipTree(it)
+		}
+	}*/
 	manifest {
 		attributes(
 				"Main-Class": "me.zeroX150.atomic.Main"

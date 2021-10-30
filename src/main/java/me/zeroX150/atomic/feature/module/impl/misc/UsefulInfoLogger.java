@@ -13,7 +13,7 @@ import me.zeroX150.atomic.helper.event.EventType;
 import me.zeroX150.atomic.helper.event.Events;
 import me.zeroX150.atomic.helper.event.events.PacketEvent;
 import me.zeroX150.atomic.helper.render.AnimatedRenderablePos;
-import me.zeroX150.atomic.helper.render.Color;
+import me.zeroX150.atomic.helper.render.CustomColor;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Utils;
 import me.zeroX150.atomic.mixin.network.IReasonAccessor;
@@ -88,8 +88,8 @@ public class UsefulInfoLogger extends Module {
                 Utils.Client.sendMessage("[UIL] [World border center change] The world border center is now at X " + centerX + ", Z " + centerZ);
                 renders.add(
                         new AnimatedRenderablePos(
-                                new Color(255, 255, 255, true),
-                                new Color(0, 0, 0, 0),
+                                new CustomColor(255, 255, 255, true),
+                                new CustomColor(0, 0, 0, 0),
                                 new Vec3d(centerX, 0, centerZ),
                                 new Vec3d(1, 255, 1),
                                 10000)

@@ -10,7 +10,6 @@ import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.helper.util.Utils;
 
 import java.util.Arrays;
-import java.util.Objects;
 
 public class ChatSequence extends Command {
     public ChatSequence() {
@@ -41,7 +40,7 @@ public class ChatSequence extends Command {
                                 Utils.Client.sendMessage("You have to provide a message to add");
                                 return;
                             }
-                            if (Objects.requireNonNull(ModuleRegistry.getByClass(me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.class)).isEnabled()) {
+                            if (ModuleRegistry.getByClass(me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.class).isEnabled()) {
                                 Utils.Client.sendMessage("You cant modify the config while the module is running.");
                                 return;
                             }
@@ -54,7 +53,7 @@ public class ChatSequence extends Command {
                                 Utils.Client.sendMessage("You have to provide a message index to remove! Use .chatSequence messages to list them");
                                 return;
                             }
-                            if (Objects.requireNonNull(ModuleRegistry.getByClass(me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.class)).isEnabled()) {
+                            if (ModuleRegistry.getByClass(me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.class).isEnabled()) {
                                 Utils.Client.sendMessage("You cant modify the config while the module is running.");
                                 return;
                             }
@@ -77,7 +76,7 @@ public class ChatSequence extends Command {
                 if (args.length == 1) {
                     Utils.Client.sendMessage("The current delay is " + me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.delay + " ms");
                 } else {
-                    if (Objects.requireNonNull(ModuleRegistry.getByClass(me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.class)).isEnabled()) {
+                    if (ModuleRegistry.getByClass(me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.class).isEnabled()) {
                         Utils.Client.sendMessage("You cant modify the config while the module is running.");
                         return;
                     }
@@ -94,7 +93,7 @@ public class ChatSequence extends Command {
             case "start" -> {
                 Utils.Client.sendMessage("Starting ChatSequence. Disable the module to stop it, or wait until it runs out of messages.");
                 me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.shouldRun = true;
-                Objects.requireNonNull(ModuleRegistry.getByClass(me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.class)).setEnabled(true);
+                ModuleRegistry.getByClass(me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.class).setEnabled(true);
             }
             default -> Utils.Client.sendMessage("chatSequence subcommands: messages, delay, start");
         }

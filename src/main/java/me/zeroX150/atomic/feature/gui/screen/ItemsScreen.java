@@ -10,6 +10,7 @@ import me.zeroX150.atomic.feature.ItemExploits;
 import me.zeroX150.atomic.feature.gui.widget.ItemExploitConfigRenderer;
 import me.zeroX150.atomic.feature.gui.windowed.Window;
 import me.zeroX150.atomic.feature.gui.windowed.WindowScreen;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.PrettyPrintTextFormatter;
 import me.zeroX150.atomic.helper.util.RGBColorText;
@@ -104,12 +105,12 @@ class NbtEditorWidget extends ClickableWidget implements FastTickable {
         for (RGBColorText.RGBEntry s : text.getEntries()) {
             if (s.equals(RGBColorText.NEWLINE)) {
                 xOffset = 0;
-                yOffset += 9;
+                yOffset += FontRenderers.mono.getFontHeight();
             } else {
                 String t = s.value();
                 while (t.contains("§")) t = t.replace("§", "&");
-                Atomic.monoFontRenderer.drawString(matrices, t, xOffset, yOffset, s.color());
-                xOffset += Atomic.monoFontRenderer.getStringWidth(t);
+                FontRenderers.mono.drawString(matrices, t, xOffset, yOffset, s.color());
+                xOffset += FontRenderers.mono.getStringWidth(t);
             }
         }
 
@@ -125,7 +126,7 @@ class NbtEditorWidget extends ClickableWidget implements FastTickable {
             } else {
                 String t = s.value();
                 while (t.contains("§")) t = t.replace("§", "&");
-                xOffset += Atomic.monoFontRenderer.getStringWidth(t);
+                xOffset += FontRenderers.mono.getStringWidth(t);
                 maxInset = Math.max(maxInset, xOffset);
             }
         }
@@ -195,29 +196,29 @@ class ItemExploitDisplayWidget extends ClickableWidget implements FastTickable {
         super(x, y, 150, 0, Text.of(""));
         src = exploit;
         String desc = exploit.getGenerator().getDescription();
-        String[] t = Utils.splitLinesToWidth(desc, 150, Atomic.monoFontRenderer);
+        String[] t = Utils.splitLinesToWidth(desc, 150, FontRenderers.mono);
         description.addAll(Arrays.asList(t));
         generate = new ButtonWidget(x + 5,
                 y
                         + 2 // padding
-                        + 8 // title height
+                        + FontRenderers.normal.getFontHeight() // title height
                         + 2 // padding
-                        + description.size() * 8 // description height
+                        + description.size() * FontRenderers.mono.getFontHeight() // description height
                         + 2, // padding
                 140,
                 20,
                 Text.of("Generate"),
                 button -> ItemsScreen.setSelectedItemExploit(exploit));
-        height = 2 + 8 + 2 + description.size() * 8 + 2 + 20 + 2;
+        height = 2 + FontRenderers.normal.getFontHeight() + 2 + description.size() * FontRenderers.mono.getFontHeight() + 2 + 20 + 2;
     }
 
     @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Renderer.R2D.fill(matrices, new Color(10, 10, 10, 50), x, y, x + width, y + height);
-        Atomic.fontRenderer.drawCenteredString(matrices, src.getName(), 150 / 2f, y + 2, 0xFFFFFF);
-        int yOff = y + 2 + 8 + 2;
+        FontRenderers.normal.drawCenteredString(matrices, src.getName(), 150 / 2f, y + 2, 0xFFFFFF);
+        int yOff = y + 2 + FontRenderers.normal.getFontHeight() + 2;
         for (String s : description) {
-            Atomic.monoFontRenderer.drawCenteredString(matrices, s, 150 / 2f, yOff, 0xFFFFFF);
-            yOff += 8;
+            FontRenderers.mono.drawCenteredString(matrices, s, 150 / 2f, yOff, 0xFFFFFF);
+            yOff += FontRenderers.mono.getFontHeight();
         }
         generate.render(matrices, mouseX, mouseY, delta);
     }

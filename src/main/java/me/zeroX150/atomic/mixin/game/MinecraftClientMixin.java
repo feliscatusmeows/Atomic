@@ -12,6 +12,7 @@ import me.zeroX150.atomic.feature.module.impl.misc.WindowCustomization;
 import me.zeroX150.atomic.feature.module.impl.world.FastUse;
 import me.zeroX150.atomic.helper.util.ConfigManager;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.RunArgs;
 import net.minecraft.client.gui.screen.Screen;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
@@ -52,6 +53,7 @@ public class MinecraftClientMixin {
 
     @Inject(method = "getWindowTitle", at = @At("HEAD"), cancellable = true)
     public void getWindowTitle(CallbackInfoReturnable<String> cir) {
+        if (!Atomic.INSTANCE.initialized) return;
         String v = Objects.requireNonNull(ModuleRegistry.getByClass(WindowCustomization.class)).title.getValue();
         if (Objects.requireNonNull(ModuleRegistry.getByClass(WindowCustomization.class)).isEnabled() && !v.isEmpty())
             cir.setReturnValue(v);
@@ -60,5 +62,10 @@ public class MinecraftClientMixin {
     @Inject(method = "setScreen", at = @At("HEAD"))
     void onSetScreen(Screen screen, CallbackInfo ci) {
         Atomic.lastScreenChange = System.currentTimeMillis();
+    }
+
+    @Inject(method = "<init>", at = @At("TAIL"))
+    void postInit(RunArgs args, CallbackInfo ci) {
+        Atomic.INSTANCE.postWindowInit();
     }
 }

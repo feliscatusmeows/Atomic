@@ -37,7 +37,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.Color;
 import java.util.Arrays;
-import java.util.Objects;
 
 @Mixin(Screen.class)
 public abstract class ScreenMixin extends DrawableHelper {
@@ -74,7 +73,7 @@ public abstract class ScreenMixin extends DrawableHelper {
             target = "Lnet/minecraft/client/gui/screen/Screen;fillGradient(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"
     ))
     public void renderBackgroundOverride(Screen screen, MatrixStack matrices, int startX, int startY, int endX, int endY, int colorStart, int colorEnd) {
-        if (Objects.requireNonNull(ModuleRegistry.getByClass(CleanGUI.class)).isEnabled()) {
+        if (ModuleRegistry.getByClass(CleanGUI.class).isEnabled()) {
             int i = CleanGUI.mode.getIndex();
             switch (i) {
                 case 0 -> {

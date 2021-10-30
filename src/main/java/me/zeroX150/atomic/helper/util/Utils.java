@@ -12,7 +12,7 @@ import com.mojang.authlib.Agent;
 import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import com.mojang.authlib.yggdrasil.YggdrasilUserAuthentication;
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.helper.font.FontRenderer;
+import me.zeroX150.atomic.helper.font.GlyphPageFontRenderer;
 import me.zeroX150.atomic.mixin.game.IMinecraftClientAccessor;
 import me.zeroX150.atomic.mixin.game.IRenderTickCounterAccessor;
 import net.minecraft.client.network.ServerInfo;
@@ -71,7 +71,7 @@ public class Utils {
         return new Color(Color.HSBtoRGB((System.currentTimeMillis() % 4750) / 4750f, 0.5f, 1));
     }
 
-    public static String[] splitLinesToWidth(String input, double maxWidth, FontRenderer rendererUsed) {
+    public static String[] splitLinesToWidth(String input, double maxWidth, GlyphPageFontRenderer rendererUsed) {
         List<String> dSplit = List.of(input.split("\n"));
         List<String> splits = new ArrayList<>();
         for (String s : dSplit) {

@@ -34,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
+
 @Mixin(HandledScreen.class)
 public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> extends Screen {
     final KeyBinding arrowRight = new KeyBinding("", GLFW.GLFW_KEY_RIGHT, "");
@@ -64,8 +65,8 @@ public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> exte
         int cw = 110;
         int ch = 5 + 11 + 20 + 5;
         slotSpammer = new ButtonWidget(cw / 2 - 100 / 2, 5 + 11, 100, 20, Text.of("Slot spammer"), button -> {
-            if (Objects.requireNonNull(ModuleRegistry.getByClass(SlotSpammer.class)).isEnabled()) {
-                Objects.requireNonNull(ModuleRegistry.getByClass(SlotSpammer.class)).setEnabled(false);
+            if (ModuleRegistry.getByClass(SlotSpammer.class).isEnabled()) {
+                ModuleRegistry.getByClass(SlotSpammer.class).setEnabled(false);
             } else isSelecting = !isSelecting;
         });
         tw = new SimpleTextWidget(cw / 2d, 5, "Slot spammer", 0xFFFFFF);
@@ -87,7 +88,7 @@ public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> exte
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(CallbackInfo ci) {
-        if (!Objects.requireNonNull(ModuleRegistry.getByClass(InventoryWalk.class)).isEnabled()) return;
+        if (!ModuleRegistry.getByClass(InventoryWalk.class).isEnabled()) return;
         GameOptions go = Atomic.client.options;
         setState(go.keyForward);
         setState(go.keyRight);
@@ -121,7 +122,7 @@ public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> exte
                 SlotSpammer.slotToSpam = s;
                 cir.cancel();
                 cir.setReturnValue(true);
-                Objects.requireNonNull(ModuleRegistry.getByClass(SlotSpammer.class)).setEnabled(true);
+                ModuleRegistry.getByClass(SlotSpammer.class).setEnabled(true);
             }
         }
     }
@@ -129,7 +130,7 @@ public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> exte
     @Inject(method = "render", at = @At("TAIL"))
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         String t = "disabled";
-        if (Objects.requireNonNull(ModuleRegistry.getByClass(SlotSpammer.class)).isEnabled()) {
+        if (ModuleRegistry.getByClass(SlotSpammer.class).isEnabled()) {
             slotSpammer.setMessage(Text.of("Click to disable"));
             t = "running";
         } else if (isSelecting) {

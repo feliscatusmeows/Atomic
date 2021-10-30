@@ -9,6 +9,7 @@ import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.screen.HomeScreen;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.util.Transitions;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.hud.BackgroundHelper;
@@ -43,7 +44,7 @@ public class WelcomeOverlay extends Overlay {
             "Loading...",
             "Welcome, " + Atomic.client.getSession().getUsername() + ", to Atomic."
     };
-    final List<LogEntry> logs = new ArrayList<>();
+    List<LogEntry> logs = new ArrayList<>();
     double d = 0;
     boolean done = false;
     boolean decl = false;
@@ -70,7 +71,7 @@ public class WelcomeOverlay extends Overlay {
         isLoading = true;
         loader = new Thread(() -> {
             try {
-                for (Module module : ModuleRegistry.getModules().stream().sorted(Comparator.comparingDouble(value -> -Atomic.monoFontRenderer.getStringWidth(value.getName()))).collect(Collectors.toList())) {
+                for (Module module : ModuleRegistry.getModules().stream().sorted(Comparator.comparingDouble(value -> -FontRenderers.mono.getStringWidth(value.getName()))).collect(Collectors.toList())) {
                     log("Loaded module " + module.getName());
                     Thread.sleep(20);
                 }
@@ -174,22 +175,23 @@ public class WelcomeOverlay extends Overlay {
                     }
                 }
             }
-            Atomic.fontRenderer.drawCenteredString(matrices, texts[index], w / 2f, h / 2f, BackgroundHelper.ColorMixer.getArgb((int) (c * 255), 255, 255, 255));
+            FontRenderers.normal.drawCenteredString(matrices, texts[index], w / 2f, h / 2f - FontRenderers.normal.getFontHeight() / 2f, BackgroundHelper.ColorMixer.getArgb((int) (c * 255), 255, 255, 255));
             //DrawableHelper.drawCenteredText(matrices, Atomic.client.textRenderer, texts[index], (int) ((w / 2) / m), (int) ((h / 2 - (9 / 2)) / m), BackgroundHelper.ColorMixer.getArgb((int) (c * 255), 255, 255, 255));
         }
         float scale = 1f;
-        while (logs.size() > (Atomic.client.getWindow().getScaledHeight() - 1) / (10 * scale)) {
+        List<LogEntry> logsb = new ArrayList<>(logs);
+        while (logs.size() > (Atomic.client.getWindow().getScaledHeight() - 1) / (FontRenderers.mono.getFontHeight() * scale)) {
             logs.remove(0);
         }
         int yOffset = 1;
-        for (LogEntry log : logs.toArray(new LogEntry[0])) {
+        for (LogEntry log : logsb) {
             log.aProg = Transitions.transition(log.aProg, log.removed ? 0 : 1, 7, 0);
             matrices.push();
             matrices.scale(scale, scale, 1);
-            double wid = Atomic.monoFontRenderer.getStringWidth(log.a) + 2;
+            double wid = FontRenderers.mono.getStringWidth(log.a) + 2;
             float sub = (float) ((1 - log.aProg) * wid);
-            Atomic.monoFontRenderer.drawString(matrices, log.a, 1 - sub, yOffset, BackgroundHelper.ColorMixer.getArgb(MathHelper.clamp(a, 1, 255), 255, 255, 255));
-            yOffset += 10;
+            FontRenderers.mono.drawString(matrices, log.a, 1 - sub, yOffset, BackgroundHelper.ColorMixer.getArgb(MathHelper.clamp(a, 1, 255), 255, 255, 255));
+            yOffset += (FontRenderers.mono.getFontHeight());
             matrices.pop();
         }
     }

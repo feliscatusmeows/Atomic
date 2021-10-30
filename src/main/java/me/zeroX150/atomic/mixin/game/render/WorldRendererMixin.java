@@ -5,7 +5,6 @@
 
 package me.zeroX150.atomic.mixin.game.render;
 
-import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.impl.render.ESP;
 import me.zeroX150.atomic.feature.module.impl.render.NoRender;
@@ -28,11 +27,10 @@ import java.util.Objects;
 
 @Mixin(WorldRenderer.class)
 public class WorldRendererMixin {
-    final Module noRender = ModuleRegistry.getByClass(NoRender.class);
 
     @Inject(method = "renderWeather", at = @At("HEAD"), cancellable = true)
     public void renderWeather(LightmapTextureManager manager, float f, double d, double e, double g, CallbackInfo ci) {
-        if (Objects.requireNonNull(noRender).isEnabled() && NoRender.weather.getValue()) ci.cancel();
+        if (ModuleRegistry.getByClass(NoRender.class).isEnabled() && NoRender.weather.getValue()) ci.cancel();
     }
 
     @Inject(method = "renderEntity", at = @At("HEAD"))

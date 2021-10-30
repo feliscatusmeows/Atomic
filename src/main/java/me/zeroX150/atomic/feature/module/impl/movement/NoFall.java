@@ -21,9 +21,9 @@ import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
  * @see IPlayerMoveC2SPacketAccessor
  */
 public class NoFall extends Module {
-    public boolean enabled = true;
     public static MultiValue mode;
     final SliderValue fallDist = (SliderValue) this.config.create("Fall distance", 3, 0, 10, 1).description("The distance to fall for to enable the module");
+    public boolean enabled = true;
 
     public NoFall() {
         super("No Fall", "no fall damage", ModuleType.MOVEMENT);

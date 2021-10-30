@@ -10,6 +10,7 @@ import me.zeroX150.atomic.feature.gui.screen.FastTickable;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
 import me.zeroX150.atomic.feature.module.impl.misc.InfChatLength;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Transitions;
 import me.zeroX150.atomic.mixin.game.render.ITextFieldAccessor;
@@ -26,7 +27,6 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.Color;
-import java.util.Objects;
 
 @SuppressWarnings("EmptyMethod") @Mixin(ChatScreen.class)
 public abstract class AChatScreenMixin extends Screen implements FastTickable {
@@ -49,8 +49,8 @@ public abstract class AChatScreenMixin extends Screen implements FastTickable {
         boolean showExtra = maxLength != Integer.MAX_VALUE;
         double perUsed = showExtra ? ((double) cLength / maxLength) : 0;
         String v = cLength + (showExtra ? (" / " + maxLength + " " + ((int) Math.round(perUsed * 100)) + "%") : "");
-        float w = Atomic.monoFontRenderer.getStringWidth(v);
-        Atomic.monoFontRenderer.drawString(matrices, v, this.width - 2 - w, this.height - 25 + yOffset, Renderer.Util.lerp(new Color(255, 50, 50), new Color(50, 255, 50), perUsed).getRGB());
+        float w = FontRenderers.mono.getStringWidth(v);
+        FontRenderers.mono.drawString(matrices, v, this.width - 2 - w, this.height - 25 + yOffset, Renderer.Util.lerp(new Color(255, 50, 50), new Color(50, 255, 50), perUsed).getRGB());
     }
 
     @Redirect(method = "render", at = @At(
@@ -80,7 +80,7 @@ public abstract class AChatScreenMixin extends Screen implements FastTickable {
 
     @Inject(method = "onChatFieldUpdate", at = @At("HEAD"))
     public void chatFieldUpdatePre(String chatText, CallbackInfo ci) {
-        chatField.setMaxLength((Objects.requireNonNull(ModuleRegistry.getByClass(InfChatLength.class)).isEnabled() || chatText.startsWith(ClientConfig.chatPrefix.getValue())) ? Integer.MAX_VALUE : 256);
+        chatField.setMaxLength((ModuleRegistry.getByClass(InfChatLength.class).isEnabled() || chatText.startsWith(ClientConfig.chatPrefix.getValue())) ? Integer.MAX_VALUE : 256);
     }
 
     @Inject(method = "init", at = @At("RETURN"))

@@ -6,9 +6,9 @@
 package me.zeroX150.atomic.mixin.game.render;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.screen.FastTickable;
 import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -93,7 +93,7 @@ public abstract class AButtonWidgetMixin implements FastTickable {
         }
         DrawableHelper.fill(matrices, x, y, x + width, y + height, this.active ? Renderer.Util.lerp(new Color(38, 83, 92, 100), unselectedColor, interpolatedAProg).getRGB() : disabledColor.getRGB());
         //CustomFont.INSTANCE.drawString(this.getMessage().getString(),this.x+this.width/2,this.y+(this.height-9)/2,0xFFFFFF);
-        Atomic.fontRenderer.drawCenteredString(matrices, this.getMessage().getString(), this.x + this.width / 2f, this.y + (this.height - 9) / 2f, 0xFFFFFF);
+        FontRenderers.normal.drawCenteredString(matrices, this.getMessage().getString(), this.x + this.width / 2f, this.y + (this.height - FontRenderers.normal.getFontHeight()) / 2f, 0xFFFFFF);
     }
 
     double ease(double x) {

@@ -7,7 +7,7 @@ package me.zeroX150.atomic.feature.command.impl;
 
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.command.Command;
-import me.zeroX150.atomic.feature.gui.screen.ClickGUIScreen;
+import me.zeroX150.atomic.feature.gui.clickgui.ClickGUIScreen;
 import me.zeroX150.atomic.helper.util.Utils;
 
 public class Test extends Command {

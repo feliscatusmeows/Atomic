@@ -5,8 +5,8 @@
 
 package me.zeroX150.atomic.feature.gui.clickgui;
 
-import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.Module;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.keybind.KeybindManager;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -58,8 +58,8 @@ public class KeyListenerButton extends ButtonWidget {
             if (n == null) n = "kc." + kc;
             this.setMessage(Text.of(n));
         }
-        fill(matrices, x, y, x + width, y + height, (this.isHovered() ? Themes.currentActiveTheme.active() : Themes.currentActiveTheme.inactive()).getRGB());
-        Atomic.fontRenderer.drawCenteredString(matrices, this.getMessage().getString(), x + width / 2f, y + height / 2f - 8 / 2f, Themes.currentActiveTheme.fontColor().getRGB());
+        fill(matrices, x, y, x + width, y + height, (this.isHovered() ? Themes.currentActiveTheme.left() : Themes.currentActiveTheme.center()).getRGB());
+        FontRenderers.normal.drawCenteredString(matrices, this.getMessage().getString(), x + width / 2f, y + height / 2f - FontRenderers.normal.getFontHeight() / 2f, Themes.currentActiveTheme.fontColor().getRGB());
         //DrawableHelper.drawCenteredText(matrices, Atomic.client.textRenderer, this.getMessage(), x + (width / 2), y + (height / 2 - 9 / 2), 0xFFFFFF);
     }
 }

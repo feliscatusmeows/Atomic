@@ -5,7 +5,6 @@
 
 package me.zeroX150.atomic.feature.module;
 
-import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.impl.client.Alts;
 import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
 import me.zeroX150.atomic.feature.module.impl.combat.AimAssist;
@@ -119,6 +118,7 @@ import me.zeroX150.atomic.feature.module.impl.world.Scaffold;
 import me.zeroX150.atomic.feature.module.impl.world.Tunnel;
 import me.zeroX150.atomic.feature.module.impl.world.WaterClutch;
 import me.zeroX150.atomic.feature.module.impl.world.XRAY;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -241,8 +241,10 @@ public class ModuleRegistry {
         modules.add(new EntityFullbright());
         modules.add(new EdgeJump());
         modules.add(new LongJump());
+    }
 
-        modules.sort(Comparator.comparingDouble(value -> -Atomic.fontRenderer.getStringWidth(value.getName())));
+    public static void sortModulesPostInit() {
+        modules.sort(Comparator.comparingDouble(value -> -FontRenderers.normal.getStringWidth(value.getName())));
     }
 
     public static boolean isDebuggerEnabled() {

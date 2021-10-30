@@ -5,13 +5,13 @@
 
 package me.zeroX150.atomic.feature.module.impl.render;
 
-import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.helper.event.EventType;
 import me.zeroX150.atomic.helper.event.Events;
 import me.zeroX150.atomic.helper.event.events.KeyboardEvent;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Transitions;
 import me.zeroX150.atomic.helper.util.Utils;
@@ -124,7 +124,7 @@ public class TabGUI extends Module {
         Color bg = new Color(0, 0, 0, 255);
         Color active = Utils.getCurrentRGB();
         Color inactive = active.darker().darker();
-        mwidth = 4 + Atomic.fontRenderer.getStringWidth(getModulesForDisplay()[0].getName()); // types sorted, so 0 will be the longest
+        mwidth = 4 + FontRenderers.normal.getStringWidth(getModulesForDisplay()[0].getName()); // types sorted, so 0 will be the longest
         MatrixStack stack = Renderer.R3D.getEmptyMatrixStack();
         double yOffset = 0;
         int index = 0;
@@ -133,7 +133,7 @@ public class TabGUI extends Module {
             if (aprog != 0 && index != selected)
                 c = Renderer.Util.lerp(new Color(0xAA, 0xAA, 0xAA), Color.WHITE, aprog).getRGB();
             Renderer.R2D.fill(bg, x, y + yOffset, x + mwidth, y + yOffset + mheight);
-            Atomic.fontRenderer.drawString(stack, value.getName(), x + 2, y + yOffset + (mheight - 9) / 2f + 0.5f, c);
+            FontRenderers.normal.drawString(stack, value.getName(), x + 2, y + yOffset + (mheight - FontRenderers.normal.getFontHeight()) / 2f + 0.5f, c);
             yOffset += mheight;
             index++;
         }
@@ -150,7 +150,7 @@ public class TabGUI extends Module {
         double rx = x + mwidth + 3;
         double ry = y + mheight * fixedSelected;
         int yoff = 0;
-        double w = Atomic.fontRenderer.getStringWidth(a.get(0).getName()) + 4;
+        double w = FontRenderers.normal.getStringWidth(a.get(0).getName()) + 4;
         Renderer.R2D.scissor(rx - 3, ry, w + 3, mheight * a.size());
         rx -= (w + 3) * (1 - aprog);
         for (Module module : a) {
@@ -158,7 +158,7 @@ public class TabGUI extends Module {
             if (module.isEnabled()) {
                 Renderer.R2D.fill(Color.WHITE, rx + w, ry + yoff, rx + w - 1, ry + yoff + mheight);
             }
-            Atomic.fontRenderer.drawString(stack, module.getName(), rx + 2, ry + yoff + (mheight - 9) / 2f + 0.5f, 0xFFFFFF);
+            FontRenderers.normal.drawString(stack, module.getName(), rx + 2, ry + yoff + (mheight - FontRenderers.normal.getFontHeight()) / 2f + 0.5f, 0xFFFFFF);
             yoff += mheight;
         }
         double selectedOffset1 = mheight * trackedSelectedModule;
@@ -167,6 +167,6 @@ public class TabGUI extends Module {
     }
 
     ModuleType[] getModulesForDisplay() {
-        return Arrays.stream(ModuleType.values()).filter(moduleType -> moduleType != ModuleType.HIDDEN).sorted(Comparator.comparingDouble(value -> -Atomic.fontRenderer.getStringWidth(value.getName()))).toArray(ModuleType[]::new);
+        return Arrays.stream(ModuleType.values()).filter(moduleType -> moduleType != ModuleType.HIDDEN).sorted(Comparator.comparingDouble(value -> -FontRenderers.normal.getStringWidth(value.getName()))).toArray(ModuleType[]::new);
     }
 }

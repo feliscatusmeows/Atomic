@@ -13,7 +13,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-import java.util.Objects;
 
 @Mixin(Deadmau5FeatureRenderer.class)
 public class Deadmau5FeatureRendererMixin {
@@ -22,7 +21,7 @@ public class Deadmau5FeatureRendererMixin {
             target = "Ljava/lang/String;equals(Ljava/lang/Object;)Z"
     ))
     boolean doesNameMatchDeadmau5(String s, Object anObject) {
-        if (Objects.requireNonNull(ModuleRegistry.getByClass(Deadmau5.class)).isEnabled()) return true;
+        if (ModuleRegistry.getByClass(Deadmau5.class).isEnabled()) return true;
         return s.equals(anObject);
     }
 
@@ -31,7 +30,7 @@ public class Deadmau5FeatureRendererMixin {
             target = "Lnet/minecraft/client/network/AbstractClientPlayerEntity;hasSkinTexture()Z"
     ))
     boolean doesPlayerHaveSkin(AbstractClientPlayerEntity abstractClientPlayerEntity) {
-        if (Objects.requireNonNull(ModuleRegistry.getByClass(Deadmau5.class)).isEnabled()) return true;
+        if (ModuleRegistry.getByClass(Deadmau5.class).isEnabled()) return true;
         return abstractClientPlayerEntity.hasSkinTexture();
     }
 }

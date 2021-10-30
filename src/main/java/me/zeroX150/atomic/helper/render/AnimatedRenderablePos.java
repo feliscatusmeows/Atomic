@@ -11,10 +11,10 @@ import net.minecraft.util.math.Vec3d;
 public class AnimatedRenderablePos extends RenderablePosition {
     final long entry = System.currentTimeMillis();
     final double duration;
-    final Color from;
-    final Color to;
+    final CustomColor from;
+    final CustomColor to;
 
-    public AnimatedRenderablePos(Color from, Color to, Vec3d position, Vec3d dimensions, int durationMS) {
+    public AnimatedRenderablePos(CustomColor from, CustomColor to, Vec3d position, Vec3d dimensions, int durationMS) {
         super(from, position, dimensions);
         this.duration = durationMS;
         this.from = from;
@@ -22,12 +22,12 @@ public class AnimatedRenderablePos extends RenderablePosition {
     }
 
     @Override
-    public Color getColor() {
+    public CustomColor getColor() {
         long timeExisted = System.currentTimeMillis() - entry;
         double v = timeExisted / duration;
         v = MathHelper.clamp(v, 0, 1);
         v = 1 - v;
-        return new Color(Renderer.Util.lerp(from, to, v).getRGB(), super.getColor().isChroma());
+        return new CustomColor(Renderer.Util.lerp(from, to, v).getRGB(), super.getColor().isChroma());
     }
 
     public boolean isExpired() {

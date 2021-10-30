@@ -7,7 +7,8 @@ package me.zeroX150.atomic.feature.gui.screen;
 
 import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import me.zeroX150.atomic.Atomic;
-import me.zeroX150.atomic.helper.render.Color;
+import me.zeroX150.atomic.helper.font.FontRenderers;
+import me.zeroX150.atomic.helper.render.CustomColor;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Transitions;
 import me.zeroX150.atomic.helper.util.Utils;
@@ -33,7 +34,7 @@ public class MessageScreen extends Screen implements FastTickable {
         this.parent = parent;
         if (this.parent == null) this.parent = Atomic.client.currentScreen;
         this.title = title;
-        description = String.join("\n", Utils.splitLinesToWidth(description, width - 10, Atomic.monoFontRenderer));
+        description = String.join("\n", Utils.splitLinesToWidth(description, width - 10, FontRenderers.mono));
         this.description = description;
         this.callback = callback;
         this.type = type;
@@ -46,7 +47,7 @@ public class MessageScreen extends Screen implements FastTickable {
 
     @Override
     public void onFastTick() {
-        double a = 0.01;
+        double a = 0.02;
         if (close) a *= -1;
         animation += a;
         animation = MathHelper.clamp(animation, 0, 1);
@@ -98,15 +99,15 @@ public class MessageScreen extends Screen implements FastTickable {
         double rw = (width * ap2) / 2d;
         Renderer.R2D.scissor(centerX - width / 2d - 2, centerY - height / 2d, rw * 2 + 2, rh * 2);
         Renderer.R2D.fill(matrices, Utils.getCurrentRGB(), centerX - width / 2d - 2, centerY - height / 2d, centerX - width / 2d, centerY + height / 2d);
-        Renderer.R2D.fill(matrices, new Color(0, 0, 0, 200), centerX - width / 2d, centerY - height / 2d, centerX + width / 2d, centerY + height / 2d);
+        Renderer.R2D.fill(matrices, new CustomColor(0, 0, 0, 200), centerX - width / 2d, centerY - height / 2d, centerX + width / 2d, centerY + height / 2d);
         if (!title.isEmpty()) {
-            Atomic.fontRenderer.drawCenteredString(matrices, title, centerX, centerY - height / 2d + 4, 0xFFFFFF);
+            FontRenderers.normal.drawCenteredString(matrices, title, centerX, centerY - height / 2d + FontRenderers.normal.getFontHeight() / 2f, 0xFFFFFF);
         }
         if (!description.isEmpty()) {
             int yoff = 0;
             for (String s : description.split("\n")) {
-                Atomic.monoFontRenderer.drawCenteredString(matrices, s, centerX, centerY - height / 2d + 4 + 10 + yoff, 0xCCCCCC);
-                yoff += 10;
+                FontRenderers.mono.drawCenteredString(matrices, s, centerX, centerY - height / 2d + FontRenderers.normal.getFontHeight() / 2f + 10 + yoff, 0xCCCCCC);
+                yoff += FontRenderers.mono.getFontHeight();
             }
         }
         super.render(matrices, mouseX, mouseY, delta);

@@ -10,6 +10,7 @@ import me.zeroX150.atomic.feature.gui.clickgui.Themes;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.manager.AttackManager;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Transitions;
@@ -32,13 +33,14 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class TargetHud extends Module {
+    public static int modalWidth = 160;
+    public static int modalHeight = 70;
     final BooleanValue renderPing = (BooleanValue) this.config.create("Render ping", true).description("Shows the ping of the enemy");
     final BooleanValue renderHP = (BooleanValue) this.config.create("Render health", true).description("Shows the current HP");
     final BooleanValue renderMaxHP = (BooleanValue) this.config.create("Render max health", true).description("Shows the max HP");
     final BooleanValue renderDistance = (BooleanValue) this.config.create("Render distance", true).description("Shows the distance to the player");
     final BooleanValue renderLook = (BooleanValue) this.config.create("Render look", false).description("Shows if the player is looking at you");
     final BooleanValue renderLoseWin = (BooleanValue) this.config.create("Render lose / win", true).description("Shows if you're losing or winning, if in battle");
-
     double wX = 0;
     double renderWX1 = 0;
     Entity e = null;
@@ -106,12 +108,11 @@ public class TargetHud extends Module {
 
     @Override
     public void onHudRender() {
-        MatrixStack stack = Renderer.R3D.getEmptyMatrixStack();
-        stack.push();
-        int w = Atomic.client.getWindow().getScaledWidth();
-        int h = Atomic.client.getWindow().getHeight();
-        int modalWidth = 160;
-        int modalHeight = 70;
+
+    }
+
+    public void draw(MatrixStack stack) {
+        if (!this.isEnabled()) return;
         if (e != null) {
             wX = 100;
             re = e;
@@ -121,24 +122,21 @@ public class TargetHud extends Module {
 
             float yOffset = 5;
             double renderWX = renderWX1 / 100d;
-            double renderPosX = w / 2d + 10;
-            double renderPosY = h / 4d + 10;
-            stack.translate(renderPosX, renderPosY, 0);
             stack.push();
             double rwxI = Math.abs(1 - renderWX);
             double x = rwxI * (modalWidth / 2d);
             double y = rwxI * (modalHeight / 2d);
             stack.translate(x, y, 0);
             stack.scale((float) renderWX, (float) renderWX, 1);
-            Renderer.R2D.fill(stack, Renderer.Util.modify(Themes.Theme.ATOMIC.getPalette().active(), -1, -1, -1, 200), 0, 0, modalWidth, modalHeight);
-            Atomic.fontRenderer.drawString(stack, entity.getEntityName(), 40, yOffset, 0xFFFFFF);
-            yOffset += 10;
+            Renderer.R2D.fill(stack, Renderer.Util.modify(Themes.Theme.ATOMIC.getPalette().left(), -1, -1, -1, 200), 0, 0, modalWidth, modalHeight);
+            FontRenderers.normal.drawString(stack, entity.getEntityName(), 40, yOffset, 0xFFFFFF);
+            yOffset += FontRenderers.normal.getFontHeight();
             PlayerListEntry ple = Objects.requireNonNull(Atomic.client.getNetworkHandler()).getPlayerListEntry(entity.getUuid());
             if (ple != null && renderPing.getValue()) {
                 int ping = ple.getLatency();
                 String v = ping + " ms";
-                float ww = Atomic.fontRenderer.getStringWidth(v);
-                Atomic.fontRenderer.drawString(stack, v, modalWidth - ww - 5, 5, 0xFFFFFF);
+                float ww = FontRenderers.normal.getStringWidth(v);
+                FontRenderers.normal.drawString(stack, v, modalWidth - ww - 5, 5, 0xFFFFFF);
             }
             float mhealth = (float) trackedMaxHp;
             float health = (float) trackedHp;
@@ -153,31 +151,31 @@ public class TargetHud extends Module {
             Color MID_END = Renderer.Util.lerp(GREEN, RED, hPer);
             Renderer.R2D.fillGradientH(stack, RED, MID_END, 0, modalHeight - 2, renderToX, modalHeight);
             if (renderHP.getValue()) {
-                Atomic.fontRenderer.drawString(stack, Utils.Math.roundToDecimal(trackedHp, 2) + " HP", 40, yOffset, MID_END.getRGB());
-                yOffset += 10;
+                FontRenderers.normal.drawString(stack, Utils.Math.roundToDecimal(trackedHp, 2) + " HP", 40, yOffset, MID_END.getRGB());
+                yOffset += FontRenderers.normal.getFontHeight();
             }
             if (renderDistance.getValue()) {
-                Atomic.fontRenderer.drawString(stack, Utils.Math.roundToDecimal(entity.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()), 1) + " D", 40, yOffset, 0xFFFFFF);
-                yOffset += 10;
+                FontRenderers.normal.drawString(stack, Utils.Math.roundToDecimal(entity.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()), 1) + " D", 40, yOffset, 0xFFFFFF);
+                yOffset += FontRenderers.normal.getFontHeight();
             }
             if (renderMaxHP.getValue()) {
                 String t = Utils.Math.roundToDecimal(mhealth, 2) + "";
                 if (remainder > 0) {
                     t += "§6 + " + Utils.Math.roundToDecimal(remainder, 1);
                 }
-                float mhP = Atomic.fontRenderer.getStringWidth(t);
-                Atomic.fontRenderer.drawString(stack, t, (modalWidth - mhP - 3), (modalHeight - 3 - 10), 0xFFFFFF);
+                float mhP = FontRenderers.normal.getStringWidth(t);
+                FontRenderers.normal.drawString(stack, t, (modalWidth - mhP - 3), (modalHeight - 3 - FontRenderers.normal.getFontHeight()), 0xFFFFFF);
             }
 
             HitResult bhr = entity.raycast(entity.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()), 0f, false);
             if (bhr.getPos().distanceTo(Atomic.client.player.getPos().add(0, 1, 0)) < 1.5 && renderLook.getValue()) {
-                Atomic.fontRenderer.drawString(stack, "Looks at you", 40, yOffset, 0xFFFFFF);
-                yOffset += 10;
+                FontRenderers.normal.drawString(stack, "Looks at you", 40, yOffset, 0xFFFFFF);
+                yOffset += FontRenderers.normal.getFontHeight();
             }
 
             if (AttackManager.getLastAttackInTimeRange() != null && renderLoseWin.getValue()) {
                 String st = entity.getHealth() > Atomic.client.player.getHealth() ? "Losing" : entity.getHealth() == Atomic.client.player.getHealth() ? "Stalemate" : "Winning";
-                Atomic.fontRenderer.drawString(stack, st, 40, yOffset, 0xFFFFFF);
+                FontRenderers.normal.drawString(stack, st, 40, yOffset, 0xFFFFFF);
             }
 
             Text cname = re.getCustomName();
@@ -186,7 +184,6 @@ public class TargetHud extends Module {
             Renderer.R2D.drawEntity((20 * renderWX) + x, (modalHeight - 11) * renderWX + y, renderWX * 27, -10, -10, entity, stack);
             re.setCustomName(cname);
         }
-        stack.push();
     }
 
 }

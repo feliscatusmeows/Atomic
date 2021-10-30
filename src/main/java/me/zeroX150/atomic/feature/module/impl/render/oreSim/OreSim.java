@@ -78,7 +78,7 @@ public class OreSim extends Module {
             } else if (setting.getKey().equals("Ancient Debris")) {
                 setting.showOnlyIf(() -> version.getIndex() >= 2);
             }
-            return Atomic.fontRenderer.getStringWidth(setting.getKey());
+            return /*FontRenderers.normal.getStringWidth(setting.getKey())*/0;
         })).forEach(this.config.getAll()::add);
 
         this.config.organizeClickGUIList = false;
