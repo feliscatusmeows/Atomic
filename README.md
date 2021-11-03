@@ -15,7 +15,7 @@ a bit stale, so I decided to start this.
 
 ## Downloading
 
-You can download this from the `builds` folder. The latest jarfile will always be called "latest.jar". Download and drag
+You can download this from the `builds` folder. There is only one file in there, so i dont think you can download the wrong thing. Download and drag
 into your 1.17+ mods folder to use. Download in the `builds` folder,
 or [here](https://github.com/cornos/Atomic/raw/master/builds/latest.jar) for a direct download link
 
