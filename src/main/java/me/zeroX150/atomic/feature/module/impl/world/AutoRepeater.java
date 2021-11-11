@@ -26,16 +26,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class AutoRepeater extends Module {
-    final SliderValue delay = (SliderValue) this.config.create("New Delay", 1, 1, 4, 0).description("How much delay to set repeaters to");
-    final SliderValue amountPerTick = (SliderValue) this.config.create("Amount per tick", 5, 1, 20, 0).description("How many repeaters to change per tick");
-    final List<BlockPos> bps = new ArrayList<>();
+
+    final SliderValue    delay         = (SliderValue) this.config.create("New Delay", 1, 1, 4, 0).description("How much delay to set repeaters to");
+    final SliderValue    amountPerTick = (SliderValue) this.config.create("Amount per tick", 5, 1, 20, 0).description("How many repeaters to change per tick");
+    final List<BlockPos> bps           = new ArrayList<>();
 
     public AutoRepeater() {
         super("Auto Repeater", "Automatically sets delay of repeaters near you to n", ModuleType.WORLD);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         bps.clear();
         scan();
     }
@@ -47,12 +47,15 @@ public class AutoRepeater extends Module {
         for (int y = r; y > -r - 1; y--) {
             for (int x = -r; x < r + 1; x++) {
                 for (int z = -r; z < r + 1; z++) {
-                    if (i >= amountPerTick.getValue()) return;
+                    if (i >= amountPerTick.getValue()) {
+                        return;
+                    }
                     BlockPos offset = new BlockPos(x, y, z);
                     BlockPos actual = player.add(offset);
                     Vec3d c = new Vec3d(actual.getX() + .5, actual.getY() + .1, actual.getZ() + .5);
-                    if (c.distanceTo(Atomic.client.player.getPos()) > Atomic.client.interactionManager.getReachDistance())
+                    if (c.distanceTo(Atomic.client.player.getPos()) > Atomic.client.interactionManager.getReachDistance()) {
                         continue;
+                    }
                     BlockState state = Objects.requireNonNull(Atomic.client.world).getBlockState(actual);
                     if (state.getBlock() == Blocks.REPEATER) {
                         int currentDelay = state.get(RepeaterBlock.DELAY);
@@ -68,31 +71,26 @@ public class AutoRepeater extends Module {
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
         for (BlockPos blockPos : new ArrayList<>(bps)) {
             Vec3d v = new Vec3d(blockPos.getX(), blockPos.getY(), blockPos.getZ());
             Renderer.R3D.renderFilled(v, new Vec3d(1, 0.2, 1), Utils.getCurrentRGB(), matrices);
         }
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

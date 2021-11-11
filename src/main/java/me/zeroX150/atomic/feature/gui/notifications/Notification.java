@@ -14,17 +14,18 @@ import java.util.List;
 import java.util.Objects;
 
 public class Notification {
-    public final String title;
-    public final long creationDate;
-    public String[] contents;
-    public long duration;
-    public double posX;
-    public double posY;
-    public double renderPosX = 0;
-    public double renderPosY = 0;
-    public double animationProgress = 0;
-    public double animationGoal = 0;
-    public boolean shouldDoAnimation = false;
+
+    public final String   title;
+    public final long     creationDate;
+    public       String[] contents;
+    public       long     duration;
+    public       double   posX;
+    public       double   posY;
+    public       double   renderPosX        = 0;
+    public       double   renderPosY        = 0;
+    public       double   animationProgress = 0;
+    public       double   animationGoal     = 0;
+    public       boolean  shouldDoAnimation = false;
 
 
     public Notification(long duration, String title, String... contents) {
@@ -35,8 +36,7 @@ public class Notification {
     }
 
     /**
-     * Creates a new notification rendered on the screen<br>
-     * If the duration is below 0, it counts as special. Special codes and their meaning:<br>
+     * Creates a new notification rendered on the screen<br> If the duration is below 0, it counts as special. Special codes and their meaning:<br>
      * <ul>
      *  <li>-1: This is an error message (blinks red, doesnt remove itself)</li>
      *  <li>-2: This is a success message (blinks green, doesnt remove itself)</li>
@@ -55,7 +55,9 @@ public class Notification {
             if (topBar) {
                 n.posY = n.renderPosY = -69;
                 NotificationRenderer.topBarNotifications.add(0, n);
-            } else NotificationRenderer.notifications.add(0, n);
+            } else {
+                NotificationRenderer.notifications.add(0, n);
+            }
         }
         return n;
     }
@@ -64,8 +66,7 @@ public class Notification {
         return create(duration, title, false, contents);
     }
 
-    @SuppressWarnings("UnusedReturnValue")
-    public static Notification create(long duration, String title, String split) {
+    @SuppressWarnings("UnusedReturnValue") public static Notification create(long duration, String title, String split) {
         List<String> splitContent = new ArrayList<>();
         StringBuilder line = new StringBuilder();
         for (String c : split.split(" +")) {

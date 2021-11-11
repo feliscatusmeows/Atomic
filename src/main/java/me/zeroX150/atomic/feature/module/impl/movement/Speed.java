@@ -16,7 +16,8 @@ import net.minecraft.entity.attribute.EntityAttributeInstance;
 import net.minecraft.entity.attribute.EntityAttributes;
 
 public class Speed extends Module {
-    final MultiValue mode = (MultiValue) this.config.create("Mode", "Vanilla", "Vanilla", "BHop", "Legit", "Minihop").description("The mode");
+
+    final MultiValue  mode     = (MultiValue) this.config.create("Mode", "Vanilla", "Vanilla", "BHop", "Legit", "Minihop").description("The mode");
     final SliderValue newSpeed = (SliderValue) this.config.create("Speed multiplier", 1, 0, 5, 1).description("The speed multiplier");
     final SliderValue bhopDown = (SliderValue) this.config.create("Down velocity", 1, -0.7, 3, 2).description("How fast to go down on bhop");
 
@@ -28,11 +29,14 @@ public class Speed extends Module {
         newSpeed.showOnlyIf(() -> !mode.getValue().equalsIgnoreCase("legit"));
     }
 
-    @Override
-    public void tick() {
-        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
+    @Override public void tick() {
+        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) {
+            return;
+        }
         EntityAttributeInstance speed = Atomic.client.player.getAttributes().getCustomInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-        if (speed == null) return;
+        if (speed == null) {
+            return;
+        }
         switch (mode.getValue().toLowerCase()) {
             case "vanilla" -> speed.setBaseValue(prev * newSpeed.getValue());
             case "bhop" -> {
@@ -57,9 +61,13 @@ public class Speed extends Module {
                 }
             }
             case "legit" -> {
-                if (Atomic.client.player.isOnGround() && isMoving()) Atomic.client.player.jump();
+                if (Atomic.client.player.isOnGround() && isMoving()) {
+                    Atomic.client.player.jump();
+                }
                 EntityAttributeInstance eai = Atomic.client.player.getAttributes().getCustomInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-                if (eai != null) eai.setBaseValue(prev);
+                if (eai != null) {
+                    eai.setBaseValue(prev);
+                }
             }
         }
     }
@@ -69,32 +77,35 @@ public class Speed extends Module {
         return go.keyForward.isPressed() || go.keyBack.isPressed() || go.keyRight.isPressed() || go.keyLeft.isPressed();
     }
 
-    @Override
-    public void enable() {
-        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
+    @Override public void enable() {
+        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) {
+            return;
+        }
         EntityAttributeInstance eai = Atomic.client.player.getAttributes().getCustomInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-        if (eai != null) prev = eai.getValue();
+        if (eai != null) {
+            prev = eai.getValue();
+        }
     }
 
-    @Override
-    public void disable() {
-        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
+    @Override public void disable() {
+        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) {
+            return;
+        }
         EntityAttributeInstance eai = Atomic.client.player.getAttributes().getCustomInstance(EntityAttributes.GENERIC_MOVEMENT_SPEED);
-        if (eai != null) eai.setBaseValue(prev);
+        if (eai != null) {
+            eai.setBaseValue(prev);
+        }
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return mode.getValue();
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

@@ -34,9 +34,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 public class HomeScreen extends Screen {
-    static boolean shownWelcome = false;
-    final FlowParticleManager pm = new FlowParticleManager(100);
-    String t;
+
+    static boolean             shownWelcome = false;
+    final  FlowParticleManager pm           = new FlowParticleManager(100);
+    String  t;
     boolean isMeteorLoaded = false;
 
     public HomeScreen() {
@@ -50,8 +51,7 @@ public class HomeScreen extends Screen {
         }
     }
 
-    @Override
-    protected void init() {
+    @Override protected void init() {
         if (!shownWelcome) {
             shownWelcome = true;
             Atomic.client.setOverlay(new WelcomeOverlay());
@@ -72,20 +72,17 @@ public class HomeScreen extends Screen {
         isMeteorLoaded = FabricLoader.getInstance().isModLoaded("meteor-client");
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         pm.tick();
         super.tick();
     }
 
-    @Override
-    public void resize(MinecraftClient client, int width, int height) {
+    @Override public void resize(MinecraftClient client, int width, int height) {
         pm.remake();
         super.resize(client, width, height);
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackgroundTexture(0);
         pm.render();
         double logoSize = 0.3;
@@ -109,8 +106,7 @@ public class HomeScreen extends Screen {
         return new ButtonWidget(width / 2 - (150 / 2), y, 150, 20, Text.of(t), action);
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Override public boolean mouseClicked(double mouseX, double mouseY, int button) {
         float width = FontRenderers.normal.getStringWidth(t);
         float mwidth = width + FontRenderers.normal.getStringWidth("0x150");
         float h = height - 10;

@@ -11,13 +11,14 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class LongJump extends Module {
-    SliderValue xz = (SliderValue) this.config.create("Speed", 5, 0, 20, 2).description("How fast to yeet forwards");
-    MultiValue focus = (MultiValue) this.config.create("Focus on", "Direction", "Direction", "Velocity").description("What to look at when applying longjump");
-    BooleanValue glide = (BooleanValue) this.config.create("Glide", true).description("Whether or not to glide when falling from a jump");
-    SliderValue glideVelocity = (SliderValue) this.config.create("Glide velocity", 0.05, -0.08, 0.07, 2).description("How much upwards velocity to apply while gliding");
-    BooleanValue keepApplying = (BooleanValue) this.config.create("Keep applying", true).description("Whether or not to keep applying the effect when falling from a jump");
-    SliderValue applyStrength = (SliderValue) this.config.create("Apply strength", 0.3, 0.01, 0.3, 3).description("How strong the effect should be when applying in post");
-    boolean jumped = false;
+
+    SliderValue  xz            = (SliderValue) this.config.create("Speed", 5, 0, 20, 2).description("How fast to yeet forwards");
+    MultiValue   focus         = (MultiValue) this.config.create("Focus on", "Direction", "Direction", "Velocity").description("What to look at when applying longjump");
+    BooleanValue glide         = (BooleanValue) this.config.create("Glide", true).description("Whether or not to glide when falling from a jump");
+    SliderValue  glideVelocity = (SliderValue) this.config.create("Glide velocity", 0.05, -0.08, 0.07, 2).description("How much upwards velocity to apply while gliding");
+    BooleanValue keepApplying  = (BooleanValue) this.config.create("Keep applying", true).description("Whether or not to keep applying the effect when falling from a jump");
+    SliderValue  applyStrength = (SliderValue) this.config.create("Apply strength", 0.3, 0.01, 0.3, 3).description("How strong the effect should be when applying in post");
+    boolean      jumped        = false;
 
     public LongJump() {
         super("Long Jump", "Jumps a long distance", ModuleType.MOVEMENT);
@@ -43,13 +44,14 @@ public class LongJump extends Module {
         jumped = true;
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         if (!Atomic.client.options.keyJump.isPressed()) {
             jumped = false;
         }
         if (Atomic.client.player.getVelocity().y < 0 && !Atomic.client.player.isOnGround() && Atomic.client.player.fallDistance > 0 && jumped) {
-            if (glide.getValue()) Atomic.client.player.addVelocity(0, glideVelocity.getValue(), 0);
+            if (glide.getValue()) {
+                Atomic.client.player.addVelocity(0, glideVelocity.getValue(), 0);
+            }
             if (keepApplying.getValue()) {
                 Vec3d newVel = getVel();
                 newVel = newVel.multiply(applyStrength.getValue());
@@ -65,28 +67,23 @@ public class LongJump extends Module {
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

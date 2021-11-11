@@ -9,6 +9,7 @@ import me.zeroX150.atomic.helper.event.events.base.NonCancellableEvent;
 import net.minecraft.entity.player.PlayerEntity;
 
 public class PlayerNoClipQueryEvent extends NonCancellableEvent {
+
     final PlayerEntity player;
     NoClipState state = NoClipState.UNSET;
 
@@ -29,8 +30,11 @@ public class PlayerNoClipQueryEvent extends NonCancellableEvent {
     }
 
     public boolean getNoClip() {
-        if (state == NoClipState.UNSET) return player.isSpectator();
-        else return state == NoClipState.ACTIVE;
+        if (state == NoClipState.UNSET) {
+            return player.isSpectator();
+        } else {
+            return state == NoClipState.ACTIVE;
+        }
     }
 
     public enum NoClipState {

@@ -20,11 +20,12 @@ import net.minecraft.util.math.MathHelper;
 import java.util.Objects;
 
 public class Zoom extends Module {
-    static long enabledTime = 0;
-    static SliderValue finalFov;
-    final BooleanValue hold = (BooleanValue) this.config.create("Hold", true).description("Whether or not to disable the module when the keybind is unpressed");
+
+    static long         enabledTime = 0;
+    static SliderValue  finalFov;
+    final  BooleanValue hold        = (BooleanValue) this.config.create("Hold", true).description("Whether or not to disable the module when the keybind is unpressed");
     Keybind kb;
-    double msens = 0.5d;
+    double  msens = 0.5d;
 
     public Zoom() {
         super("Zoom", "ok zoomer", ModuleType.RENDER);
@@ -34,7 +35,9 @@ public class Zoom extends Module {
     public static double getZoomValue(double vanilla) {
         long enabledFor = System.currentTimeMillis() - enabledTime;
         double prog = MathHelper.clamp(enabledFor / 100d, 0, 1);
-        if (!Objects.requireNonNull(ModuleRegistry.getByClass(Zoom.class)).isEnabled()) prog = Math.abs(1 - prog);
+        if (!Objects.requireNonNull(ModuleRegistry.getByClass(Zoom.class)).isEnabled()) {
+            prog = Math.abs(1 - prog);
+        }
         prog = easeOutBounce(prog);
         return Renderer.Util.lerp(vanilla, finalFov.getValue(), prog);
     }
@@ -43,15 +46,16 @@ public class Zoom extends Module {
         return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
     }
 
-    @Override
-    public void tick() {
-        if (kb == null) return;
-        if (!kb.isHeld() && hold.getValue()) this.setEnabled(false);
+    @Override public void tick() {
+        if (kb == null) {
+            return;
+        }
+        if (!kb.isHeld() && hold.getValue()) {
+            this.setEnabled(false);
+        }
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public void enable() {
+    @SuppressWarnings("unchecked") @Override public void enable() {
         msens = Atomic.client.options.mouseSensitivity;
         Atomic.client.options.mouseSensitivity = msens * (finalFov.getValue() / Atomic.client.options.fov);
         // retard the keybind thing is always an int shut the fuck up
@@ -59,24 +63,20 @@ public class Zoom extends Module {
         enabledTime = System.currentTimeMillis();
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
         enabledTime = System.currentTimeMillis();
         Atomic.client.options.mouseSensitivity = msens;
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

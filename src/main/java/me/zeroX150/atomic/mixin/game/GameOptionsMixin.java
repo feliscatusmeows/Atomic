@@ -16,15 +16,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.File;
 
-@Mixin(GameOptions.class)
-public class GameOptionsMixin {
+@Mixin(GameOptions.class) public class GameOptionsMixin {
 
     @Shadow public boolean autoJump;
 
     @Shadow public NarratorMode narrator;
 
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void disableAutojump(MinecraftClient client, File optionsFile, CallbackInfo ci) {
+    @Inject(method = "<init>", at = @At("RETURN")) private void atomic_disableAutojumpAndNarrator(MinecraftClient client, File optionsFile, CallbackInfo ci) {
         this.autoJump = false;
         this.narrator = NarratorMode.OFF;
     }

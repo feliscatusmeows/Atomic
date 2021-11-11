@@ -12,9 +12,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ModuleConfig {
-    final List<DynamicValue<?>> config = new ArrayList<>();
-    final List<PropGroup> groups = new ArrayList<>();
-    public boolean organizeClickGUIList = true;
+
+    final  List<DynamicValue<?>> config               = new ArrayList<>();
+    final  List<PropGroup>       groups               = new ArrayList<>();
+    public boolean               organizeClickGUIList = true;
 
     public void addProxy(DynamicValue<?> v) {
         config.add(v);
@@ -69,7 +70,9 @@ public class ModuleConfig {
 
     public DynamicValue<?> get(String key) {
         for (DynamicValue<?> dynamicValue : config) {
-            if (dynamicValue.getKey().equalsIgnoreCase(key)) return dynamicValue;
+            if (dynamicValue.getKey().equalsIgnoreCase(key)) {
+                return dynamicValue;
+            }
         }
         return null;
     }

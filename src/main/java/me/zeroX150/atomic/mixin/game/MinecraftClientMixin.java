@@ -25,47 +25,44 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Objects;
 
-@Mixin(MinecraftClient.class)
-public class MinecraftClientMixin {
-    @Shadow
-    private int itemUseCooldown;
+@Mixin(MinecraftClient.class) public class MinecraftClientMixin {
 
-    @Inject(method = "stop", at = @At("HEAD"))
-    public void onStop(CallbackInfo ci) {
+    @Shadow private int itemUseCooldown;
+
+    @Inject(method = "stop", at = @At("HEAD")) public void atomic_preStop(CallbackInfo ci) {
         ConfigManager.saveState();
     }
 
-    @Inject(method = "hasReducedDebugInfo", at = @At("HEAD"), cancellable = true)
-    public void overwriteReducedDebugInfo(CallbackInfoReturnable<Boolean> cir) {
-        if (Objects.requireNonNull(ModuleRegistry.getByClass(AntiReducedDebugInfo.class)).isEnabled())
+    @Inject(method = "hasReducedDebugInfo", at = @At("HEAD"), cancellable = true) public void atomic_overwriteReducedDebugInfo(CallbackInfoReturnable<Boolean> cir) {
+        if (Objects.requireNonNull(ModuleRegistry.getByClass(AntiReducedDebugInfo.class)).isEnabled()) {
             cir.setReturnValue(false);
+        }
     }
 
-    @Redirect(method = "handleInputEvents", at = @At(
-            value = "FIELD",
-            opcode = Opcodes.GETFIELD,
-            target = "Lnet/minecraft/client/MinecraftClient;itemUseCooldown:I"
-    ))
-    public int replaceItemUseCooldown(MinecraftClient minecraftClient) {
-        if (Objects.requireNonNull(ModuleRegistry.getByClass(FastUse.class)).isEnabled()) return 0;
-        else return this.itemUseCooldown;
+    @Redirect(method = "handleInputEvents", at = @At(value = "FIELD", opcode = Opcodes.GETFIELD, target = "Lnet/minecraft/client/MinecraftClient;itemUseCooldown:I"))
+    public int atomic_replaceItemUseCooldown(MinecraftClient minecraftClient) {
+        if (Objects.requireNonNull(ModuleRegistry.getByClass(FastUse.class)).isEnabled()) {
+            return 0;
+        } else {
+            return this.itemUseCooldown;
+        }
     }
 
-    @Inject(method = "getWindowTitle", at = @At("HEAD"), cancellable = true)
-    public void getWindowTitle(CallbackInfoReturnable<String> cir) {
-        if (!Atomic.INSTANCE.initialized) return;
+    @Inject(method = "getWindowTitle", at = @At("HEAD"), cancellable = true) public void atomic_replaceWindowTitle(CallbackInfoReturnable<String> cir) {
+        if (!Atomic.INSTANCE.initialized) {
+            return;
+        }
         String v = Objects.requireNonNull(ModuleRegistry.getByClass(WindowCustomization.class)).title.getValue();
-        if (Objects.requireNonNull(ModuleRegistry.getByClass(WindowCustomization.class)).isEnabled() && !v.isEmpty())
+        if (Objects.requireNonNull(ModuleRegistry.getByClass(WindowCustomization.class)).isEnabled() && !v.isEmpty()) {
             cir.setReturnValue(v);
+        }
     }
 
-    @Inject(method = "setScreen", at = @At("HEAD"))
-    void onSetScreen(Screen screen, CallbackInfo ci) {
+    @Inject(method = "setScreen", at = @At("HEAD")) void atomic_preSetScreen(Screen screen, CallbackInfo ci) {
         Atomic.lastScreenChange = System.currentTimeMillis();
     }
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    void postInit(RunArgs args, CallbackInfo ci) {
+    @Inject(method = "<init>", at = @At("TAIL")) void atomic_postInit(RunArgs args, CallbackInfo ci) {
         Atomic.INSTANCE.postWindowInit();
     }
 }

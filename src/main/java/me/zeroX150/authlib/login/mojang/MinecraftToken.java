@@ -43,11 +43,7 @@ public class MinecraftToken {
         return username;
     }
 
-    @Override
-    public String toString() {
-        return "MinecraftToken{" +
-                "accessToken='" + accessToken + '\'' +
-                ", username='" + username + '\'' +
-                '}';
+    @Override public String toString() {
+        return "MinecraftToken{" + "accessToken='" + accessToken + '\'' + ", username='" + username + '\'' + '}';
     }
 }

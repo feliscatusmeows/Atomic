@@ -11,8 +11,8 @@ import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.feature.module.config.MultiValue;
-import me.zeroX150.atomic.feature.module.config.PropGroup;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
+import me.zeroX150.atomic.helper.Timer;
 import me.zeroX150.atomic.helper.manager.AttackManager;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Friends;
@@ -42,41 +42,37 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class Killaura extends Module {
-    final BooleanValue capRangeAtMax = (BooleanValue) this.config.create("Max range", true).description("Whether or not to set the range to the max");
-    final SliderValue range = (SliderValue) this.config.create("Range", 3.2, 0.1, 7, 2).description("The range to select entities by");
 
-    final BooleanValue automaticDelay = (BooleanValue) this.config.create("Auto delay", true).description("Whether or not to automatically pick a delay based on your weapon");
-    final SliderValue delay = (SliderValue) this.config.create("Delay", 0, 0, 20, 0).description("The delay before attacking");
-
-    final MultiValue mode = (MultiValue) this.config.create("Mode", "Single", "Single", "Multi").description("The mode");
-    final SliderValue multiLimit = (SliderValue) this.config.create("Targets", 1, 1, 5, 0).description("How many enemies to attack");
-    final MultiValue prio = (MultiValue) this.config.create("Priority", "Distance", "Distance", "Health descending", "Health ascending", "Angle").description("What to prioritize when selecting an entity to attack");
-    final BooleanValue attackPlayers = (BooleanValue) this.config.create("Attack players", true).description("Whether or not to attack players");
-    final BooleanValue attackHostile = (BooleanValue) this.config.create("Attack hostile", true).description("Whether or not to attack monsters");
-    final BooleanValue attackNeutral = (BooleanValue) this.config.create("Attack neutral", true).description("Whether or not to attack neutral mobs");
-    final BooleanValue attackPassive = (BooleanValue) this.config.create("Attack passive", true).description("Whether or not to attack animals");
-    final BooleanValue attackEverything = (BooleanValue) this.config.create("Attack everything", true).description("Attack everything that does not apply to previous filters");
-
-    final BooleanValue enableConfuse = (BooleanValue) this.config.create("Enable Confuse", false).description("Various settings");
-    final MultiValue confuseMode = this.config.create("Confuse Mode", "TP", "Behind", "TP", "Circle");
-    final BooleanValue confuseAllowClip = (BooleanValue) this.config.create("Move into solid", false).description("Allow confuse to tp into block");
-
+    final BooleanValue capRangeAtMax           = (BooleanValue) this.config.create("Max range", true).description("Whether or not to set the range to the max");
+    final SliderValue  range                   = (SliderValue) this.config.create("Range", 3.2, 0.1, 7, 2).description("The range to select entities by");
+    final BooleanValue automaticDelay          = (BooleanValue) this.config.create("Auto delay", true).description("Whether or not to automatically pick a delay based on your weapon");
+    final SliderValue  delay                   = (SliderValue) this.config.create("Delay", 0, 0, 20, 1).description("The delay before attacking");
+    final MultiValue   mode                    = (MultiValue) this.config.create("Mode", "Single", "Single", "Multi").description("The mode");
+    final SliderValue  multiLimit              = (SliderValue) this.config.create("Targets", 1, 1, 5, 0).description("How many enemies to attack");
+    final MultiValue   prio                    = (MultiValue) this.config.create("Priority", "Distance", "Distance", "Health descending", "Health ascending", "Angle")
+            .description("What to prioritize when selecting an entity to attack");
+    final BooleanValue attackPlayers           = (BooleanValue) this.config.create("Attack players", true).description("Whether or not to attack players");
+    final BooleanValue attackHostile           = (BooleanValue) this.config.create("Attack hostile", true).description("Whether or not to attack monsters");
+    final BooleanValue attackNeutral           = (BooleanValue) this.config.create("Attack neutral", true).description("Whether or not to attack neutral mobs");
+    final BooleanValue attackPassive           = (BooleanValue) this.config.create("Attack passive", true).description("Whether or not to attack animals");
+    final BooleanValue attackEverything        = (BooleanValue) this.config.create("Attack everything", true).description("Attack everything that does not apply to previous filters");
+    final BooleanValue enableConfuse           = (BooleanValue) this.config.create("Enable Confuse", false).description("Various settings");
+    final MultiValue   confuseMode             = this.config.create("Confuse Mode", "TP", "Behind", "TP", "Circle");
+    final BooleanValue confuseAllowClip        = (BooleanValue) this.config.create("Move into solid", false).description("Allow confuse to tp into block");
     final BooleanValue attackOnlyCombatPartner = (BooleanValue) this.config.create("Attack combat", true).description("Whether or not to only attack the combat partner (if in combat)");
-    final BooleanValue ignoreFriends = (BooleanValue) this.config.create("Ignore friends", true).description("Whether or not to ignore friends");
+    final BooleanValue ignoreFriends           = (BooleanValue) this.config.create("Ignore friends", true).description("Whether or not to ignore friends");
 
-    PropGroup confuse = this.config.createPropGroup("Confuse", enableConfuse, confuseMode, confuseAllowClip);
-    PropGroup entities = this.config.createPropGroup("Entities", attackEverything, attackHostile, attackNeutral, attackPassive, attackPlayers, attackOnlyCombatPartner);
-
-    Entity combatPartner;
-    int delayPassed = 0;
-    double circleProg = 0;
+    Entity       combatPartner;
+    double       circleProg = 0;
+    Timer        delayExec  = new Timer();
+    List<Entity> attacks    = new ArrayList<>();
 
     public Killaura() {
         super("Killaura", "anime", ModuleType.COMBAT);
-        range.showOnlyIf(() -> !capRangeAtMax.getValue() && !attackOnlyCombatPartner.getValue());
-        delay.showOnlyIf(() -> !automaticDelay.getValue() && !attackOnlyCombatPartner.getValue());
+        range.showOnlyIf(() -> !capRangeAtMax.getValue());
+        delay.showOnlyIf(() -> !automaticDelay.getValue());
         capRangeAtMax.showOnlyIf(() -> !attackOnlyCombatPartner.getValue());
-        automaticDelay.showOnlyIf(() -> !attackOnlyCombatPartner.getValue());
+        //automaticDelay.showOnlyIf(() -> !attackOnlyCombatPartner.getValue());
         ignoreFriends.showOnlyIf(() -> !attackOnlyCombatPartner.getValue());
         multiLimit.showOnlyIf(() -> mode.getValue().equalsIgnoreCase("multi") && !attackOnlyCombatPartner.getValue());
         mode.showOnlyIf(() -> !attackOnlyCombatPartner.getValue());
@@ -89,15 +85,25 @@ public class Killaura extends Module {
         enableConfuse.showOnlyIf(() -> mode.getValue().equalsIgnoreCase("single"));
         confuseMode.showOnlyIf(() -> enableConfuse.getValue() && mode.getValue().equalsIgnoreCase("single"));
         confuseAllowClip.showOnlyIf(() -> enableConfuse.getValue() && mode.getValue().equalsIgnoreCase("single"));
+
+        this.config.createPropGroup("Confuse", enableConfuse, confuseMode, confuseAllowClip);
+        this.config.createPropGroup("Entities", attackEverything, attackHostile, attackNeutral, attackPassive, attackPlayers, attackOnlyCombatPartner);
     }
 
     int getDelay() {
-        if (Atomic.client.player == null) return 0;
-        if (!automaticDelay.getValue()) return (int) (delay.getValue() + 0);
-        else {
+        if (Atomic.client.player == null) {
+            return 0;
+        }
+        if (!automaticDelay.getValue()) {
+            return (int) (delay.getValue() + 0);
+        } else {
             ItemStack hand = Atomic.client.player.getMainHandStack();
-            if (hand == null) hand = Atomic.client.player.getOffHandStack();
-            if (hand == null) return 10;
+            if (hand == null) {
+                hand = Atomic.client.player.getOffHandStack();
+            }
+            if (hand == null) {
+                return 10;
+            }
             hand.getTooltip(Atomic.client.player, TooltipContext.Default.ADVANCED);
             AtomicDouble speed = new AtomicDouble(Atomic.client.player.getAttributeBaseValue(EntityAttributes.GENERIC_ATTACK_SPEED));
             hand.getAttributeModifiers(EquipmentSlot.MAINHAND).forEach((entityAttribute, entityAttributeModifier) -> {
@@ -110,9 +116,14 @@ public class Killaura extends Module {
     }
 
     double getRange() {
-        if (Atomic.client.interactionManager == null) return 0;
-        if (capRangeAtMax.getValue()) return Atomic.client.interactionManager.getReachDistance();
-        else return range.getValue();
+        if (Atomic.client.interactionManager == null) {
+            return 0;
+        }
+        if (capRangeAtMax.getValue()) {
+            return Atomic.client.interactionManager.getReachDistance();
+        } else {
+            return range.getValue();
+        }
     }
 
     void doConfuse(Entity e) { // This also contains a range check
@@ -133,60 +144,93 @@ public class Killaura extends Module {
                 updatePos = new Vec3d(e.getX() + sin, e.getY(), e.getZ() + cos);
             }
         }
-        if (!confuseAllowClip.getValue() && Atomic.client.world.getBlockState(new BlockPos(updatePos)).getMaterial().blocksMovement())
+        if (!confuseAllowClip.getValue() && Atomic.client.world.getBlockState(new BlockPos(updatePos)).getMaterial().blocksMovement()) {
             return;
-        if (e.getPos().distanceTo(updatePos) <= getRange())
+        }
+        if (e.getPos().distanceTo(updatePos) <= getRange()) {
             Atomic.client.player.updatePosition(updatePos.x, updatePos.y, updatePos.z);
+        }
     }
 
-    @Override
-    public void tick() {
-        if (Atomic.client.world == null || Atomic.client.player == null || Atomic.client.interactionManager == null)
+    @Override public void tick() {
+        if (Atomic.client.world == null || Atomic.client.player == null || Atomic.client.interactionManager == null) {
             return;
-        boolean delayHasPassed;
-        if (delayPassed > 0) {
-            delayPassed--;
-            delayHasPassed = false;
-        } else delayHasPassed = true;
+        }
+        boolean delayHasPassed = this.delayExec.hasExpired(getDelay() * 50L);
         if (attackOnlyCombatPartner.getValue()) {
-            if (AttackManager.getLastAttackInTimeRange() != null)
+            if (AttackManager.getLastAttackInTimeRange() != null) {
                 combatPartner = (AttackManager.getLastAttackInTimeRange());
-            else combatPartner = null;
-            if (combatPartner == null) return;
-            if (!combatPartner.isAttackable()) return;
-            if (combatPartner.equals(Atomic.client.player)) return;
-            if (!combatPartner.isAlive()) return;
-            if (enableConfuse.getValue()) doConfuse(combatPartner);
-            if (combatPartner.getPos().distanceTo(Atomic.client.player.getPos()) > getRange()) return;
+            } else {
+                combatPartner = null;
+            }
+            if (combatPartner == null) {
+                return;
+            }
+            if (!combatPartner.isAttackable()) {
+                return;
+            }
+            if (combatPartner.equals(Atomic.client.player)) {
+                return;
+            }
+            if (!combatPartner.isAlive()) {
+                return;
+            }
+            if (enableConfuse.getValue()) {
+                doConfuse(combatPartner);
+            }
+            if (combatPartner.getPos().distanceTo(Atomic.client.player.getPos()) > getRange()) {
+                return;
+            }
             Packets.sendServerSideLook(combatPartner.getEyePos());
             Rotations.lookAtV3(combatPartner.getPos().add(0, combatPartner.getHeight() / 2, 0));
             if (delayHasPassed) {
                 Atomic.client.interactionManager.attackEntity(Atomic.client.player, combatPartner);
                 Atomic.client.player.swingHand(Hand.MAIN_HAND);
-                delayPassed = getDelay();
+                delayExec.reset();
             }
             return;
         }
-        List<Entity> attacks = new ArrayList<>();
+        attacks.clear();
         for (Entity entity : Objects.requireNonNull(Atomic.client.world).getEntities()) {
-            if (attacks.size() > multiLimit.getValue()) break;
-            if (!entity.isAttackable()) continue;
-            if (entity.equals(Atomic.client.player)) continue;
-            if (!entity.isAlive()) continue;
-            if (entity.getPos().distanceTo(Atomic.client.player.getPos()) > getRange()) continue;
+            if (attacks.size() > multiLimit.getValue()) {
+                break;
+            }
+            if (!entity.isAttackable()) {
+                continue;
+            }
+            if (entity.equals(Atomic.client.player)) {
+                continue;
+            }
+            if (!entity.isAlive()) {
+                continue;
+            }
+            if (entity.getPos().distanceTo(Atomic.client.player.getPos()) > getRange()) {
+                continue;
+            }
             boolean checked = false;
             if (entity instanceof Angerable) {
                 checked = true;
-                if (attackNeutral.getValue()) attacks.add(entity);
-                else continue;
+                if (attackNeutral.getValue()) {
+                    attacks.add(entity);
+                } else {
+                    continue;
+                }
             }
             if (entity instanceof PlayerEntity) {
-                if (attackPlayers.getValue()) attacks.add(entity);
+                if (attackPlayers.getValue()) {
+                    attacks.add(entity);
+                }
             } else if (entity instanceof HostileEntity) {
-                if (attackHostile.getValue()) attacks.add(entity);
+                if (attackHostile.getValue()) {
+                    attacks.add(entity);
+                }
             } else if (entity instanceof PassiveEntity) {
-                if (attackPassive.getValue()) attacks.add(entity);
-            } else if (attackEverything.getValue() && !checked) attacks.add(entity);
+                if (attackPassive.getValue()) {
+                    attacks.add(entity);
+                }
+            } else if (attackEverything.getValue() && !checked) {
+                attacks.add(entity);
+            }
         }
 
         if (ignoreFriends.getValue()) {
@@ -203,8 +247,9 @@ public class Killaura extends Module {
         if (mode.getValue().equalsIgnoreCase("single")) {
             Entity tar = null;
             if (prio.getValue().equalsIgnoreCase("distance")) {
-                tar = attacks.stream().sorted(Comparator.comparingDouble(value -> value.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()))).collect(Collectors.toList()).get(0);
-            } else if (prio.getValue().contains("Health")) { // almosst missed this
+                tar = attacks.stream().sorted(Comparator.comparingDouble(value -> value.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()))).collect(Collectors.toList())
+                        .get(0);
+            } else if (prio.getValue().contains("Health")) { // almost missed this
                 // get entity with the least health if mode is ascending, else get most health
                 tar = attacks.stream().sorted(Comparator.comparingDouble(value -> {
                     if (value instanceof LivingEntity e) {
@@ -223,15 +268,21 @@ public class Killaura extends Module {
                     return Math.abs(MathHelper.wrapDegrees(yaw - Atomic.client.player.getYaw())) + Math.abs(MathHelper.wrapDegrees(pitch - Atomic.client.player.getPitch()));
                 })).sorted(Comparator.comparingDouble(value -> value.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()))).collect(Collectors.toList()).get(0);
             }
-            if (tar == null) return;
-            if (enableConfuse.getValue()) doConfuse(tar);
-            if (tar.getPos().distanceTo(Atomic.client.player.getPos()) > getRange()) return;
+            if (tar == null) {
+                return;
+            }
+            if (enableConfuse.getValue()) {
+                doConfuse(tar);
+            }
+            if (tar.getPos().distanceTo(Atomic.client.player.getPos()) > getRange()) {
+                return;
+            }
             Packets.sendServerSideLook(tar.getEyePos());
             Rotations.lookAtV3(tar.getPos().add(0, tar.getHeight() / 2, 0));
             if (delayHasPassed) {
                 Atomic.client.interactionManager.attackEntity(Atomic.client.player, tar);
                 Atomic.client.player.swingHand(Hand.MAIN_HAND);
-                delayPassed = getDelay();
+                delayExec.reset();
             }
             return;
         }
@@ -241,30 +292,33 @@ public class Killaura extends Module {
             if (delayHasPassed) {
                 Atomic.client.interactionManager.attackEntity(Atomic.client.player, attack);
                 Atomic.client.player.swingHand(Hand.MAIN_HAND);
-                delayPassed = getDelay();
+                delayExec.reset();
             }
         }
     }
 
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
-        return mode.getValue();
+    @Override public String getContext() {
+        List<String> t = new ArrayList<>();
+        t.add("T" + attacks.size());
+        t.add("D" + getDelay());
+        t.add("R" + getRange());
+        t.add(mode.getValue());
+        return "[" + String.join(";", t) + "]";
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
-        if (!attackOnlyCombatPartner.getValue()) return;
+    @Override public void onWorldRender(MatrixStack matrices) {
+        if (!attackOnlyCombatPartner.getValue()) {
+            return;
+        }
         if (combatPartner != null) {
             Vec3d origin = combatPartner.getPos();
             float h = combatPartner.getHeight();
@@ -272,8 +326,7 @@ public class Killaura extends Module {
         }
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
-public class Friends {
-    static final File CONFIG_FILE;
+@SuppressWarnings("ResultOfMethodCallIgnored") public class Friends {
+
+    static final File         CONFIG_FILE;
     static final List<Friend> friends = new ArrayList<>();
 
     static {
@@ -60,7 +60,9 @@ public class Friends {
             Atomic.log(Level.INFO, "No friends to save");
             return;
         }
-        if (!CONFIG_FILE.isFile()) CONFIG_FILE.delete();
+        if (!CONFIG_FILE.isFile()) {
+            CONFIG_FILE.delete();
+        }
         JsonArray flist = new JsonArray();
         for (Friend friend : friends) {
             flist.add(friend.uuid.toString());
@@ -76,7 +78,9 @@ public class Friends {
     public static boolean isAFriend(PlayerEntity pe) {
         boolean v = false;
         for (Friend friend : new ArrayList<>(friends)) {
-            if (friend.is(pe)) v = true;
+            if (friend.is(pe)) {
+                v = true;
+            }
         }
         return v;
     }
@@ -88,8 +92,9 @@ public class Friends {
     public static void addFriend(PlayerEntity pe) {
         Friend f = new Friend(pe.getUuid());
         boolean c = f.is(pe); // always true, to sync player var
-        if (!c)
+        if (!c) {
             UnsafeAccess.UNSAFE.throwException(new Exception("what the fuck")); // someone broke the universe (or a bitflip happened idk)
+        }
         friends.add(f);
     }
 
@@ -98,6 +103,7 @@ public class Friends {
     }
 
     static class Friend {
+
         final UUID uuid;
         PlayerEntity player;
 

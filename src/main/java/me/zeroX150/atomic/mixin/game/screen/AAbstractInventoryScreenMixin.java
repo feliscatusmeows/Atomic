@@ -18,14 +18,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AbstractInventoryScreen.class)
-public class AAbstractInventoryScreenMixin extends Screen {
+@Mixin(AbstractInventoryScreen.class) public class AAbstractInventoryScreenMixin extends Screen {
+
     protected AAbstractInventoryScreenMixin(Text title) {
         super(title);
     }
 
-    @Inject(method = "init", at = @At("RETURN"))
-    public void initCustom(CallbackInfo ci) {
+    @Inject(method = "init", at = @At("RETURN")) public void atomic_postInit(CallbackInfo ci) {
         ButtonWidget dupe = new ButtonWidget(width - 105, 5, 100, 20, Text.of("Dupe"), button -> {
             Atomic.client.setScreen(new BruhScreen());
             new Thread(() -> {

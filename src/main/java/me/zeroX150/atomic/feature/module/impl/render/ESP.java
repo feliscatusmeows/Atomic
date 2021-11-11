@@ -33,32 +33,29 @@ import org.lwjgl.opengl.GL11;
 import java.awt.Color;
 
 public class ESP extends Module {
-    public final MultiValue outlineMode = this.config.create("Outline mode", "Filled", "Filled", "2D", "Outline", "Shader");
-    final BooleanValue entities = (BooleanValue) this.config.create("Show Entities", false).description("Whether or not to show entities");
-    final BooleanValue players = (BooleanValue) this.config.create("Show Players", true).description("Whether or not to show players");
-    final SliderValue range = this.config.create("Range", 64, 32, 128, 0);
+
+    public final MultiValue   outlineMode = this.config.create("Outline mode", "Filled", "Filled", "2D", "Outline", "Shader");
+    final        BooleanValue entities    = (BooleanValue) this.config.create("Show Entities", false).description("Whether or not to show entities");
+    final        BooleanValue players     = (BooleanValue) this.config.create("Show Players", true).description("Whether or not to show players");
+    final        SliderValue  range       = this.config.create("Range", 64, 32, 128, 0);
 
     public ESP() {
         super("ESP", "shows where shit is but its the walmart version", ModuleType.RENDER);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
@@ -66,18 +63,23 @@ public class ESP extends Module {
         return ((e instanceof PlayerEntity && players.getValue()) || entities.getValue());
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
-        if (Atomic.client.world == null || Atomic.client.player == null) return;
+    @Override public void onWorldRender(MatrixStack matrices) {
+        if (Atomic.client.world == null || Atomic.client.player == null) {
+            return;
+        }
         for (Entity entity : Atomic.client.world.getEntities()) {
-            if (entity.squaredDistanceTo(Atomic.client.player) > Math.pow(range.getValue(), 2)) continue;
-            if (entity.getUuid().equals(Atomic.client.player.getUuid())) continue;
+            if (entity.squaredDistanceTo(Atomic.client.player) > Math.pow(range.getValue(), 2)) {
+                continue;
+            }
+            if (entity.getUuid().equals(Atomic.client.player.getUuid())) {
+                continue;
+            }
             if (shouldRenderEntity(entity)) {
                 Color c = Utils.getCurrentRGB();
-                if (entity instanceof PlayerEntity pe && Friends.isAFriend(pe)) c = new Color(100, 255, 20);
-                Vec3d eSource = new Vec3d(MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevX, entity.getX()),
-                        MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevY, entity.getY()),
-                        MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevZ, entity.getZ()));
+                if (entity instanceof PlayerEntity pe && Friends.isAFriend(pe)) {
+                    c = new Color(100, 255, 20);
+                }
+                Vec3d eSource = new Vec3d(MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevX, entity.getX()), MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevY, entity.getY()), MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevZ, entity.getZ()));
                 switch (outlineMode.getIndex()) {
                     case 0 -> Renderer.R3D.renderFilled(eSource.subtract(new Vec3d(entity.getWidth(), 0, entity.getWidth()).multiply(0.5)), new Vec3d(entity.getWidth(), entity.getHeight(), entity.getWidth()), Renderer.Util.modify(c, -1, -1, -1, 130), matrices);
                     case 1 -> renderOutline(entity, c, matrices);
@@ -87,15 +89,12 @@ public class ESP extends Module {
         }
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 
     void renderOutline(Entity e, Color color, MatrixStack stack) {
-        Vec3d eSource = new Vec3d(MathHelper.lerp(Atomic.client.getTickDelta(), e.prevX, e.getX()),
-                MathHelper.lerp(Atomic.client.getTickDelta(), e.prevY, e.getY()),
-                MathHelper.lerp(Atomic.client.getTickDelta(), e.prevZ, e.getZ()));
+        Vec3d eSource = new Vec3d(MathHelper.lerp(Atomic.client.getTickDelta(), e.prevX, e.getX()), MathHelper.lerp(Atomic.client.getTickDelta(), e.prevY, e.getY()), MathHelper.lerp(Atomic.client.getTickDelta(), e.prevZ, e.getZ()));
         float red = color.getRed() / 255f;
         float green = color.getGreen() / 255f;
         float blue = color.getBlue() / 255f;
@@ -119,8 +118,7 @@ public class ESP extends Module {
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         RenderSystem.defaultBlendFunc();
         RenderSystem.enableBlend();
-        buffer.begin(VertexFormat.DrawMode.DEBUG_LINES,
-                VertexFormats.POSITION_COLOR);
+        buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
 
         buffer.vertex(matrix, x + sin, y, z + cos).color(red, green, blue, alpha).next();
         buffer.vertex(matrix, x - sin, y, z - cos).color(red, green, blue, alpha).next();

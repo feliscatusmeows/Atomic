@@ -33,19 +33,20 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class TargetHud extends Module {
-    public static int modalWidth = 160;
-    public static int modalHeight = 70;
-    final BooleanValue renderPing = (BooleanValue) this.config.create("Render ping", true).description("Shows the ping of the enemy");
-    final BooleanValue renderHP = (BooleanValue) this.config.create("Render health", true).description("Shows the current HP");
-    final BooleanValue renderMaxHP = (BooleanValue) this.config.create("Render max health", true).description("Shows the max HP");
-    final BooleanValue renderDistance = (BooleanValue) this.config.create("Render distance", true).description("Shows the distance to the player");
-    final BooleanValue renderLook = (BooleanValue) this.config.create("Render look", false).description("Shows if the player is looking at you");
-    final BooleanValue renderLoseWin = (BooleanValue) this.config.create("Render lose / win", true).description("Shows if you're losing or winning, if in battle");
-    double wX = 0;
-    double renderWX1 = 0;
-    Entity e = null;
-    Entity re = null;
-    double trackedHp = 0;
+
+    public static int          modalWidth     = 160;
+    public static int          modalHeight    = 70;
+    final         BooleanValue renderPing     = (BooleanValue) this.config.create("Render ping", true).description("Shows the ping of the enemy");
+    final         BooleanValue renderHP       = (BooleanValue) this.config.create("Render health", true).description("Shows the current HP");
+    final         BooleanValue renderMaxHP    = (BooleanValue) this.config.create("Render max health", true).description("Shows the max HP");
+    final         BooleanValue renderDistance = (BooleanValue) this.config.create("Render distance", true).description("Shows the distance to the player");
+    final         BooleanValue renderLook     = (BooleanValue) this.config.create("Render look", false).description("Shows if the player is looking at you");
+    final         BooleanValue renderLoseWin  = (BooleanValue) this.config.create("Render lose / win", true).description("Shows if you're losing or winning, if in battle");
+    double wX           = 0;
+    double renderWX1    = 0;
+    Entity e            = null;
+    Entity re           = null;
+    double trackedHp    = 0;
     double trackedMaxHp = 0;
 
     public TargetHud() {
@@ -53,43 +54,54 @@ public class TargetHud extends Module {
     }
 
     boolean isApplicable(Entity check) {
-        if (check == Atomic.client.player) return false;
-        if (check.distanceTo(Atomic.client.player) > 64) return false;
+        if (check == Atomic.client.player) {
+            return false;
+        }
+        if (check.distanceTo(Atomic.client.player) > 64) {
+            return false;
+        }
         int l = check.getEntityName().length();
-        if (l < 3 || l > 16) return false;
+        if (l < 3 || l > 16) {
+            return false;
+        }
         boolean isValidEntityName = Utils.Players.isPlayerNameValid(check.getEntityName());
-        if (!isValidEntityName) return false;
-        if (check == Atomic.client.player) return false;
+        if (!isValidEntityName) {
+            return false;
+        }
+        if (check == Atomic.client.player) {
+            return false;
+        }
         return check.getType() == EntityType.PLAYER && check instanceof PlayerEntity;
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         if (AttackManager.getLastAttackInTimeRange() != null) {
             e = AttackManager.getLastAttackInTimeRange();
             return;
         }
-        List<Entity> entitiesQueue = StreamSupport.stream(Objects.requireNonNull(Atomic.client.world).getEntities().spliterator(), false).filter(this::isApplicable).sorted(Comparator.comparingDouble(value -> value.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()))).collect(Collectors.toList());
+        List<Entity> entitiesQueue = StreamSupport.stream(Objects.requireNonNull(Atomic.client.world).getEntities().spliterator(), false).filter(this::isApplicable)
+                .sorted(Comparator.comparingDouble(value -> value.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()))).collect(Collectors.toList());
         if (entitiesQueue.size() > 0) {
             e = entitiesQueue.get(0);
-        } else e = null;
+        } else {
+            e = null;
+        }
         if (e instanceof LivingEntity ev) {
-            if (ev.isDead()) e = null;
+            if (ev.isDead()) {
+                e = null;
+            }
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         renderWX1 = Transitions.transition(renderWX1, wX, 10);
         if (re instanceof LivingEntity e) {
             trackedHp = Transitions.transition(trackedHp, e.getHealth(), 15, 0.002);
@@ -97,28 +109,31 @@ public class TargetHud extends Module {
         }
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 
     public void draw(MatrixStack stack) {
-        if (!this.isEnabled()) return;
+        if (!this.isEnabled()) {
+            return;
+        }
         if (e != null) {
             wX = 100;
             re = e;
-        } else wX = 0;
+        } else {
+            wX = 0;
+        }
         if (re != null) {
-            if (!(re instanceof PlayerEntity entity)) return;
+            if (!(re instanceof PlayerEntity entity)) {
+                return;
+            }
 
             float yOffset = 5;
             double renderWX = renderWX1 / 100d;
@@ -141,7 +156,9 @@ public class TargetHud extends Module {
             float mhealth = (float) trackedMaxHp;
             float health = (float) trackedHp;
             float remainder = health - mhealth;
-            if (remainder < 0) remainder = 0;
+            if (remainder < 0) {
+                remainder = 0;
+            }
             float hPer = health / mhealth;
             //hPer = MathHelper.clamp(hPer,0,1);
             double renderToX = modalWidth * hPer;

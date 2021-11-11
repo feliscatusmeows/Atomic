@@ -11,6 +11,7 @@ import me.zeroX150.atomic.feature.gui.clickgui.ClickGUIScreen;
 import me.zeroX150.atomic.helper.util.Utils;
 
 public class Test extends Command {
+
     public Test() {
         super("Test", "amogus sus", "among", "sus", "test");
     }
@@ -19,8 +20,7 @@ public class Test extends Command {
         Atomic.client.setScreen(new ClickGUIScreen());
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         Utils.TickManager.runInNTicks(10, Test::real);
     }
 }

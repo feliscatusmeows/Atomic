@@ -29,14 +29,14 @@ import java.util.HashMap;
 
 public class GlyphPage {
 
-    private final Font font;
-    private final boolean antiAliasing;
-    private final boolean fractionalMetrics;
+    private final Font                      font;
+    private final boolean                   antiAliasing;
+    private final boolean                   fractionalMetrics;
     private final HashMap<Character, Glyph> glyphCharacterMap = new HashMap<>();
-    private int imgSize;
-    private int maxFontHeight = -1;
-    private BufferedImage bufferedImage;
-    private AbstractTexture loadedTexture;
+    private       int                       imgSize;
+    private       int                       maxFontHeight     = -1;
+    private       BufferedImage             bufferedImage;
+    private       AbstractTexture           loadedTexture;
 
     public GlyphPage(Font font, boolean antiAliasing, boolean fractionalMetrics) {
         this.font = font;
@@ -55,10 +55,12 @@ public class GlyphPage {
         for (char ch : chars) {
             Rectangle2D bounds = font.getStringBounds(Character.toString(ch), fontRenderContext);
 
-            if (maxWidth < bounds.getWidth())
+            if (maxWidth < bounds.getWidth()) {
                 maxWidth = bounds.getWidth();
-            if (maxHeight < bounds.getHeight())
+            }
+            if (maxHeight < bounds.getHeight()) {
                 maxHeight = bounds.getHeight();
+            }
         }
 
         // Leave some additional space
@@ -66,9 +68,7 @@ public class GlyphPage {
         maxWidth += 2;
         maxHeight += 2;
 
-        imgSize = (int) Math.ceil(Math.max(Math.ceil(Math.sqrt(maxWidth * maxWidth * chars.length) / maxWidth),
-                Math.ceil(Math.sqrt(maxHeight * maxHeight * chars.length) / maxHeight)) * Math.max(maxWidth, maxHeight))
-                + 1;
+        imgSize = (int) Math.ceil(Math.max(Math.ceil(Math.sqrt(maxWidth * maxWidth * chars.length) / maxWidth), Math.ceil(Math.sqrt(maxHeight * maxHeight * chars.length) / maxHeight)) * Math.max(maxWidth, maxHeight)) + 1;
 
         bufferedImage = new BufferedImage(imgSize, imgSize, BufferedImage.TYPE_INT_ARGB);
 
@@ -82,13 +82,9 @@ public class GlyphPage {
 
         g.setColor(Color.white);
 
-        g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS,
-                fractionalMetrics ? RenderingHints.VALUE_FRACTIONALMETRICS_ON
-                        : RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                antiAliasing ? RenderingHints.VALUE_ANTIALIAS_OFF : RenderingHints.VALUE_ANTIALIAS_ON);
-        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
-                antiAliasing ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+        g.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, fractionalMetrics ? RenderingHints.VALUE_FRACTIONALMETRICS_ON : RenderingHints.VALUE_FRACTIONALMETRICS_OFF);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, antiAliasing ? RenderingHints.VALUE_ANTIALIAS_OFF : RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, antiAliasing ? RenderingHints.VALUE_TEXT_ANTIALIAS_ON : RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
 
         FontMetrics fontMetrics = g.getFontMetrics();
 
@@ -113,11 +109,13 @@ public class GlyphPage {
             glyph.x = posX;
             glyph.y = posY;
 
-            if (glyph.height > maxFontHeight)
+            if (glyph.height > maxFontHeight) {
                 maxFontHeight = glyph.height;
+            }
 
-            if (glyph.height > currentCharHeight)
+            if (glyph.height > currentCharHeight) {
                 currentCharHeight = glyph.height;
+            }
 
             g.drawString(Character.toString(ch), posX + 2, posY + fontMetrics.getAscent());
 
@@ -154,8 +152,9 @@ public class GlyphPage {
     public float drawChar(MatrixStack stack, char ch, float x, float y, float red, float blue, float green, float alpha) {
         Glyph glyph = glyphCharacterMap.get(ch);
 
-        if (glyph == null)
+        if (glyph == null) {
             return 0;
+        }
 
         float pageX = glyph.x / (float) imgSize;
         float pageY = glyph.y / (float) imgSize;
@@ -171,14 +170,10 @@ public class GlyphPage {
         RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
         bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR_TEXTURE);
 
-        bufferBuilder.vertex(stack.peek().getModel(), x, y + height, 0).color(red, green, blue, alpha)
-                .texture(pageX, pageY + pageHeight).next();
-        bufferBuilder.vertex(stack.peek().getModel(), x + width, y + height, 0).color(red, green, blue, alpha)
-                .texture(pageX + pageWidth, pageY + pageHeight).next();
-        bufferBuilder.vertex(stack.peek().getModel(), x + width, y, 0).color(red, green, blue, alpha)
-                .texture(pageX + pageWidth, pageY).next();
-        bufferBuilder.vertex(stack.peek().getModel(), x, y, 0).color(red, green, blue, alpha).texture(pageX, pageY)
-                .next();
+        bufferBuilder.vertex(stack.peek().getModel(), x, y + height, 0).color(red, green, blue, alpha).texture(pageX, pageY + pageHeight).next();
+        bufferBuilder.vertex(stack.peek().getModel(), x + width, y + height, 0).color(red, green, blue, alpha).texture(pageX + pageWidth, pageY + pageHeight).next();
+        bufferBuilder.vertex(stack.peek().getModel(), x + width, y, 0).color(red, green, blue, alpha).texture(pageX + pageWidth, pageY).next();
+        bufferBuilder.vertex(stack.peek().getModel(), x, y, 0).color(red, green, blue, alpha).texture(pageX, pageY).next();
         bufferBuilder.end();
 
         BufferRenderer.draw(bufferBuilder);
@@ -204,6 +199,7 @@ public class GlyphPage {
     }
 
     static class Glyph {
+
         private int x;
         private int y;
         private int width;

@@ -107,6 +107,7 @@ import me.zeroX150.atomic.feature.module.impl.world.Bunker;
 import me.zeroX150.atomic.feature.module.impl.world.ClickNuke;
 import me.zeroX150.atomic.feature.module.impl.world.FarmingAura;
 import me.zeroX150.atomic.feature.module.impl.world.FastUse;
+import me.zeroX150.atomic.feature.module.impl.world.Flattener;
 import me.zeroX150.atomic.feature.module.impl.world.GodBridge;
 import me.zeroX150.atomic.feature.module.impl.world.InstantBreak;
 import me.zeroX150.atomic.feature.module.impl.world.LeverAura;
@@ -125,6 +126,7 @@ import java.util.Comparator;
 import java.util.List;
 
 public class ModuleRegistry {
+
     static final List<Module> modules = new ArrayList<>();
 
     static {
@@ -241,6 +243,7 @@ public class ModuleRegistry {
         modules.add(new EntityFullbright());
         modules.add(new EdgeJump());
         modules.add(new LongJump());
+        modules.add(new Flattener());
     }
 
     public static void sortModulesPostInit() {
@@ -259,17 +262,20 @@ public class ModuleRegistry {
         return modules;
     }
 
-    @SuppressWarnings("unchecked")
-    public static <T extends Module> T getByClass(Class<T> clazz) {
+    @SuppressWarnings("unchecked") public static <T extends Module> T getByClass(Class<T> clazz) {
         for (Module module : getModules()) {
-            if (module.getClass() == clazz) return (T) module;
+            if (module.getClass() == clazz) {
+                return (T) module;
+            }
         }
         throw new IllegalStateException("Unregistered module");
     }
 
     public static Module getByName(String n) {
         for (Module module : getModules()) {
-            if (module.getName().equalsIgnoreCase(n)) return module;
+            if (module.getName().equalsIgnoreCase(n)) {
+                return module;
+            }
         }
         return null;
     }

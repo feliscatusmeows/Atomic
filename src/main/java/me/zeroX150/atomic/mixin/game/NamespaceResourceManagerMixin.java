@@ -18,15 +18,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.io.File;
 import java.io.IOException;
 
-@Mixin(NamespaceResourceManager.class)
-public class NamespaceResourceManagerMixin {
-    @Inject(method = "getResource", cancellable = true, at = @At("HEAD"))
-    public void getResource(Identifier id, CallbackInfoReturnable<Resource> cir) {
+@Mixin(NamespaceResourceManager.class) public class NamespaceResourceManagerMixin {
+
+    @Inject(method = "getResource", cancellable = true, at = @At("HEAD")) public void atomic_overwriteCapesResource(Identifier id, CallbackInfoReturnable<Resource> cir) {
         if (id.getNamespace().equalsIgnoreCase("atomic") && id.getPath().startsWith("capes/")) {
             String sanitizedPath = id.getPath().replace("capes/", "");
             File f = new File(Atomic.client.runDirectory.getAbsolutePath() + "/aCapes/" + sanitizedPath);
-            if (!f.exists() || !f.isFile()) cir.setReturnValue(null);
-            else {
+            if (!f.exists() || !f.isFile()) {
+                cir.setReturnValue(null);
+            } else {
                 try {
                     cir.setReturnValue(new ResourceImpl("atomicCapes", id, f.toURI().toURL().openStream(), null));
                 } catch (IOException e) {

@@ -22,34 +22,41 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Objects;
 
 public class Freecam extends Module {
+
     final SliderValue speed = (SliderValue) this.config.create("Speed", 1, 0, 10, 1).description("The speed to fly with");
-    Vec3d startloc;
-    float pitch = 0f;
-    float yaw = 0f;
+    Vec3d   startloc;
+    float   pitch = 0f;
+    float   yaw   = 0f;
     boolean flewBefore;
 
     public Freecam() {
         super("Freecam", "look outside your body", ModuleType.RENDER);
         Events.registerEventHandler(EventType.PACKET_SEND, event1 -> {
-            if (!this.isEnabled()) return;
+            if (!this.isEnabled()) {
+                return;
+            }
             PacketEvent event = (PacketEvent) event1;
-            if (event.getPacket() instanceof PlayerMoveC2SPacket) event.setCancelled(true);
-            if (event.getPacket() instanceof PlayerInputC2SPacket) event.setCancelled(true);
+            if (event.getPacket() instanceof PlayerMoveC2SPacket) {
+                event.setCancelled(true);
+            }
+            if (event.getPacket() instanceof PlayerInputC2SPacket) {
+                event.setCancelled(true);
+            }
         });
         Events.registerEventHandler(EventType.NOCLIP_QUERY, event -> {
-            if (!this.isEnabled() || ((PlayerNoClipQueryEvent) event).getPlayer().isOnGround()) return;
+            if (!this.isEnabled() || ((PlayerNoClipQueryEvent) event).getPlayer().isOnGround()) {
+                return;
+            }
             ((PlayerNoClipQueryEvent) event).setNoClipState(PlayerNoClipQueryEvent.NoClipState.ACTIVE);
         });
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         Objects.requireNonNull(Atomic.client.player).getAbilities().setFlySpeed((float) (this.speed.getValue() + 0f) / 20f);
         Atomic.client.player.getAbilities().flying = true;
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
         startloc = Objects.requireNonNull(Atomic.client.player).getPos();
         pitch = Atomic.client.player.getPitch();
         yaw = Atomic.client.player.getYaw();
@@ -58,8 +65,7 @@ public class Freecam extends Module {
         Atomic.client.player.setOnGround(false);
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
         if (startloc != null) {
             Objects.requireNonNull(Atomic.client.player).updatePosition(startloc.x, startloc.y, startloc.z);
         }
@@ -73,19 +79,16 @@ public class Freecam extends Module {
         Atomic.client.player.setVelocity(0, 0, 0);
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
         Objects.requireNonNull(Atomic.client.player).setSwimming(false);
         Atomic.client.player.setPose(EntityPose.STANDING);
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

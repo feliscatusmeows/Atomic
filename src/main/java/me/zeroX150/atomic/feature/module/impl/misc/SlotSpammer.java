@@ -18,50 +18,48 @@ import net.minecraft.screen.slot.SlotActionType;
 import java.util.Objects;
 
 public class SlotSpammer extends Module {
-    public static Slot slotToSpam = null;
-    final SliderValue amountPerTick = (SliderValue) this.config.create("Amount / tick", 5, 1, 100, 0).description("The amount of clicks per tick to simulate");
+
+    public static Slot        slotToSpam    = null;
+    final         SliderValue amountPerTick = (SliderValue) this.config.create("Amount / tick", 5, 1, 100, 0).description("The amount of clicks per tick to simulate");
 
     public SlotSpammer() {
         super("Slot Spammer", "Spams slots", ModuleType.MISC);
     }
 
-    @Override
-    public void tick() {
-        if (slotToSpam == null) return;
+    @Override public void tick() {
+        if (slotToSpam == null) {
+            return;
+        }
         if (!(Atomic.client.currentScreen instanceof HandledScreen)) {
             this.setEnabled(false);
             return;
         }
         for (int i = 0; i < amountPerTick.getValue(); i++) {
-            Objects.requireNonNull(Atomic.client.interactionManager).clickSlot(((HandledScreen<?>) Atomic.client.currentScreen).getScreenHandler().syncId, slotToSpam.id, 0, SlotActionType.PICKUP, Atomic.client.player);
+            Objects.requireNonNull(Atomic.client.interactionManager)
+                    .clickSlot(((HandledScreen<?>) Atomic.client.currentScreen).getScreenHandler().syncId, slotToSpam.id, 0, SlotActionType.PICKUP, Atomic.client.player);
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
         if (slotToSpam == null) {
             Notification.create(6000, "Slot spammer", "Please only enable via the inventory");
             this.setEnabled(false);
         }
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
         slotToSpam = null;
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

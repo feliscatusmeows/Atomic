@@ -24,14 +24,14 @@ import net.minecraft.text.Text;
 import java.util.Objects;
 
 public class ViewNbt extends Command {
+
     int i = 0;
 
     public ViewNbt() {
         super("ViewNbt", "Views the nbt data of the current item", "viewnbt", "shownbt");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         boolean formatted = false;
         boolean copy = false;
         boolean noColor = false;

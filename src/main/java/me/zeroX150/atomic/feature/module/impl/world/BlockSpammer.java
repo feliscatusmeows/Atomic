@@ -17,14 +17,14 @@ import net.minecraft.util.hit.HitResult;
 import java.util.Objects;
 
 public class BlockSpammer extends Module {
+
     final SliderValue timesPerTick = (SliderValue) this.config.create("Times per tick", 20, 1, 100, 0).description("How many times to interact per tick");
 
     public BlockSpammer() {
         super("Block Spammer", "uses a block a LOT of times per second", ModuleType.WORLD);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         HitResult hr = Atomic.client.crosshairTarget;
         if (hr instanceof BlockHitResult bhr) {
             for (int i = 0; i < timesPerTick.getValue(); i++) {
@@ -33,28 +33,23 @@ public class BlockSpammer extends Module {
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

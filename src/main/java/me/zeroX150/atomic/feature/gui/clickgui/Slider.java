@@ -16,11 +16,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 public class Slider extends ClickableWidget {
-    final double min;
-    final double max;
+
+    final double      min;
+    final double      max;
     final SliderValue v;
-    final int prec;
-    double value;
+    final int         prec;
+    double  value;
     boolean dragged = false;
 
     public Slider(int x, int y, int width, SliderValue conf) {
@@ -32,11 +33,11 @@ public class Slider extends ClickableWidget {
         this.prec = conf.getPrec();
     }
 
-    @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Renderer.R2D.fill(matrices, Themes.currentActiveTheme.center(), (x + (width * getValue())), y, x + width, y + height);
         Renderer.R2D.fill(matrices, Themes.currentActiveTheme.left(), x, y, (x + (width * getValue())), y + height);
-        FontRenderers.normal.drawCenteredString(matrices, Utils.Math.roundToDecimal(value, prec) + "", x + width / 2f, y + height / 2f - FontRenderers.normal.getFontHeight() / 2f, Themes.currentActiveTheme.fontColor().getRGB());
+        FontRenderers.normal.drawCenteredString(matrices, Utils.Math.roundToDecimal(value, prec) + "", x + width / 2f, y + height / 2f - FontRenderers.normal.getFontHeight() / 2f, Themes.currentActiveTheme.fontColor()
+                .getRGB());
         //drawCenteredText(matrices, Atomic.client.textRenderer, Client.roundToN(value, prec) + "", x + (width / 2), y + (height / 2 - (9 / 2)), 0xFFFFFF);
     }
 
@@ -44,20 +45,19 @@ public class Slider extends ClickableWidget {
         return MathHelper.clamp((value - min) / (max - min), 0, 1);
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (isHovered()) dragged = true;
+    @Override public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (isHovered()) {
+            dragged = true;
+        }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    @Override public boolean mouseReleased(double mouseX, double mouseY, int button) {
         dragged = false;
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    @Override public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (dragged) {
             double mxTranslated = mouseX - x;
             double perIn = MathHelper.clamp(mxTranslated / width, 0, 1);
@@ -67,8 +67,7 @@ public class Slider extends ClickableWidget {
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
-    @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
+    @Override public void appendNarrations(NarrationMessageBuilder builder) {
 
     }
 }

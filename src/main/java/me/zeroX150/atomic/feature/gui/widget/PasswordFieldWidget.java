@@ -26,8 +26,7 @@ public class PasswordFieldWidget extends TextFieldWidget {
         this.showText = showText;
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         String text = this.getText();
         if (this.showText) {
             this.setText("x".repeat(text.length()));

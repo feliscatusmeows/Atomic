@@ -13,12 +13,12 @@ import me.zeroX150.atomic.helper.util.TypeConverter;
 import me.zeroX150.atomic.helper.util.Utils;
 
 public class Config extends Command {
+
     public Config() {
         super("Config", "le poggers", "config", "conf");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length == 0) {
             Utils.Client.sendMessage("Syntax: .config (module) <key> <value>");
             Utils.Client.sendMessage("For a module or key with spaces, use - as a seperator");

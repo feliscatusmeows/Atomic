@@ -12,13 +12,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(ChatMessageC2SPacket.class)
-public class ChatMessageC2SPacketMixin {
-    @Redirect(method = "<init>(Ljava/lang/String;)V", at = @At(
-            value = "INVOKE",
-            target = "Ljava/lang/String;length()I"
-    ))
-    public int redirectLength(String s) {
+@Mixin(ChatMessageC2SPacket.class) public class ChatMessageC2SPacketMixin {
+
+    @Redirect(method = "<init>(Ljava/lang/String;)V", at = @At(value = "INVOKE", target = "Ljava/lang/String;length()I")) public int atomic_removeLengthLimit(String s) {
         return ModuleRegistry.getByClass(InfChatLength.class).isEnabled() ? 1 : s.length();
     }
 }

@@ -28,22 +28,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.Color;
 
-@SuppressWarnings("EmptyMethod") @Mixin(ChatScreen.class)
-public abstract class AChatScreenMixin extends Screen implements FastTickable {
-    @Shadow
-    protected TextFieldWidget chatField;
-    double yOffset = 25;
+@SuppressWarnings("EmptyMethod") @Mixin(ChatScreen.class) public abstract class AChatScreenMixin extends Screen implements FastTickable {
+
+    @Shadow protected TextFieldWidget chatField;
+    double yOffset      = 25;
     double targetOffset = 0;
 
     protected AChatScreenMixin(Text title) {
         super(title);
     }
 
-    @Shadow
-    protected abstract void onChatFieldUpdate(@SuppressWarnings("SameParameterValue") String chatText);
+    @Shadow protected abstract void onChatFieldUpdate(@SuppressWarnings("SameParameterValue") String chatText);
 
-    @Inject(method = "render", at = @At("RETURN"))
-    public void renderPost(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At("RETURN")) public void atomic_postRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         int maxLength = ((ITextFieldAccessor) chatField).getMaxLength();
         int cLength = chatField.getText().length();
         boolean showExtra = maxLength != Integer.MAX_VALUE;
@@ -53,19 +50,13 @@ public abstract class AChatScreenMixin extends Screen implements FastTickable {
         FontRenderers.mono.drawString(matrices, v, this.width - 2 - w, this.height - 25 + yOffset, Renderer.Util.lerp(new Color(255, 50, 50), new Color(50, 255, 50), perUsed).getRGB());
     }
 
-    @Redirect(method = "render", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/screen/ChatScreen;fill(Lnet/minecraft/client/util/math/MatrixStack;IIIII)V"
-    ))
-    void doNothing(MatrixStack matrices, int x1, int y1, int x2, int y2, int color) {
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/ChatScreen;fill(Lnet/minecraft/client/util/math/MatrixStack;IIIII)V"))
+    void atomic_stopFillCall(MatrixStack matrices, int x1, int y1, int x2, int y2, int color) {
         // do nothing
     }
 
-    @Redirect(method = "render", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V"
-    ))
-    void animateRender(TextFieldWidget textFieldWidget, MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/TextFieldWidget;render(Lnet/minecraft/client/util/math/MatrixStack;IIF)V"))
+    void atomic_animateSlideIn(TextFieldWidget textFieldWidget, MatrixStack matrices, int mouseX, int mouseY, float delta) {
         matrices.push();
         matrices.translate(0, yOffset, 0);
         fill(matrices, 2, this.height - 14, this.width - 2, this.height - 2, Atomic.client.options.getTextBackgroundColor(-2147483648));
@@ -73,18 +64,15 @@ public abstract class AChatScreenMixin extends Screen implements FastTickable {
         matrices.pop();
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         yOffset = Transitions.transition(yOffset, targetOffset, 10, .0001);
     }
 
-    @Inject(method = "onChatFieldUpdate", at = @At("HEAD"))
-    public void chatFieldUpdatePre(String chatText, CallbackInfo ci) {
+    @Inject(method = "onChatFieldUpdate", at = @At("HEAD")) public void atomic_preChatFieldUpdate(String chatText, CallbackInfo ci) {
         chatField.setMaxLength((ModuleRegistry.getByClass(InfChatLength.class).isEnabled() || chatText.startsWith(ClientConfig.chatPrefix.getValue())) ? Integer.MAX_VALUE : 256);
     }
 
-    @Inject(method = "init", at = @At("RETURN"))
-    public void initPost(CallbackInfo ci) {
+    @Inject(method = "init", at = @At("RETURN")) public void atomic_postInit(CallbackInfo ci) {
         this.onChatFieldUpdate("");
         targetOffset = 0;
     }

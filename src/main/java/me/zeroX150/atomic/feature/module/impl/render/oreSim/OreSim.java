@@ -5,8 +5,6 @@
 
 package me.zeroX150.atomic.feature.module.impl.render.oreSim;
 
-import baritone.api.BaritoneAPI;
-import baritone.api.pathing.goals.GoalTwoBlocks;
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.module.Module;
 import me.zeroX150.atomic.feature.module.ModuleType;
@@ -39,21 +37,17 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.Random;
 
 public class OreSim extends Module {
 
-    final SliderValue chunkRange;
-    final DynamicValue<String> seedInput;
-    final MultiValue airCheck;
-    final MultiValue version;
-    final BooleanValue featureSeed;
+    final         SliderValue                                      chunkRange;
+    final         DynamicValue<String>                             seedInput;
+    final         MultiValue                                       airCheck;
+    final         MultiValue                                       version;
+    final         BooleanValue                                     featureSeed;
     private final HashMap<Long, HashMap<Ore.Type, HashSet<Vec3d>>> chunkRenderers = new HashMap<>();
-    private final HashSet<Vec3d> blackList = new HashSet<>();
-    public boolean automine = false;
-    Long worldSeed;
+    Long      worldSeed;
     List<Ore> oreConfig;
     private ChunkPos prevOffset = new ChunkPos(0, 0);
 
@@ -84,9 +78,10 @@ public class OreSim extends Module {
         this.config.organizeClickGUIList = false;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack ms) {
-        if (Atomic.client.player == null) return;
+    @Override public void onWorldRender(MatrixStack ms) {
+        if (Atomic.client.player == null) {
+            return;
+        }
         if (worldSeed != null) {
             int chunkX = Atomic.client.player.getChunkPos().x;
             int chunkZ = Atomic.client.player.getChunkPos().z;
@@ -104,8 +99,7 @@ public class OreSim extends Module {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 
@@ -115,7 +109,9 @@ public class OreSim extends Module {
         if (chunkRenderers.containsKey(chunkKey)) {
             for (Ore ore : oreConfig) {
                 if (ore.enabled.getValue()) {
-                    if (!chunkRenderers.get(chunkKey).containsKey(ore.type)) continue;
+                    if (!chunkRenderers.get(chunkKey).containsKey(ore.type)) {
+                        continue;
+                    }
                     BufferBuilder buffer = Renderer.R3D.renderPrepare(ore.color);
                     for (Vec3d pos : chunkRenderers.get(chunkKey).get(ore.type)) {
                         Renderer.R3D.renderOutlineIntern(pos, new Vec3d(1, 1, 1), ms, buffer);
@@ -128,10 +124,11 @@ public class OreSim extends Module {
         }
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         if (airCheck.getValue().equals("Rescan")) {
-            if (Atomic.client.player == null || Atomic.client.world == null) return;
+            if (Atomic.client.player == null || Atomic.client.world == null) {
+                return;
+            }
             long chunkX = Atomic.client.player.getChunkPos().x;
             long chunkZ = Atomic.client.player.getChunkPos().z;
             ClientWorld world = Atomic.client.world;
@@ -151,10 +148,7 @@ public class OreSim extends Module {
                         long chunkKey = (chunkX + offsetX) + ((chunkZ + offsetZ) << 32);
 
                         if (chunkRenderers.containsKey(chunkKey)) {
-                            chunkRenderers.get(chunkKey).values().forEach(oreSet ->
-                                    oreSet.removeIf(ore ->
-                                            !world.getBlockState(new BlockPos((int) ore.x, (int) ore.y, (int) ore.z)).isOpaque())
-                            );
+                            chunkRenderers.get(chunkKey).values().forEach(oreSet -> oreSet.removeIf(ore -> !world.getBlockState(new BlockPos((int) ore.x, (int) ore.y, (int) ore.z)).isOpaque()));
                         }
                         chunkCounter--;
                     }
@@ -163,44 +157,21 @@ public class OreSim extends Module {
                 prevOffset = new ChunkPos(-renderdistance, -renderdistance);
             }
         }
-        if (!automine) return;
-        if (BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().isActive()) return;
 
-        ArrayList<Vec3d> oreGoals = new ArrayList<>();
-        int chunkX = Objects.requireNonNull(Atomic.client.player).getChunkPos().x;
-        int chunkZ = Atomic.client.player.getChunkPos().z;
-        int rangeVal = 3;
-        for (int range = 0; range <= rangeVal; range++) {
-            for (int x = -range + chunkX; x <= range + chunkX; x++) {
-                oreGoals.addAll(addToBaritone(x, chunkZ + range - rangeVal));
-            }
-            for (int x = (-range) + 1 + chunkX; x < range + chunkX; x++) {
-                oreGoals.addAll(addToBaritone(x, chunkZ - range + rangeVal + 1));
-            }
-        }
-
-        Vec3d playerPos = Atomic.client.player.getPos();
-
-        Optional<Vec3d> optGoal = oreGoals.stream().filter(pos -> pos.getY() > 4 && !blackList.contains(pos)).min(Comparator.comparingDouble(pos -> pos.squaredDistanceTo(playerPos)));
-
-        if (optGoal.isPresent()) {
-            BlockPos goal = new BlockPos(optGoal.get());
-            blackList.add(optGoal.get());
-            BaritoneAPI.getProvider().getPrimaryBaritone().getCustomGoalProcess().setGoalAndPath(new GoalTwoBlocks(goal.getX(), goal.getY(), goal.getZ()));
-        }
     }
 
     private ArrayList<Vec3d> addToBaritone(int chunkX, int chunkZ) {
         ArrayList<Vec3d> baritoneGoals = new ArrayList<>();
         long chunkKey = (long) chunkX + ((long) chunkZ << 32);
-        if (!chunkRenderers.containsKey(chunkKey)) return baritoneGoals;
+        if (!chunkRenderers.containsKey(chunkKey)) {
+            return baritoneGoals;
+        }
 
         oreConfig.stream().filter(config -> config.enabled.getValue()).forEach(ore -> baritoneGoals.addAll(chunkRenderers.get(chunkKey).getOrDefault(ore.type, new HashSet<>())));
         return baritoneGoals;
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
         if (worldSeed == null) {
             Utils.Client.sendMessage("input a world seed into the seed field in the oresim config");
             setEnabled(false);
@@ -209,13 +180,11 @@ public class OreSim extends Module {
         reload();
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
@@ -243,7 +212,9 @@ public class OreSim extends Module {
     private void loadVisibleChunks() {
         int renderdistance = MinecraftClient.getInstance().options.viewDistance;
 
-        if (Atomic.client.player == null) return;
+        if (Atomic.client.player == null) {
+            return;
+        }
         int playerChunkX = Atomic.client.player.getChunkPos().x;
         int playerChunkZ = Atomic.client.player.getChunkPos().z;
 
@@ -270,10 +241,13 @@ public class OreSim extends Module {
 
         ClientWorld world = Atomic.client.world;
 
-        if (chunkRenderers.containsKey(chunkKey) || world == null)
+        if (chunkRenderers.containsKey(chunkKey) || world == null) {
             return;
+        }
 
-        if (world.getChunkManager().getChunk(chunkX, chunkZ, ChunkStatus.FULL, false) == null) return;
+        if (world.getChunkManager().getChunk(chunkX, chunkZ, ChunkStatus.FULL, false) == null) {
+            return;
+        }
 
         chunkX = chunkX << 4;
         chunkZ = chunkZ << 4;
@@ -284,8 +258,7 @@ public class OreSim extends Module {
 
         long populationSeed = random.setPopulationSeed(worldSeed, chunkX, chunkZ);
 
-        Identifier id = world.getRegistryManager().get(Registry.BIOME_KEY)
-                .getId(world.getBiomeAccess().getBiomeForNoiseGen(new BlockPos(chunkX >> 4, 0, chunkZ >> 4)));
+        Identifier id = world.getRegistryManager().get(Registry.BIOME_KEY).getId(world.getBiomeAccess().getBiomeForNoiseGen(new BlockPos(chunkX >> 4, 0, chunkZ >> 4)));
         if (id == null) {
             Utils.Client.sendMessage("Something went wrong, you may have some mods that mess with world generation");
             this.setEnabled(false);
@@ -296,7 +269,9 @@ public class OreSim extends Module {
 
         for (Ore ore : oreConfig) {
 
-            if (!dimensionName.endsWith(ore.dimension)) continue;
+            if (!dimensionName.endsWith(ore.dimension)) {
+                continue;
+            }
 
             HashSet<Vec3d> ores = new HashSet<>();
 
@@ -306,8 +281,9 @@ public class OreSim extends Module {
             } else {
                 index = ore.index.get("default");
             }
-            if (index < 0)
+            if (index < 0) {
                 continue;
+            }
 
             if (featureSeed.getValue()) {
                 random.setDecoratorSeed(helperRandom.setPopulationSeed(ore.paperSeed, chunkX, chunkZ), index, ore.step);
@@ -338,15 +314,17 @@ public class OreSim extends Module {
                 switch (ore.generator) {
                     case DEFAULT -> ores.addAll(generateNormal(world, random, new BlockPos(x, y, z), ore.size));
                     case EMERALD -> {
-                        if (airCheck.getValue().equals("Off") || world.getBlockState(new BlockPos(x, y, z)).isOpaque())
+                        if (airCheck.getValue().equals("Off") || world.getBlockState(new BlockPos(x, y, z)).isOpaque()) {
                             ores.add(new Vec3d(x, y, z));
+                        }
                     }
                     case NO_SURFACE -> ores.addAll(generateHidden(world, random, new BlockPos(x, y, z), ore.size));
                     default -> Atomic.log(Level.ERROR, ore.type + " has some unknown generator. Fix it!");
                 }
             }
-            if (!ores.isEmpty())
+            if (!ores.isEmpty()) {
                 h.put(ore.type, ores);
+            }
         }
         chunkRenderers.put(chunkKey, h);
     }
@@ -382,8 +360,7 @@ public class OreSim extends Module {
         return new ArrayList<>();
     }
 
-    private ArrayList<Vec3d> generateVeinPart(ClientWorld world, Random random, int veinSize, double startX, double endX, double startZ,
-                                              double endZ, double startY, double endY, int x, int y, int z, int size, int i) {
+    private ArrayList<Vec3d> generateVeinPart(ClientWorld world, Random random, int veinSize, double startX, double endX, double startZ, double endZ, double startY, double endY, int x, int y, int z, int size, int i) {
 
         BitSet bitSet = new BitSet(size * i * size);
         BlockPos.Mutable mutable = new BlockPos.Mutable();
@@ -482,8 +459,9 @@ public class OreSim extends Module {
             int x = this.randomCoord(random, size) + blockPos.getX();
             int y = this.randomCoord(random, size) + blockPos.getY();
             int z = this.randomCoord(random, size) + blockPos.getZ();
-            if (airCheck.getValue().equals("Off") || world.getBlockState(new BlockPos(x, y, z)).isOpaque())
+            if (airCheck.getValue().equals("Off") || world.getBlockState(new BlockPos(x, y, z)).isOpaque()) {
                 poses.add(new Vec3d(x, y, z));
+            }
         }
 
         return poses;
@@ -494,6 +472,7 @@ public class OreSim extends Module {
     }
 
     public interface DimensionTypeCaller {
+
         Identifier getInfiniburn();
     }
 }

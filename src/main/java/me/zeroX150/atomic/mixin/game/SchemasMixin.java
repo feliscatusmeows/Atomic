@@ -15,10 +15,9 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 // mixin to enable lazy dfu loading
 // mod that does this on its own and where i got the shit from
 // https://github.com/astei/lazydfu
-@Mixin(Schemas.class)
-public class SchemasMixin {
-    @Redirect(method = "create", at = @At(value = "NEW", target = "com/mojang/datafixers/DataFixerBuilder"))
-    private static DataFixerBuilder replaceBuilder(int dataVersion) {
+@Mixin(Schemas.class) public class SchemasMixin {
+
+    @Redirect(method = "create", at = @At(value = "NEW", target = "com/mojang/datafixers/DataFixerBuilder")) private static DataFixerBuilder atomic_replaceDFB(int dataVersion) {
         return new LazyDFB(dataVersion);
     }
 }

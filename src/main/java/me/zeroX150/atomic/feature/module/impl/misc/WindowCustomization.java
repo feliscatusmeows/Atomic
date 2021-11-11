@@ -20,13 +20,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 public class WindowCustomization extends Module {
-    public final DynamicValue<String> title = this.config.create("Title", "Minecraft sus edition").description("The title of the window (leave blank for default)");
-    final DynamicValue<String> pathToImage = this.config.create("Image", "").description("The path to the window icon (leave blank for default, HAS TO BE 1:1 ASPECT)");
+
+    public final DynamicValue<String> title       = this.config.create("Title", "Minecraft sus edition").description("The title of the window (leave blank for default)");
+    final        DynamicValue<String> pathToImage = this.config.create("Image", "").description("The path to the window icon (leave blank for default, HAS TO BE 1:1 ASPECT)");
 
     public WindowCustomization() {
         super("Better Window", "Allows you to change aspects of the minecraft window", ModuleType.MISC);
         title.addChangeListener(() -> {
-            if (Atomic.client.getWindow() != null) Atomic.client.updateWindowTitle();
+            if (Atomic.client.getWindow() != null) {
+                Atomic.client.updateWindowTitle();
+            }
         });
         pathToImage.addChangeListener(() -> {
             if (Atomic.client.getWindow() != null) {
@@ -37,8 +40,9 @@ public class WindowCustomization extends Module {
                     return;
                 }
                 File f = new File(v);
-                if (!f.exists() || !f.isFile()) pathToImage.setInvalid(true);
-                else {
+                if (!f.exists() || !f.isFile()) {
+                    pathToImage.setInvalid(true);
+                } else {
                     pathToImage.setInvalid(false);
                     try {
                         InputStream is = FileUtils.openInputStream(f);
@@ -52,12 +56,10 @@ public class WindowCustomization extends Module {
         });
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
         if (Atomic.client.getWindow() != null) {
             Atomic.client.updateWindowTitle();
             String v = pathToImage.getValue();
@@ -67,8 +69,9 @@ public class WindowCustomization extends Module {
                 return;
             }
             File f = new File(v);
-            if (!f.exists() || !f.isFile()) pathToImage.setInvalid(true);
-            else {
+            if (!f.exists() || !f.isFile()) {
+                pathToImage.setInvalid(true);
+            } else {
                 pathToImage.setInvalid(false);
                 try {
                     FileInputStream is = FileUtils.openInputStream(f);
@@ -82,8 +85,7 @@ public class WindowCustomization extends Module {
         }
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
         Atomic.client.updateWindowTitle();
         setDefaultIcon();
     }
@@ -98,18 +100,15 @@ public class WindowCustomization extends Module {
         }
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

@@ -10,6 +10,7 @@ import me.zeroX150.atomic.helper.util.Utils;
 import java.awt.Color;
 
 public class ColorValue extends DynamicValue<String> {
+
     boolean isRGB = false;
 
     public ColorValue(String key, Color value) {
@@ -29,17 +30,19 @@ public class ColorValue extends DynamicValue<String> {
         isRGB = RGB;
     }
 
-    @Override
-    public String getValue() {
+    @Override public String getValue() {
         return super.getValue() + (isRGB ? ";" : "");
     }
 
-    @Override
-    public void setValue(Object value) {
+    @Override public void setValue(Object value) {
 
-        if (!(value instanceof String v)) return;
+        if (!(value instanceof String v)) {
+            return;
+        }
         boolean isRGB = v.endsWith(";");
-        if (isRGB) v = v.replaceAll(";", "");
+        if (isRGB) {
+            v = v.replaceAll(";", "");
+        }
         Color parsed;
         try {
             parsed = new Color(Integer.parseInt(v));

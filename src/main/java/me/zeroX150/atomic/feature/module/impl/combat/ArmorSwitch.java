@@ -22,10 +22,13 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class ArmorSwitch extends Module {
+
     public ArmorSwitch() {
         super("Armor Switch", "Allows you to put armor on with right click even if you have armor on", ModuleType.COMBAT);
         Events.registerEventHandler(EventType.MOUSE_EVENT, event -> {
-            if (!this.isEnabled() || Atomic.client.currentScreen != null) return;
+            if (!this.isEnabled() || Atomic.client.currentScreen != null) {
+                return;
+            }
             MouseEvent me = (MouseEvent) event;
             if (me.getButton() == 1 && me.getAction() == MouseEvent.MouseEventType.MOUSE_CLICKED) {
                 putArmor();
@@ -44,43 +47,39 @@ public class ArmorSwitch extends Module {
                 case LEGS -> slotToPut = 7;
                 case FEET -> slotToPut = 8;
             }
-        } else if (Arrays.stream(new Item[]{ Items.CREEPER_HEAD, Items.DRAGON_HEAD, Items.PLAYER_HEAD, Items.ZOMBIE_HEAD }).anyMatch(item -> item == selected.getItem())) {
+        } else if (Arrays.stream(new Item[]{Items.CREEPER_HEAD, Items.DRAGON_HEAD, Items.PLAYER_HEAD, Items.ZOMBIE_HEAD}).anyMatch(item -> item == selected.getItem())) {
             slotToPut = 5;
         } else if (selected.getItem() == Items.ELYTRA) {
             slotToPut = 6;
         }
-        if (slotToPut == -1) return;
+        if (slotToPut == -1) {
+            return;
+        }
         Utils.Inventory.moveStackToOther(Utils.Inventory.slotIndexToId(Atomic.client.player.getInventory().selectedSlot), slotToPut);
 
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

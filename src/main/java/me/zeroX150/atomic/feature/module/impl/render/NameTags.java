@@ -14,6 +14,7 @@ import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
@@ -25,19 +26,25 @@ public class NameTags extends Module {
         super("Name Tags", "big nametag.mp4", ModuleType.RENDER);
     }
 
-    public boolean renderTag(Entity entity, MatrixStack stack) {
-        if (!(entity instanceof LivingEntity le)) return false;
-        if (Atomic.client.player == null || entity.isInvisible() || !entity.shouldRenderName()) return false;
-        if (!Utils.Players.isPlayerNameValid(le.getEntityName())) return false;
-        if (entity.getUuid() == Atomic.client.player.getUuid()) return false;
-        Vec3d eSource = new Vec3d(MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevX, entity.getX()),
-                MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevY, entity.getY()),
-                MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevZ, entity.getZ()));
+    public boolean renderTag(Text text, Entity entity, MatrixStack stack) {
+        if (!(entity instanceof LivingEntity le)) {
+            return false;
+        }
+        if (Atomic.client.player == null || entity.isInvisible() || !entity.shouldRenderName()) {
+            return false;
+        }
+        if (!Utils.Players.isPlayerNameValid(le.getEntityName())) {
+            return false;
+        }
+        if (entity.getUuid() == Atomic.client.player.getUuid()) {
+            return false;
+        }
+        Vec3d eSource = new Vec3d(MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevX, entity.getX()), MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevY, entity.getY()), MathHelper.lerp(Atomic.client.getTickDelta(), entity.prevZ, entity.getZ()));
         Vec3d sourcePos = eSource.add(0, (entity.getHeight() + .5) * 2, 0);
         Vec3d screenSpace = Renderer.R2D.getScreenSpaceCoordinate(sourcePos, stack);
         if (Renderer.R2D.isOnScreen(screenSpace)) {
             Utils.TickManager.runOnNextRender(() -> {
-                String name = entity.getEntityName();
+                String name = text.getString();
                 float health = le.getHealth();
                 double healthRounded = Utils.Math.roundToDecimal(health, 1);
                 String entireDisplay = name + healthRounded;
@@ -61,33 +68,27 @@ public class NameTags extends Module {
         return true;
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

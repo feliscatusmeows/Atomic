@@ -17,6 +17,7 @@ import net.minecraft.client.util.math.MatrixStack;
  * @see LivingEntityMixin
  */
 public class Jesus extends Module {
+
     public static MultiValue mode;
 
     final SliderValue velStrength = this.config.create("Velocity strength", 0.1, 0.001, 0.3, 3);
@@ -28,9 +29,10 @@ public class Jesus extends Module {
         velStrength.showOnlyIf(() -> Jesus.mode.getValue().equalsIgnoreCase("velocity"));
     }
 
-    @Override
-    public void tick() {
-        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
+    @Override public void tick() {
+        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) {
+            return;
+        }
         if (Atomic.client.player.isWet()) {
             switch (mode.getValue().toLowerCase()) {
                 case "jump" -> Atomic.client.player.jump();
@@ -40,28 +42,23 @@ public class Jesus extends Module {
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

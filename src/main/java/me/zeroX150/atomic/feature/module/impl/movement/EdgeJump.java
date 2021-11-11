@@ -12,44 +12,44 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.Box;
 
 public class EdgeJump extends Module {
+
     public EdgeJump() {
         super("Edge Jump", "Jumps automatically at the edges of blocks", ModuleType.MOVEMENT);
     }
 
-    @Override
-    public void tick() {
-        if (Atomic.client.player == null || Atomic.client.world == null) return;
-        if (!Atomic.client.player.isOnGround() || Atomic.client.player.isSneaking()) return;
+    @Override public void tick() {
+        if (Atomic.client.player == null || Atomic.client.world == null) {
+            return;
+        }
+        if (!Atomic.client.player.isOnGround() || Atomic.client.player.isSneaking()) {
+            return;
+        }
 
         Box bounding = Atomic.client.player.getBoundingBox();
         bounding = bounding.offset(0, -0.5, 0);
         bounding = bounding.expand(-0.001, 0, -0.001);
-        if (Atomic.client.world.getBlockCollisions(Atomic.client.player, bounding).findAny().isEmpty())
+        if (Atomic.client.world.getBlockCollisions(Atomic.client.player, bounding).findAny().isEmpty()) {
             Atomic.client.player.jump();
+        }
     }
 
-    @Override
-    public void enable() {
-
-    }
-
-    @Override
-    public void disable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public void disable() {
+
+    }
+
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

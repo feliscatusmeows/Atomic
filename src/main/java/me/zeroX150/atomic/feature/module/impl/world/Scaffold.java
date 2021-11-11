@@ -27,59 +27,58 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Objects;
 
 public class Scaffold extends Module {
+
     final SliderValue extend = this.config.create("Extend", 3, 0, 5, 1);
 
     public Scaffold() {
         super("Scaffold", "scaffold", ModuleType.WORLD);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
         Atomic.client.options.keySneak.setPressed(false);
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         Vec3d ppos = Objects.requireNonNull(Atomic.client.player).getPos().add(0, -1, 0);
         BlockPos bp = new BlockPos(ppos);
         int selIndex = Atomic.client.player.getInventory().selectedSlot;
-        if (!(Atomic.client.player.getInventory().getStack(selIndex).getItem() instanceof BlockItem))
+        if (!(Atomic.client.player.getInventory().getStack(selIndex).getItem() instanceof BlockItem)) {
             for (int i = 0; i < 9; i++) {
                 ItemStack is = Atomic.client.player.getInventory().getStack(i);
-                if (is.getItem() == Items.AIR) continue;
+                if (is.getItem() == Items.AIR) {
+                    continue;
+                }
                 if (is.getItem() instanceof BlockItem) {
                     selIndex = i;
                     break;
                 }
             }
+        }
         if (Atomic.client.player.getInventory().getStack(selIndex).getItem() != Items.AIR) {
             boolean sneaking = new Keybind(Atomic.client.options.keySneak.getDefaultKey().getCode()).isHeld();
-            if (sneaking) bp = bp.down();
+            if (sneaking) {
+                bp = bp.down();
+            }
             // fucking multithreading moment
             int finalSelIndex = selIndex;
             BlockPos finalBp = bp;
@@ -90,9 +89,12 @@ public class Scaffold extends Module {
                 Vec3d v = ppos;
                 for (double i = 0; i < extend.getValue(); i += 0.5) {
                     v = v.add(dir);
-                    if (v.distanceTo(Atomic.client.player.getPos()) >= Objects.requireNonNull(Atomic.client.interactionManager).getReachDistance())
+                    if (v.distanceTo(Atomic.client.player.getPos()) >= Objects.requireNonNull(Atomic.client.interactionManager).getReachDistance()) {
                         break;
-                    if (sneaking) v = v.add(0, -1, 0);
+                    }
+                    if (sneaking) {
+                        v = v.add(0, -1, 0);
+                    }
                     BlockPos bp1 = new BlockPos(v);
                     Atomic.client.execute(() -> placeBlockWithSlot(finalSelIndex, bp1));
                 }
@@ -103,7 +105,9 @@ public class Scaffold extends Module {
 
     void placeBlockWithSlot(int s, BlockPos bp) {
         BlockState st = Objects.requireNonNull(Atomic.client.world).getBlockState(bp);
-        if (!st.getMaterial().isReplaceable()) return;
+        if (!st.getMaterial().isReplaceable()) {
+            return;
+        }
         Vec2f py = Rotations.getPitchYaw(new Vec3d(bp.getX() + .5, bp.getY() + .5, bp.getZ() + .5));
         Rotations.setClientPitch(py.x);
         Rotations.setClientYaw(py.y);

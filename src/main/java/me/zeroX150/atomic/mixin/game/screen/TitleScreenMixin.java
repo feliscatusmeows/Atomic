@@ -19,14 +19,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(TitleScreen.class)
-public class TitleScreenMixin extends Screen {
+@Mixin(TitleScreen.class) public class TitleScreenMixin extends Screen {
+
     public TitleScreenMixin() {
         super(Text.of(""));
     }
 
-    @Inject(method = "init", at = @At("TAIL"))
-    public void init(CallbackInfo ci) {
+    @Inject(method = "init", at = @At("TAIL")) public void atomic_postInit(CallbackInfo ci) {
         ButtonWidget alts = new ButtonWidget(1, 22, 130, 20, Text.of("Alt manager"), button -> Atomic.client.setScreen(NewAltManagerScreen.getInstance()));
         ButtonWidget customScreen = new ButtonWidget(1, 1, 130, 20, Text.of("Custom home screen"), button -> {
             ClientConfig.customMainMenu.setValue(true);
@@ -36,8 +35,7 @@ public class TitleScreenMixin extends Screen {
         this.addDrawableChild(customScreen);
     }
 
-    @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At("HEAD"), cancellable = true) public void atomic_preRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (ClientConfig.customMainMenu.getValue()) {
             ci.cancel();
             Atomic.client.setScreen(new HomeScreen());

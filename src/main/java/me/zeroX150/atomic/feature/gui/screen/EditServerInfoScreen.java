@@ -20,8 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditServerInfoScreen extends Screen {
+
     final ServerInfo si;
-    final Screen parent;
+    final Screen     parent;
     TextFieldWidget motd;
     TextFieldWidget pcount;
 
@@ -32,8 +33,7 @@ public class EditServerInfoScreen extends Screen {
 
     }
 
-    @Override
-    protected void init() {
+    @Override protected void init() {
         int fw = 200;
         motd = new TextFieldWidget(textRenderer, width / 2 - fw / 2, height / 2 - 25, fw, 20, Text.of("SPECIAL:Server MOTD"));
         motd.setMaxLength(65535);
@@ -58,7 +58,9 @@ public class EditServerInfoScreen extends Screen {
                 si.label = Text.of(motd.getText().replaceAll("&", "§").replaceAll("\\\\n", "\n"));
                 si.playerCountLabel = IMultiplayerServerListPingerAccessor.createPlayerCountText(i1, i2);
                 Atomic.client.setScreen(parent);
-            } else pcount.setEditableColor(0xFF5555);
+            } else {
+                pcount.setEditableColor(0xFF5555);
+            }
         });
         addDrawableChild(motd);
         addDrawableChild(pcount);
@@ -66,8 +68,7 @@ public class EditServerInfoScreen extends Screen {
         addDrawableChild(cancel);
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
         FontRenderers.title.drawString(matrices, "Server Editor", 5, 5, 0xFFFFFF);
         List<String> texts = new ArrayList<>();

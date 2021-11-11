@@ -19,15 +19,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HoverableExtenderWidget implements Drawable, Element, FastTickable, Selectable {
-    final List<Drawable> renders = new ArrayList<>();
-    final List<Element> children = new ArrayList<>();
-    final double sourceX;
-    final double sourceY;
-    final double width;
-    final double height;
-    final double extend;
-    double x;
-    double renderX;
+
+    final List<Drawable> renders  = new ArrayList<>();
+    final List<Element>  children = new ArrayList<>();
+    final double         sourceX;
+    final double         sourceY;
+    final double         width;
+    final double         height;
+    final double         extend;
+    double  x;
+    double  renderX;
     boolean isHovered = false;
 
     public HoverableExtenderWidget(double x, double y, double width, double height, double extend) {
@@ -43,18 +44,18 @@ public class HoverableExtenderWidget implements Drawable, Element, FastTickable,
         children.add(drawableElement);
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         renderX = Transitions.transition(renderX, this.x, 7);
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         matrices.push();
         isHovered = renderX < mouseX && renderX + width > mouseX && sourceY < mouseY && sourceY + height > mouseY;
         if (isHovered) {
             this.x = sourceX - width + extend;
-        } else this.x = sourceX;
+        } else {
+            this.x = sourceX;
+        }
         Renderer.R2D.fill(matrices, new Color(17, 17, 17, 200), renderX, sourceY, renderX + width, sourceY + height);
         matrices.translate(renderX, sourceY, 0);
         int mx = (int) (mouseX - renderX);
@@ -65,76 +66,80 @@ public class HoverableExtenderWidget implements Drawable, Element, FastTickable,
         matrices.pop();
     }
 
-    @Override
-    public SelectionType getType() {
+    @Override public SelectionType getType() {
         return isHovered ? SelectionType.HOVERED : SelectionType.NONE;
     }
 
-    @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
+    @Override public void appendNarrations(NarrationMessageBuilder builder) {
 
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Override public boolean mouseClicked(double mouseX, double mouseY, int button) {
         for (Element child : children) {
-            if (child.mouseClicked(mouseX - renderX, mouseY - sourceY, button)) return true;
+            if (child.mouseClicked(mouseX - renderX, mouseY - sourceY, button)) {
+                return true;
+            }
         }
         return Element.super.mouseClicked(mouseX, mouseY, button);
     }
 
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    @Override public boolean mouseReleased(double mouseX, double mouseY, int button) {
         for (Element child : children) {
-            if (child.mouseReleased(mouseX - renderX, mouseY - sourceY, button)) return true;
+            if (child.mouseReleased(mouseX - renderX, mouseY - sourceY, button)) {
+                return true;
+            }
         }
         return Element.super.mouseReleased(mouseX, mouseY, button);
     }
 
-    @Override
-    public void mouseMoved(double mouseX, double mouseY) {
+    @Override public void mouseMoved(double mouseX, double mouseY) {
         for (Element child : children) {
             child.mouseMoved(mouseX - renderX, mouseY - sourceY);
         }
         Element.super.mouseMoved(mouseX, mouseY);
     }
 
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    @Override public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         for (Element child : children) {
-            if (child.keyPressed(keyCode, scanCode, modifiers)) return true;
+            if (child.keyPressed(keyCode, scanCode, modifiers)) {
+                return true;
+            }
         }
         return Element.super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    @Override
-    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+    @Override public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         for (Element child : children) {
-            if (child.keyReleased(keyCode, scanCode, modifiers)) return true;
+            if (child.keyReleased(keyCode, scanCode, modifiers)) {
+                return true;
+            }
         }
         return Element.super.keyReleased(keyCode, scanCode, modifiers);
     }
 
-    @Override
-    public boolean charTyped(char chr, int modifiers) {
+    @Override public boolean charTyped(char chr, int modifiers) {
         for (Element child : children) {
-            if (child.charTyped(chr, modifiers)) return true;
+            if (child.charTyped(chr, modifiers)) {
+                return true;
+            }
         }
         return Element.super.charTyped(chr, modifiers);
     }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    @Override public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         for (Element child : children) {
-            if (child.mouseScrolled(mouseX - renderX, mouseY - sourceY, amount)) return true;
+            if (child.mouseScrolled(mouseX - renderX, mouseY - sourceY, amount)) {
+                return true;
+            }
         }
         return Element.super.mouseScrolled(mouseX, mouseY, amount);
     }
 
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    @Override public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         for (Element child : children) {
-            if (child.mouseDragged(mouseX - renderX, mouseY - sourceY, button, deltaX, deltaY)) return true;
+            if (child.mouseDragged(mouseX - renderX, mouseY - sourceY, button, deltaX, deltaY)) {
+                return true;
+            }
         }
         return Element.super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }

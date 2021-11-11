@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UsefulInfoLogger extends Module {
+
     static final Int2ObjectOpenHashMap<String> REASON_MAPPINGS = new Int2ObjectOpenHashMap<>();
 
     static {
@@ -49,18 +50,20 @@ public class UsefulInfoLogger extends Module {
         REASON_MAPPINGS.put(11, "Instant respawn");
     }
 
-    final List<AnimatedRenderablePos> renders = new ArrayList<>();
-    final BooleanValue showGameStateChange = (BooleanValue) this.config.create("Game state", true).description("Show when the game state changes");
-    final BooleanValue showCommandTreeArrival = (BooleanValue) this.config.create("Command tree", true).description("Show when command trees arrive");
-    final BooleanValue showEngageInCombat = (BooleanValue) this.config.create("Combat start", true).description("Shows when you engage in combat");
-    final BooleanValue showEndCombat = (BooleanValue) this.config.create("Combat end", true).description("Shows when the server considers combat to be over");
-    final BooleanValue showDifficultyChange = (BooleanValue) this.config.create("New difficulty", true).description("Shows when the server changes difficulty");
-    final BooleanValue showWorldBorderCenterChange = (BooleanValue) this.config.create("World border update", true).description("Shows when the world border changes center");
+    final List<AnimatedRenderablePos> renders                     = new ArrayList<>();
+    final BooleanValue                showGameStateChange         = (BooleanValue) this.config.create("Game state", true).description("Show when the game state changes");
+    final BooleanValue                showCommandTreeArrival      = (BooleanValue) this.config.create("Command tree", true).description("Show when command trees arrive");
+    final BooleanValue                showEngageInCombat          = (BooleanValue) this.config.create("Combat start", true).description("Shows when you engage in combat");
+    final BooleanValue                showEndCombat               = (BooleanValue) this.config.create("Combat end", true).description("Shows when the server considers combat to be over");
+    final BooleanValue                showDifficultyChange        = (BooleanValue) this.config.create("New difficulty", true).description("Shows when the server changes difficulty");
+    final BooleanValue                showWorldBorderCenterChange = (BooleanValue) this.config.create("World border update", true).description("Shows when the world border changes center");
 
     public UsefulInfoLogger() {
         super("Server Logger", "Prints useful information about the server in chat, when it arrives", ModuleType.MISC);
         Events.registerEventHandler(EventType.PACKET_RECEIVE, event -> {
-            if (!this.isEnabled()) return;
+            if (!this.isEnabled()) {
+                return;
+            }
             PacketEvent pe = (PacketEvent) event;
             Packet<?> p = pe.getPacket();
             if (p instanceof GameStateChangeS2CPacket packet && showGameStateChange.getValue()) {
@@ -86,48 +89,35 @@ public class UsefulInfoLogger extends Module {
                 double centerX = Math.floor(packet.getCenterX());
                 double centerZ = Math.floor(packet.getCenterZ());
                 Utils.Client.sendMessage("[UIL] [World border center change] The world border center is now at X " + centerX + ", Z " + centerZ);
-                renders.add(
-                        new AnimatedRenderablePos(
-                                new CustomColor(255, 255, 255, true),
-                                new CustomColor(0, 0, 0, 0),
-                                new Vec3d(centerX, 0, centerZ),
-                                new Vec3d(1, 255, 1),
-                                10000)
-                );
+                renders.add(new AnimatedRenderablePos(new CustomColor(255, 255, 255, true), new CustomColor(0, 0, 0, 0), new Vec3d(centerX, 0, centerZ), new Vec3d(1, 255, 1), 10000));
             }
         });
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
         renders.removeIf(AnimatedRenderablePos::isExpired);
         for (AnimatedRenderablePos render : renders) {
             Renderer.R3D.renderFilled(render.getPos(), render.getDimensions(), render.getColor(), matrices);
         }
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

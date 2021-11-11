@@ -36,8 +36,7 @@ public class MicrosoftAuthenticator extends Authenticator<me.zeroX150.authlib.lo
     protected String loginCookie;
     protected String loginPPFT;
 
-    @Override
-    public me.zeroX150.authlib.login.microsoft.XboxToken login(String email, String password) {
+    @Override public me.zeroX150.authlib.login.microsoft.XboxToken login(String email, String password) {
         me.zeroX150.authlib.login.microsoft.MicrosoftToken microsoftToken = generateTokenPair(generateLoginCode(email, password));
         me.zeroX150.authlib.login.microsoft.XboxLiveToken xboxLiveToken = generateXboxTokenPair(microsoftToken);
         return generateXboxTokenPair(xboxLiveToken);
@@ -73,8 +72,9 @@ public class MicrosoftAuthenticator extends Authenticator<me.zeroX150.authlib.lo
                 throw new AuthFailureException("Authentication error. Could not find 'LOGIN-URL' tag from response!");
             }
 
-            if (loginCookie == null || loginPPFT == null || loginUrl == null)
+            if (loginCookie == null || loginPPFT == null || loginUrl == null) {
                 throw new AuthFailureException("Authentication error. Error in authentication process!");
+            }
 
         } catch (IOException exception) {
             throw new AuthFailureException(String.format("Authentication error. Request could not be made! Cause: '%s'", exception.getMessage()));
@@ -322,13 +322,9 @@ public class MicrosoftAuthenticator extends Authenticator<me.zeroX150.authlib.lo
             if (sb.length() > 0) {
                 sb.append("&");
             }
-            sb.append(String.format("%s=%s",
-                    encodeURL(entry.getKey()),
-                    encodeURL(entry.getValue())
-            ));
+            sb.append(String.format("%s=%s", encodeURL(entry.getKey()), encodeURL(entry.getValue())));
         }
         return sb.toString();
     }
-
 
 }

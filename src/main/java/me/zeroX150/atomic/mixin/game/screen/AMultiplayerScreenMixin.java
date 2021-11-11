@@ -22,18 +22,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 
-@Mixin(MultiplayerScreen.class)
-public abstract class AMultiplayerScreenMixin extends Screen {
-    @Shadow
-    protected MultiplayerServerListWidget serverListWidget;
+@Mixin(MultiplayerScreen.class) public abstract class AMultiplayerScreenMixin extends Screen {
+
+    @Shadow protected MultiplayerServerListWidget serverListWidget;
     ButtonWidget editMotd;
 
     public AMultiplayerScreenMixin() {
         super(Text.of(""));
     }
 
-    @Inject(method = "init", at = @At("HEAD"))
-    public void init(CallbackInfo ci) {
+    @Inject(method = "init", at = @At("HEAD")) public void atomic_preInit(CallbackInfo ci) {
         editMotd = new ButtonWidget(8, height - 28, 100, 20, Text.of("Edit Server"), button -> {
             MultiplayerServerListWidget.ServerEntry se = (MultiplayerServerListWidget.ServerEntry) this.serverListWidget.getSelectedOrNull();
             Atomic.client.setScreen(new EditServerInfoScreen(Objects.requireNonNull(se).getServer(), this));
@@ -43,8 +41,7 @@ public abstract class AMultiplayerScreenMixin extends Screen {
         addDrawableChild(a);
     }
 
-    @Inject(method = "render", at = @At("HEAD"))
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At("HEAD")) public void atomic_preRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         MultiplayerServerListWidget.Entry e = this.serverListWidget.getSelectedOrNull();
         editMotd.active = (e instanceof MultiplayerServerListWidget.ServerEntry);
     }

@@ -20,17 +20,17 @@ import net.minecraft.util.math.Vec3i;
 import java.util.Objects;
 
 public class Tunnel extends Module {
+
     final BooleanValue autotool = (BooleanValue) this.config.create("AutoTool", true).description("Automatically selects the best tool");
-    boolean breakBlock = false;
+    boolean   breakBlock = false;
     Direction startDirection;
-    BlockPos bpToMine = null;
+    BlockPos  bpToMine   = null;
 
     public Tunnel() {
         super("Tunnel", "Makes a tunnel for you", ModuleType.WORLD);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         Vec3i adder = startDirection.getVector();
         Vec3d next = Objects.requireNonNull(Atomic.client.player).getPos().add(adder.getX(), adder.getY(), adder.getZ());
         BlockPos bp = new BlockPos(next);
@@ -38,35 +38,34 @@ public class Tunnel extends Module {
             bpToMine = bp.add(0, 1, 0);
         } else if (Atomic.client.world.getBlockState(bp).getMaterial().blocksMovement()) {
             bpToMine = bp;
-        } else bpToMine = null;
+        } else {
+            bpToMine = null;
+        }
         if (breakBlock && bpToMine != null) {
-            if (autotool.getValue()) AutoTool.pick(Atomic.client.world.getBlockState(bpToMine));
+            if (autotool.getValue()) {
+                AutoTool.pick(Atomic.client.world.getBlockState(bpToMine));
+            }
             Objects.requireNonNull(Atomic.client.interactionManager).updateBlockBreakingProgress(bpToMine, Direction.DOWN);
         }
         Atomic.client.options.keyForward.setPressed(bpToMine == null);
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
         startDirection = Objects.requireNonNull(Atomic.client.player).getMovementDirection();
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         if (bpToMine != null) {
             Rotations.lookAtPositionSmooth(new Vec3d(bpToMine.getX() + .5, bpToMine.getY() + .5, bpToMine.getZ() + .5), 10);
             if (Atomic.client.crosshairTarget instanceof BlockHitResult bhr) {
@@ -78,8 +77,7 @@ public class Tunnel extends Module {
         }
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

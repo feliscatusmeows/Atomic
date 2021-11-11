@@ -16,13 +16,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NWordCounter extends Module {
+
     final Pattern nwordPattern = Pattern.compile("n[ei](g+)([eoau]r|r[ae]|uh|a|)(s+|ette|)");
     int count = 0;
 
     public NWordCounter() {
         super("N-Word Counter", "Counts the amount of n words in chat", ModuleType.FUN);
         Events.registerEventHandler(EventType.PACKET_RECEIVE, event -> {
-            if (!this.isEnabled()) return;
+            if (!this.isEnabled()) {
+                return;
+            }
             PacketEvent pe = (PacketEvent) event;
             if (pe.getPacket() instanceof net.minecraft.network.packet.s2c.play.GameMessageS2CPacket packet) {
                 Matcher matcher = nwordPattern.matcher(packet.getMessage().getString().toLowerCase());
@@ -31,33 +34,27 @@ public class NWordCounter extends Module {
         });
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return count + "";
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PropGroup {
-    String name;
+
+    String                name;
     List<DynamicValue<?>> children = new ArrayList<>();
 
     public PropGroup(String name) {

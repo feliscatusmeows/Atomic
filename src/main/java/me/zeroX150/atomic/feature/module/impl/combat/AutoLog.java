@@ -13,15 +13,17 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public class AutoLog extends Module {
+
     final DynamicValue<Integer> hpAmount = this.config.create("Health", 3).description("The amount of HP needed to issue a disconnect");
 
     public AutoLog() {
         super("Auto Log", "automatically leaves after a certain health is reached", ModuleType.COMBAT);
     }
 
-    @Override
-    public void tick() {
-        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
+    @Override public void tick() {
+        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) {
+            return;
+        }
         float currentHealth = Atomic.client.player.getHealth();
         if (currentHealth < hpAmount.getValue()) {
             Atomic.client.getNetworkHandler().getConnection().disconnect(Text.of("[A] Autolog disabled because " + ((int) currentHealth) + " < " + hpAmount.getValue()));
@@ -29,28 +31,23 @@ public class AutoLog extends Module {
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return hpAmount.getValue() + "";
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

@@ -14,9 +14,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.Quaternion;
 
 public class Animations extends Module {
-    final SliderValue scaleX = (SliderValue) this.config.create("Scale X", 0.5, 0, 2, 3).description("How much to scale on the X axis");
-    final SliderValue scaleY = (SliderValue) this.config.create("Scale Y", 0.5, 0, 2, 3).description("How much to scale on the Y axis");
-    final SliderValue scaleZ = (SliderValue) this.config.create("Scale Z", 0.5, 0, 2, 3).description("How much to scale on the Z axis");
+
+    final SliderValue scaleX  = (SliderValue) this.config.create("Scale X", 0.5, 0, 2, 3).description("How much to scale on the X axis");
+    final SliderValue scaleY  = (SliderValue) this.config.create("Scale Y", 0.5, 0, 2, 3).description("How much to scale on the Y axis");
+    final SliderValue scaleZ  = (SliderValue) this.config.create("Scale Z", 0.5, 0, 2, 3).description("How much to scale on the Z axis");
     final SliderValue rotateX = (SliderValue) this.config.create("Rotate X", 0, 0, 360, 0).description("How much to rotate on the X");
     final SliderValue rotateY = (SliderValue) this.config.create("Rotate Y", 0, 0, 360, 0).description("How much to rotate on the Y");
     final SliderValue rotateZ = (SliderValue) this.config.create("Rotate Z", 0, 0, 360, 0).description("How much to rotate on the Z");
@@ -31,13 +32,14 @@ public class Animations extends Module {
         this.config.createPropGroup("Offset", offsetX, offsetY, offsetZ);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
     public void applyRotations(LivingEntity le, MatrixStack stack) {
-        if (!le.equals(Atomic.client.player) || Atomic.client.gameRenderer.getCamera().isThirdPerson()) return;
+        if (!le.equals(Atomic.client.player) || Atomic.client.gameRenderer.getCamera().isThirdPerson()) {
+            return;
+        }
         //stack.multiply(new Quaternion(new Vec3f(0,1,0),,true));
         stack.translate(0, (1 - scaleY.getValue()) * .2, 0);
         stack.translate(offsetX.getValue(), offsetY.getValue(), offsetZ.getValue());
@@ -45,28 +47,23 @@ public class Animations extends Module {
         stack.scale((float) (0 + scaleX.getValue()), (float) (0 + scaleY.getValue()), (float) (0 + scaleZ.getValue()));
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

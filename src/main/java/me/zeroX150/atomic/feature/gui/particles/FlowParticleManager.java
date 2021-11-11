@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Random;
 
 public class FlowParticleManager {
+
     public final List<FlowParticle> particles = new ArrayList<>();
 
     public FlowParticleManager(int amount) {
@@ -42,10 +43,13 @@ public class FlowParticleManager {
             for (int i = 0; i < particle.previousPos.size(); i++) {
                 FlowParticle.PosEntry previousPos = particle.previousPos.get(i);
                 double v = (double) i / particle.previousPos.size();
-                if (last == null) last = previousPos;
+                if (last == null) {
+                    last = previousPos;
+                }
                 double dist = Math.sqrt(Math.pow((last.x() - previousPos.x()), 2) + Math.pow((last.y() - previousPos.y()), 2));
-                if (dist < 10)
+                if (dist < 10) {
                     Renderer.R2D.lineScreenD(Renderer.Util.modify(Color.getHSBColor((float) v, 0.6f, 1), -1, -1, -1, (int) (v * 255f)), last.x(), last.y(), previousPos.x(), previousPos.y());
+                }
                 last = previousPos;
             }
         }

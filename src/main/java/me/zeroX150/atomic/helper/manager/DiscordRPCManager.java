@@ -11,12 +11,13 @@ import club.minnced.discord.rpc.DiscordRichPresence;
 import me.zeroX150.atomic.helper.util.Utils;
 
 public class DiscordRPCManager {
+
     final DiscordRichPresence presence = new DiscordRichPresence();
-    String appid;
+    String               appid;
     DiscordEventHandlers handler;
-    Thread runner;
-    boolean isRunning = false;
-    int imageIndex = 0;
+    Thread               runner;
+    boolean              isRunning  = false;
+    int                  imageIndex = 0;
 
     public DiscordRPCManager() {
     }
@@ -50,14 +51,12 @@ public class DiscordRPCManager {
         return this;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
-    public DiscordRPCManager setPresenceDetails(String details) {
+    @SuppressWarnings("UnusedReturnValue") public DiscordRPCManager setPresenceDetails(String details) {
         presence.details = details;
         return this;
     }
 
-    @SuppressWarnings("UnusedReturnValue")
-    public DiscordRPCManager setPresenceState(String state) {
+    @SuppressWarnings("UnusedReturnValue") public DiscordRPCManager setPresenceState(String state) {
         presence.state = state;
         return this;
     }

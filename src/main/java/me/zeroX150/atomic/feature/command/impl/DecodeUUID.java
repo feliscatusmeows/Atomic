@@ -14,12 +14,12 @@ import java.util.List;
 import java.util.UUID;
 
 public class DecodeUUID extends Command {
+
     public DecodeUUID() {
         super("DecodeUUID", "Decodes a UUID to its 4 integers", "decodeuuid", "duuid", "dcuuid");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length == 0) {
             Utils.Client.sendMessage("No uuid given");
             return;

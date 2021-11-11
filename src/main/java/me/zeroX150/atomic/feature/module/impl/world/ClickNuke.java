@@ -22,24 +22,32 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Objects;
 
 public class ClickNuke extends Module {
-    final SliderValue rangeX = (SliderValue) this.config.create("Range X", 5, 1, 10, 0).description("How big the affected radius should be in the X dimension");
-    final SliderValue rangeZ = (SliderValue) this.config.create("Range Z", 5, 1, 10, 0).description("How big the affected radius should be in the Z dimension");
-    final SliderValue rangeY = (SliderValue) this.config.create("Range Y", 5, 1, 10, 0).description("How big the affected radius should be in the Y dimension");
+
+    final SliderValue  rangeX  = (SliderValue) this.config.create("Range X", 5, 1, 10, 0).description("How big the affected radius should be in the X dimension");
+    final SliderValue  rangeZ  = (SliderValue) this.config.create("Range Z", 5, 1, 10, 0).description("How big the affected radius should be in the Z dimension");
+    final SliderValue  rangeY  = (SliderValue) this.config.create("Range Y", 5, 1, 10, 0).description("How big the affected radius should be in the Y dimension");
     final BooleanValue destroy = (BooleanValue) this.config.create("Destroy particles", false).description("Makes particles appear when a block gets destroyed");
 
     public ClickNuke() {
         super("Click Nuke", "Nukes whatever you click at [REQUIRES OP]", ModuleType.WORLD);
         Events.registerEventHandler(EventType.MOUSE_EVENT, event -> {
-            if (!this.isEnabled()) return;
-            if (Atomic.client.player == null) return;
+            if (!this.isEnabled()) {
+                return;
+            }
+            if (Atomic.client.player == null) {
+                return;
+            }
             MouseEvent event1 = (MouseEvent) event;
-            if (event1.getButton() == 0 && event1.getAction() == MouseEvent.MouseEventType.MOUSE_CLICKED)
+            if (event1.getButton() == 0 && event1.getAction() == MouseEvent.MouseEventType.MOUSE_CLICKED) {
                 mousePressed();
+            }
         });
     }
 
     void mousePressed() {
-        if (Atomic.client.currentScreen != null) return;
+        if (Atomic.client.currentScreen != null) {
+            return;
+        }
         HitResult hr = Objects.requireNonNull(Atomic.client.player).raycast(200d, 0f, true);
         Vec3d pos1 = hr.getPos();
         BlockPos pos = new BlockPos(pos1);
@@ -53,32 +61,26 @@ public class ClickNuke extends Module {
         return (int) Math.round(v);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

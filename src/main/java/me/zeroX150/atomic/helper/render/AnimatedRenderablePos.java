@@ -9,8 +9,9 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 
 public class AnimatedRenderablePos extends RenderablePosition {
-    final long entry = System.currentTimeMillis();
-    final double duration;
+
+    final long        entry = System.currentTimeMillis();
+    final double      duration;
     final CustomColor from;
     final CustomColor to;
 
@@ -21,8 +22,7 @@ public class AnimatedRenderablePos extends RenderablePosition {
         this.to = to;
     }
 
-    @Override
-    public CustomColor getColor() {
+    @Override public CustomColor getColor() {
         long timeExisted = System.currentTimeMillis() - entry;
         double v = timeExisted / duration;
         v = MathHelper.clamp(v, 0, 1);

@@ -28,46 +28,40 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(PlayerEntity.class)
-public abstract class PlayerEntityMixin extends LivingEntity implements IsJumpingGetter {
+@Mixin(PlayerEntity.class) public abstract class PlayerEntityMixin extends LivingEntity implements IsJumpingGetter {
+
     boolean velocityHack = false;
 
     private PlayerEntityMixin(EntityType<? extends LivingEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    @Redirect(method = "tick", at = @At(
-            value = "FIELD",
-            target = "Lnet/minecraft/entity/player/PlayerEntity;noClip:Z",
-            opcode = Opcodes.PUTFIELD
-    ))
-    void tick(PlayerEntity playerEntity, boolean value) {
+    @Redirect(method = "tick", at = @At(value = "FIELD", target = "Lnet/minecraft/entity/player/PlayerEntity;noClip:Z", opcode = Opcodes.PUTFIELD))
+    void atomic_tickNoClip(PlayerEntity playerEntity, boolean value) {
         PlayerNoClipQueryEvent q = new PlayerNoClipQueryEvent(playerEntity);
         Events.fireEvent(EventType.NOCLIP_QUERY, q);
         playerEntity.noClip = q.getNoClip();
     }
 
-    @Inject(at = @At("HEAD"), method = "travel(Lnet/minecraft/util/math/Vec3d;)V", cancellable = true)
-    private void travel(Vec3d movementInput, CallbackInfo info) {
-        if (!ModuleRegistry.getByClass(Squake.class).isEnabled())
+    @Inject(at = @At("HEAD"), method = "travel(Lnet/minecraft/util/math/Vec3d;)V", cancellable = true) private void atomic_squakeTravel(Vec3d movementInput, CallbackInfo info) {
+        if (!ModuleRegistry.getByClass(Squake.class).isEnabled()) {
             return;
+        }
 
-        if (QuakeClientPlayer.travel((PlayerEntity) (Object) this, movementInput))
+        if (QuakeClientPlayer.travel((PlayerEntity) (Object) this, movementInput)) {
             info.cancel();
+        }
     }
 
-    @Inject(at = @At("HEAD"), method = "tick()V")
-    private void beforeUpdate(CallbackInfo info) {
+    @Inject(at = @At("HEAD"), method = "tick()V") private void atomic_preTick(CallbackInfo info) {
         QuakeClientPlayer.beforeOnLivingUpdate((PlayerEntity) (Object) this);
     }
 
-    @Inject(at = @At("TAIL"), method = "jump()V")
-    private void afterJump(CallbackInfo info) {
+    @Inject(at = @At("TAIL"), method = "jump()V") private void atomic_postTick(CallbackInfo info) {
         QuakeClientPlayer.afterJump((PlayerEntity) (Object) this);
     }
 
-    @Override
-    public void updateVelocity(float speed, Vec3d movementInput) {
+    @Override public void updateVelocity(float speed, Vec3d movementInput) {
         if (!ModuleRegistry.getByClass(Squake.class).isEnabled() || !world.isClient) {
             super.updateVelocity(speed, movementInput);
             return;
@@ -79,25 +73,28 @@ public abstract class PlayerEntityMixin extends LivingEntity implements IsJumpin
         super.updateVelocity(speed, movementInput);
     }
 
-    @Override
-    public boolean isJumping() {
+    @Override public boolean isJumping() {
         return this.jumping;
     }
 
     @Inject(at = @At("HEAD"), method = "handleFallDamage(FFLnet/minecraft/entity/damage/DamageSource;)Z")
-    private void preHandleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
+    private void atomic_preHandleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         velocityHack = velocityModified;
     }
 
     @Inject(at = @At("RETURN"), method = "handleFallDamage(FFLnet/minecraft/entity/damage/DamageSource;)Z")
-    private void postHandleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        if (!world.isClient) velocityModified = velocityHack;
+    private void atomic_postHandleFallDamage(float fallDistance, float damageMultiplier, DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
+        if (!world.isClient) {
+            velocityModified = velocityHack;
+        }
     }
 
-    @Inject(method = "jump", at = @At("RETURN"))
-    void r(CallbackInfo ci) {
-        if (!this.equals(Atomic.client.player)) return;
-        if (ModuleRegistry.getByClass(LongJump.class).isEnabled())
+    @Inject(method = "jump", at = @At("RETURN")) void r(CallbackInfo ci) {
+        if (!this.equals(Atomic.client.player)) {
+            return;
+        }
+        if (ModuleRegistry.getByClass(LongJump.class).isEnabled()) {
             ModuleRegistry.getByClass(LongJump.class).applyLongJumpVelocity();
+        }
     }
 }

@@ -35,48 +35,56 @@ import java.util.Random;
  */
 
 public class QuakeClientPlayer {
-    private static final Random random = new Random();
+
+    private static final Random         random         = new Random();
     private static final List<double[]> baseVelocities = new ArrayList<>();
 
     private QuakeClientPlayer() {
     }
 
     public static boolean travel(PlayerEntity player, Vec3d movementInput) {
-        if (!player.world.isClient)
+        if (!player.world.isClient) {
             return false;
+        }
 
-        if (!ModuleRegistry.getByClass(Squake.class).isEnabled())
+        if (!ModuleRegistry.getByClass(Squake.class).isEnabled()) {
             return false;
+        }
 
         boolean didQuakeMovement;
         double d0 = player.getX();
         double d1 = player.getY();
         double d2 = player.getZ();
 
-        if ((player.getAbilities().flying || player.isFallFlying()) && !player.hasVehicle())
+        if ((player.getAbilities().flying || player.isFallFlying()) && !player.hasVehicle()) {
             return false;
-        else
+        } else {
             didQuakeMovement = quake_travel(player, movementInput);
+        }
 
-        if (didQuakeMovement)
+        if (didQuakeMovement) {
             player.increaseTravelMotionStats(player.getX() - d0, player.getY() - d1, player.getZ() - d2);
+        }
 
         return didQuakeMovement;
     }
 
     public static boolean updateVelocity(Entity entity, Vec3d movementInput, float movementSpeed) {
-        if (!(entity instanceof PlayerEntity))
+        if (!(entity instanceof PlayerEntity)) {
             return false;
+        }
 
         return updateVelocityPlayer((PlayerEntity) entity, movementInput, movementSpeed);
     }
 
     public static boolean updateVelocityPlayer(PlayerEntity player, Vec3d movementInput, float movementSpeed) {
-        if (!player.world.isClient)
+        if (!player.world.isClient) {
             return false;
+        }
 
-        if (!ModuleRegistry.getByClass(Squake.class).isEnabled())
+        if (!ModuleRegistry.getByClass(Squake.class).isEnabled()) {
             return false;
+        }
 
         if ((player.getAbilities().flying && !player.hasVehicle()) || player.isTouchingWater() || player.isInLava() || !player.getAbilities().flying) {
             return false;
@@ -86,7 +94,7 @@ public class QuakeClientPlayer {
         float wishspeed = movementSpeed;
         wishspeed *= 2.15f;
         double[] wishdir = getMovementDirection(player, movementInput.x, movementInput.z);
-        double[] wishvel = new double[]{ wishdir[0] * wishspeed, wishdir[1] * wishspeed };
+        double[] wishvel = new double[]{wishdir[0] * wishspeed, wishdir[1] * wishspeed};
         baseVelocities.add(wishvel);
 
         return true;
@@ -135,7 +143,7 @@ public class QuakeClientPlayer {
 
     private static double[] getMovementDirection(PlayerEntity player, double sidemove, double forwardmove) {
         double f3 = sidemove * sidemove + forwardmove * forwardmove;
-        double[] dir = { 0.0F, 0.0F };
+        double[] dir = {0.0F, 0.0F};
 
         if (f3 >= 1.0E-4F) {
             f3 = MathHelper.sqrt((float) f3);
@@ -192,7 +200,9 @@ public class QuakeClientPlayer {
     }
 
     public static boolean intersects(VoxelShape shape, Box box) {
-        if (shape.isEmpty()) return false;
+        if (shape.isEmpty()) {
+            return false;
+        }
         MutableBoolean result = new MutableBoolean(false);
         shape.forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> {
             if (box.intersects(minX, minY, minZ, maxX, maxY, maxZ)) {
@@ -202,8 +212,7 @@ public class QuakeClientPlayer {
         return result.booleanValue();
     }
 
-    @SuppressWarnings("deprecation")
-    private static void minecraft_ApplyGravity(PlayerEntity player) {
+    @SuppressWarnings("deprecation") private static void minecraft_ApplyGravity(PlayerEntity player) {
         BlockPos pos = new BlockPos((int) player.getX(), (int) player.getY(), (int) player.getZ());
         double velocityY = player.getVelocity().y;
         if (player.hasStatusEffect(StatusEffects.LEVITATION)) {
@@ -283,9 +292,9 @@ public class QuakeClientPlayer {
         else if ((player.isInLava() && !player.getAbilities().flying)) {
             return false;
         } else if (player.isTouchingWater() && !player.getAbilities().flying) {
-            if (ModuleRegistry.getByClass(Squake.class).sharkingEnabled.getValue())
+            if (ModuleRegistry.getByClass(Squake.class).sharkingEnabled.getValue()) {
                 quake_WaterMove(player, (float) movementInput.x, (float) movementInput.y, (float) movementInput.z);
-            else {
+            } else {
                 return false;
             }
         } else {
@@ -372,8 +381,9 @@ public class QuakeClientPlayer {
             float movespeed = quake_getMaxMoveSpeed(player);
             if (curspeed > movespeed) {
                 double speedbonus = curspeed / movespeed * 0.5F;
-                if (speedbonus > 1.0F)
+                if (speedbonus > 1.0F) {
                     speedbonus = 1.0F;
+                }
 
                 player.setVelocity(player.getVelocity().add(0, speedbonus * curspeed * ModuleRegistry.getByClass(Squake.class).trimpMultiplier.getValue(), 0));
 
@@ -395,8 +405,7 @@ public class QuakeClientPlayer {
         player.setVelocity(player.getVelocity().multiply(friction));
     }
 
-    @SuppressWarnings("unused")
-    private static void quake_WaterAccelerate(PlayerEntity player, float wishspeed, float speed, double wishX, double wishZ, double accel) {
+    @SuppressWarnings("unused") private static void quake_WaterAccelerate(PlayerEntity player, float wishspeed, float speed, double wishX, double wishZ, double accel) {
         float addspeed = wishspeed - speed;
         if (addspeed > 0) {
             float accelspeed = (float) (accel * wishspeed * 0.05F);
@@ -422,13 +431,15 @@ public class QuakeClientPlayer {
         if (!isSharking || curspeed < 0.078F) {
             minecraft_WaterMove(player, new Vec3d(sidemove, upmove, forwardmove));
         } else {
-            if (curspeed > 0.09)
+            if (curspeed > 0.09) {
                 quake_ApplyWaterFriction(player, ModuleRegistry.getByClass(Squake.class).sharkingWaterFriction.getValue());
+            }
 
-            if (curspeed > 0.098)
+            if (curspeed > 0.098) {
                 quake_AirAccelerate(player, wishspeed, wishdir[0], wishdir[1], ModuleRegistry.getByClass(Squake.class).groundAccelerate.getValue());
-            else
+            } else {
                 quake_Accelerate(player, .0980F, wishdir[0], wishdir[1], ModuleRegistry.getByClass(Squake.class).groundAccelerate.getValue());
+            }
 
             player.move(MovementType.SELF, player.getVelocity());
 
@@ -465,15 +476,17 @@ public class QuakeClientPlayer {
         addspeed = wishspeed - currentspeed;
 
         // If not adding any, done.
-        if (addspeed <= 0)
+        if (addspeed <= 0) {
             return;
+        }
 
         // Determine acceleration speed after acceleration
         accelspeed = accel * wishspeed / getSlipperiness(player) * 0.05F;
 
         // Cap it
-        if (accelspeed > addspeed)
+        if (accelspeed > addspeed) {
             accelspeed = addspeed;
+        }
 
         // Adjust pmove vel.
         player.setVelocity(player.getVelocity().add(accelspeed * wishX, 0, accelspeed * wishZ));
@@ -485,8 +498,9 @@ public class QuakeClientPlayer {
         float wishspd = wishspeed;
         float maxAirAcceleration = (float) (ModuleRegistry.getByClass(Squake.class).airAccelPerTick.getValue() + 0f);
 
-        if (wishspd > maxAirAcceleration)
+        if (wishspd > maxAirAcceleration) {
             wishspd = maxAirAcceleration;
+        }
 
         // Determine veer amount
         // this is a dot product
@@ -496,23 +510,26 @@ public class QuakeClientPlayer {
         addspeed = wishspd - currentspeed;
 
         // If not adding any, done.
-        if (addspeed <= 0)
+        if (addspeed <= 0) {
             return;
+        }
 
         // Determine acceleration speed after acceleration
         accelspeed = accel * wishspeed * 0.05F;
 
         // Cap it
-        if (accelspeed > addspeed)
+        if (accelspeed > addspeed) {
             accelspeed = addspeed;
+        }
 
         // Adjust pmove vel.
         player.setVelocity(player.getVelocity().add(accelspeed * wishX, 0, accelspeed * wishZ));
     }
 
     public static void beforeOnLivingUpdate(PlayerEntity player) {
-        if (!player.world.isClient)
+        if (!player.world.isClient) {
             return;
+        }
 
         if (!baseVelocities.isEmpty()) {
             baseVelocities.clear();
@@ -520,11 +537,13 @@ public class QuakeClientPlayer {
     }
 
     public static void afterJump(PlayerEntity player) {
-        if (!player.world.isClient)
+        if (!player.world.isClient) {
             return;
+        }
 
-        if (!ModuleRegistry.getByClass(Squake.class).isEnabled())
+        if (!ModuleRegistry.getByClass(Squake.class).isEnabled()) {
             return;
+        }
 
         // undo this dumb thing
         if (player.isSprinting()) {
@@ -536,8 +555,7 @@ public class QuakeClientPlayer {
         quake_Jump(player);
     }
 
-    @SuppressWarnings("unused")
-    private static void quake_Friction(PlayerEntity player) {
+    @SuppressWarnings("unused") private static void quake_Friction(PlayerEntity player) {
         double speed, newspeed, control;
         float friction;
         float drop;
@@ -568,8 +586,9 @@ public class QuakeClientPlayer {
 
         // scale the velocity
         newspeed = speed - drop;
-        if (newspeed < 0.0F)
+        if (newspeed < 0.0F) {
             newspeed = 0.0F;
+        }
 
         if (newspeed != speed) {
             // Determine proportion of old speed we are using.
@@ -605,8 +624,9 @@ public class QuakeClientPlayer {
     }
 
     private static void quake_ApplyHardCap(PlayerEntity player, float movespeed) {
-        if (ModuleRegistry.getByClass(Squake.class).uncappedBunnyhop.getValue())
+        if (ModuleRegistry.getByClass(Squake.class).uncappedBunnyhop.getValue()) {
             return;
+        }
 
         float hardCapPercent = Float.parseFloat(ModuleRegistry.getByClass(Squake.class).hardCap.getValue().toString());
 
@@ -622,6 +642,7 @@ public class QuakeClientPlayer {
     }
 
     public interface IsJumpingGetter {
+
         boolean isJumping();
     }
 

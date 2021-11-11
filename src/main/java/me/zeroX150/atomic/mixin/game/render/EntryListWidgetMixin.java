@@ -15,23 +15,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@SuppressWarnings("ConstantConditions")
-@Mixin(EntryListWidget.class)
-public class EntryListWidgetMixin {
+@SuppressWarnings("ConstantConditions") @Mixin(EntryListWidget.class) public class EntryListWidgetMixin {
 
-    @Shadow
-    protected int width;
-    @Shadow
-    protected int height;
-    @Shadow
-    private boolean renderBackground;
-    @Shadow
-    private boolean renderHorizontalShadows;
+    @Shadow protected int     width;
+    @Shadow protected int     height;
+    @Shadow private   boolean renderBackground;
+    @Shadow private   boolean renderHorizontalShadows;
 
-    @Inject(method = "render", at = @At("HEAD"))
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At("HEAD")) public void atomic_preRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         this.renderBackground = false;
         this.renderHorizontalShadows = false;
-        if (!(((Object) this) instanceof PackListWidget)) Renderer.R2D.renderBackgroundTexture();
+        if (!(((Object) this) instanceof PackListWidget)) {
+            Renderer.R2D.renderBackgroundTexture();
+        }
     }
 }

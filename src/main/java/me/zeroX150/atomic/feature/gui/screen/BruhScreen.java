@@ -13,12 +13,12 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class BruhScreen extends Screen {
+
     public BruhScreen() {
         super(Text.of(""));
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         RenderSystem.setShaderTexture(0, new Identifier("atomic", "bruh.png"));
         DrawableHelper.drawTexture(matrices, width / 2 - 32, height / 2 - 32, 0, 0, 64, 64, 64, 64);
         super.render(matrices, mouseX, mouseY, delta);

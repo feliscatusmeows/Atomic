@@ -15,14 +15,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class FlowParticle {
-    public static final Vec2f base = new Vec2f(2f, 2f);
-    final double pullStrength;
-    final double speedMtp;
-    final List<PosEntry> previousPos = new ArrayList<>();
+
+    public static final Vec2f          base        = new Vec2f(2f, 2f);
+    final               double         pullStrength;
+    final               double         speedMtp;
+    final               List<PosEntry> previousPos = new ArrayList<>();
     double x;
-    Vec2f velocity;
-    float brightness;
-    Color color;
+    Vec2f  velocity;
+    float  brightness;
+    Color  color;
     double y;
 
     public FlowParticle(Vec2f initialPos, Vec2f vel, Color color) {
@@ -54,10 +55,18 @@ public class FlowParticle {
         }
         x = nx;
         y = ny;
-        if (nx > w) x = w - 1;
-        if (nx < 0) x = 1;
-        if (ny > h) y = h - 1;
-        if (ny < 0) y = 1;
+        if (nx > w) {
+            x = w - 1;
+        }
+        if (nx < 0) {
+            x = 1;
+        }
+        if (ny > h) {
+            y = h - 1;
+        }
+        if (ny < 0) {
+            y = 1;
+        }
         brightness += (Math.random() - 0.5) / 8;
         brightness = brightness > 0.5f ? 0.5f : (brightness < 0 ? 0 : brightness);
         double perX = x / Atomic.client.getWindow().getScaledWidth();
@@ -74,9 +83,12 @@ public class FlowParticle {
         float newVY = (float) Transitions.transition(velocity.y, base.y * speedMtp, pullStrength, 0);
         velocity = new Vec2f(newVX, newVY);
         previousPos.add(new PosEntry(x, y));
-        if (previousPos.size() > 50) previousPos.remove(0);
+        if (previousPos.size() > 50) {
+            previousPos.remove(0);
+        }
     }
 
     record PosEntry(double x, double y) {
+
     }
 }

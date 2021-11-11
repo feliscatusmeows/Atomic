@@ -12,16 +12,13 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(CreditsScreen.class)
-public class CreditsScreenMixin {
+@Mixin(CreditsScreen.class) public class CreditsScreenMixin {
+
     final Identifier nomodV = new Identifier("nomod.textures/gui/options_background.png");
 
-    @Redirect(method = "renderBackground", at = @At(
-            value = "FIELD",
-            opcode = Opcodes.GETSTATIC,
-            target = "Lnet/minecraft/client/gui/DrawableHelper;OPTIONS_BACKGROUND_TEXTURE:Lnet/minecraft/util/Identifier;"
-    ))
-    public Identifier redirect() {
+    @Redirect(method = "renderBackground",
+            at = @At(value = "FIELD", opcode = Opcodes.GETSTATIC, target = "Lnet/minecraft/client/gui/DrawableHelper;OPTIONS_BACKGROUND_TEXTURE:Lnet/minecraft/util/Identifier;"))
+    public Identifier atomic_replaceCreditsScreenBackground() {
         return nomodV;
     }
 }

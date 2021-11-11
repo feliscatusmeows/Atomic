@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class KeybindManager {
+
     public static final Map<Module, Keybind> keybindMap = new HashMap<>();
 
     public static void init() {
@@ -24,7 +25,9 @@ public class KeybindManager {
     }
 
     public static void updateSingle(int kc, int action) {
-        if (kc == -1) return; // JESSE WE FUCKED UP
+        if (kc == -1) {
+            return; // JESSE WE FUCKED UP
+        }
         if (action == 1) { // key pressed
             for (Module o : keybindMap.keySet().toArray(new Module[0])) {
                 Keybind kb = keybindMap.get(o);

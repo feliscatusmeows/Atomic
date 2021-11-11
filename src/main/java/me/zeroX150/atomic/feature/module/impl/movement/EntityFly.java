@@ -19,6 +19,7 @@ import net.minecraft.util.math.Vec3d;
 import org.lwjgl.glfw.GLFW;
 
 public class EntityFly extends Module {
+
     final Keybind down = new Keybind(GLFW.GLFW_KEY_LEFT_ALT);
     Entity lastRide = null;
 
@@ -26,11 +27,14 @@ public class EntityFly extends Module {
         super("Entity Fly", "boatfly but yes", ModuleType.MOVEMENT);
     }
 
-    @Override
-    public void tick() {
-        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
+    @Override public void tick() {
+        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) {
+            return;
+        }
         Entity vehicle = Atomic.client.player.getVehicle();
-        if (vehicle == null) return;
+        if (vehicle == null) {
+            return;
+        }
         lastRide = vehicle;
         vehicle.setNoGravity(true);
         if (vehicle instanceof MobEntity) {
@@ -40,18 +44,24 @@ public class EntityFly extends Module {
         GameOptions go = Atomic.client.options;
         float y = Atomic.client.player.getYaw();
         int mx = 0, my = 0, mz = 0;
-        if (go.keyJump.isPressed())
+        if (go.keyJump.isPressed()) {
             my++;
-        if (go.keyBack.isPressed())
+        }
+        if (go.keyBack.isPressed()) {
             mz++;
-        if (go.keyLeft.isPressed())
+        }
+        if (go.keyLeft.isPressed()) {
             mx--;
-        if (go.keyRight.isPressed())
+        }
+        if (go.keyRight.isPressed()) {
             mx++;
-        if (down.isHeld())
+        }
+        if (down.isHeld()) {
             my--;
-        if (go.keyForward.isPressed())
+        }
+        if (go.keyForward.isPressed()) {
             mz--;
+        }
         double ts = 1;
         double s = Math.sin(Math.toRadians(y));
         double c = Math.cos(Math.toRadians(y));
@@ -69,30 +79,25 @@ public class EntityFly extends Module {
         Atomic.client.getNetworkHandler().sendPacket(p);
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
         Utils.Client.sendMessage("alt = down. dont use shift");
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
         if (lastRide != null) {
             lastRide.setNoGravity(false);
         }
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

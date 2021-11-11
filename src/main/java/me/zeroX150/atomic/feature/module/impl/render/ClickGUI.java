@@ -17,6 +17,7 @@ import me.zeroX150.atomic.feature.module.config.SliderValue;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class ClickGUI extends Module {
+
     public static BooleanValue instant;
 
     public static ColorValue cCategories;
@@ -51,34 +52,30 @@ public class ClickGUI extends Module {
         this.config.get("Keybind").setValue(344);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         if (!(Atomic.client.currentScreen instanceof ClickGUIScreen)) {
             Atomic.client.setScreen(ClickGUIScreen.getInstance());
-        } else toggle();
+        } else {
+            toggle();
+        }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

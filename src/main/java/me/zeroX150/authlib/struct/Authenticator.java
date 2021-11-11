@@ -10,7 +10,7 @@ import java.time.Duration;
  */
 public abstract class Authenticator<T> {
 
-    protected final Gson gson = new Gson();
+    protected final Gson       gson   = new Gson();
     protected final HttpClient client = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
 
     /**
@@ -21,6 +21,5 @@ public abstract class Authenticator<T> {
      * @return the string
      */
     public abstract T login(String email, String password);
-
 
 }

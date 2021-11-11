@@ -27,19 +27,20 @@ import java.util.List;
 import java.util.Objects;
 
 public class NbtEditScreen extends Screen implements FastTickable {
-    static final int LINE_HEIGHT = 10;
-    List<String> lines = new ArrayList<>();
-    NbtCompound source;
-    int cursorX = 0;
-    int cursorY = 0;
-    double lastCursorPosX = 0;
-    double lastCursorPosY = 0;
-    double renderCursorPosX = 0;
-    double renderCursorPosY = 0;
-    String errorMessage = "";
-    long lastMsgDisplay = System.currentTimeMillis();
-    double scroll = 0;
-    double trackedScroll = 0;
+
+    static final double LINE_HEIGHT = FontRenderers.mono.getFontHeight();
+    List<String> lines            = new ArrayList<>();
+    NbtCompound  source;
+    int          cursorX          = 0;
+    int          cursorY          = 0;
+    double       lastCursorPosX   = 0;
+    double       lastCursorPosY   = 0;
+    double       renderCursorPosX = 0;
+    double       renderCursorPosY = 0;
+    String       errorMessage     = "";
+    long         lastMsgDisplay   = System.currentTimeMillis();
+    double       scroll           = 0;
+    double       trackedScroll    = 0;
 
     public NbtEditScreen(NbtCompound sourceCompound) {
         super(Text.of(""));
@@ -47,25 +48,23 @@ public class NbtEditScreen extends Screen implements FastTickable {
         //lines.addAll(Arrays.asList(v.split("\n")));
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         trackedScroll = Transitions.transition(trackedScroll, scroll, 5);
         renderCursorPosX = Transitions.transition(renderCursorPosX, lastCursorPosX, 7);
         renderCursorPosY = Transitions.transition(renderCursorPosY, lastCursorPosY, 7);
     }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    @Override public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         scroll -= amount * 30;
-        int height = LINE_HEIGHT * lines.size() + 2;
+        double height = LINE_HEIGHT * lines.size() + 2;
         scroll = MathHelper.clamp(scroll, 0, Math.max(height - this.height + 20, 0));
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
-    @Override
-    protected void init() {
+    @Override protected void init() {
         {
             String v = NbtHelper.toPrettyPrintedString(source);
+            //while(v.contains("§")) v = v.replace("§", "&");
             lines.clear();
             int maxWidth = width - 115;
             for (String s : v.split("\n")) {
@@ -116,7 +115,9 @@ public class NbtEditScreen extends Screen implements FastTickable {
         });
         ButtonWidget upload = new ButtonWidget(width - 105, 11 + 25 + 25, 100, 20, Text.of("Upload"), button -> {
             try {
-                NbtCompound compound = StringNbtReader.parse(String.join("", lines));
+                String t = String.join("", lines);
+                //                while (t.contains("&")) t = t.replace("&", "§");*/
+                NbtCompound compound = StringNbtReader.parse(t);
                 {
                     String v = NbtHelper.toPrettyPrintedString(compound);
                     lines.clear();
@@ -193,8 +194,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
         lastMsgDisplay = System.currentTimeMillis();
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
         if (System.currentTimeMillis() - lastMsgDisplay > 6000) {
             errorMessage = "";
@@ -208,14 +208,14 @@ public class NbtEditScreen extends Screen implements FastTickable {
             this.lines = lines;
             cursorY = 1;
         }
-        int height = LINE_HEIGHT * lines.size() + 2;
+        double height = LINE_HEIGHT * lines.size() + 2;
         matrices.push();
         matrices.translate(0, -trackedScroll, 0);
         Renderer.R2D.fill(matrices, new Color(0, 0, 0, 100), 5, 11, width - 110, 11 + height);
         int yOffset = 12;
         for (String line : lines) {
             FontRenderers.mono.drawString(matrices, line, 6, yOffset, 0xFFFFFF);
-            yOffset += FontRenderers.mono.getFontHeight() + 1;
+            yOffset += FontRenderers.mono.getFontHeight();
         }
         double rCX;
         double rCY;
@@ -237,53 +237,56 @@ public class NbtEditScreen extends Screen implements FastTickable {
         super.render(matrices, mouseX, mouseY, delta);
     }
 
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    @Override public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (Screen.isPaste(keyCode)) {
             String clip = Atomic.client.keyboard.getClipboard();
             for (char c : clip.toCharArray()) {
                 charTyped(c, 0);
             }
-        } else switch (keyCode) {
-            case 262 -> cursorX++;
-            case 263 -> cursorX--;
-            case 264 -> cursorY++;
-            case 265 -> cursorY--;
-            case 257 -> {
-                lines.add(cursorY + 1, "");
-                cursorY++;
-            }
-            case 259 -> {
-                if (lines.size() == 0) break;
-                if (cursorX != 0) {
-                    String current = lines.get(cursorY);
-                    StringBuilder reassembled = new StringBuilder(current);
-                    reassembled.deleteCharAt(cursorX - 1);
-                    lines.remove(cursorY);
-                    lines.add(cursorY, reassembled.toString());
-                    cursorX--;
-                } else {
-                    if (cursorY > 0) {
-                        String backup = lines.get(cursorY);
-                        lines.remove(cursorY);
-                        cursorY--;
+        } else {
+            switch (keyCode) {
+                case 262 -> cursorX++;
+                case 263 -> cursorX--;
+                case 264 -> cursorY++;
+                case 265 -> cursorY--;
+                case 257 -> {
+                    lines.add(cursorY + 1, "");
+                    cursorY++;
+                }
+                case 259 -> {
+                    if (lines.size() == 0) {
+                        break;
+                    }
+                    if (cursorX != 0) {
                         String current = lines.get(cursorY);
+                        StringBuilder reassembled = new StringBuilder(current);
+                        reassembled.deleteCharAt(cursorX - 1);
                         lines.remove(cursorY);
-                        lines.add(cursorY, current + backup);
-                        cursorX = current.length();
+                        lines.add(cursorY, reassembled.toString());
+                        cursorX--;
+                    } else {
+                        if (cursorY > 0) {
+                            String backup = lines.get(cursorY);
+                            lines.remove(cursorY);
+                            cursorY--;
+                            String current = lines.get(cursorY);
+                            lines.remove(cursorY);
+                            lines.add(cursorY, current + backup);
+                            cursorX = current.length();
+                        }
                     }
                 }
-            }
-            case 261 -> {
-                if (lines.size() != 0 && cursorX < lines.get(cursorY).length()) {
-                    String current = lines.get(cursorY);
-                    StringBuilder reassembled = new StringBuilder(current);
-                    reassembled.deleteCharAt(cursorX);
-                    lines.remove(cursorY);
-                    lines.add(cursorY, reassembled.toString());
+                case 261 -> {
+                    if (lines.size() != 0 && cursorX < lines.get(cursorY).length()) {
+                        String current = lines.get(cursorY);
+                        StringBuilder reassembled = new StringBuilder(current);
+                        reassembled.deleteCharAt(cursorX);
+                        lines.remove(cursorY);
+                        lines.add(cursorY, reassembled.toString());
+                    }
                 }
+                case 256 -> onClose();
             }
-            case 256 -> onClose();
         }
         if (lines.size() != 0) {
             cursorY = MathHelper.clamp(cursorY, 0, lines.size() - 1); // start from 0 here, gotta shift everything down
@@ -295,8 +298,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
 
     }
 
-    @Override
-    public boolean charTyped(char chr, int modifiers) {
+    @Override public boolean charTyped(char chr, int modifiers) {
         if (SharedConstants.isValidChar(chr)) {
             StringBuilder b = new StringBuilder(lines.get(cursorY));
             b.insert(cursorX, chr);
@@ -308,8 +310,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
         return super.charTyped(chr, modifiers);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         if (!lines.isEmpty()) {
             String combined = String.join("", lines);
             try {
@@ -321,8 +322,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
         super.tick();
     }
 
-    @Override
-    public boolean isPauseScreen() {
+    @Override public boolean isPauseScreen() {
         return false;
     }
 }

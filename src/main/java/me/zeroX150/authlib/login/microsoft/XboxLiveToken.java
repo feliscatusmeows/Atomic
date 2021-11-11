@@ -45,5 +45,4 @@ public class XboxLiveToken extends AuthToken {
         return uhs;
     }
 
-
 }

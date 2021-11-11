@@ -8,7 +8,8 @@ package me.zeroX150.atomic.helper.render;
 import me.zeroX150.atomic.helper.util.Utils;
 
 @SuppressWarnings("unused") public class CustomColor extends java.awt.Color {
-    final int alpha;
+
+    final   int     alpha;
     private boolean isChroma = false;
 
     public CustomColor(int r, int g, int b, boolean isChroma) {
@@ -49,8 +50,7 @@ import me.zeroX150.atomic.helper.util.Utils;
         isChroma = chroma;
     }
 
-    @Override
-    public int getRGB() {
+    @Override public int getRGB() {
         if (isChroma) {
             java.awt.Color chroma = Utils.getCurrentRGB();
             return new CustomColor(chroma.getRed(), chroma.getGreen(), chroma.getBlue(), alpha).getRGB();
@@ -58,8 +58,7 @@ import me.zeroX150.atomic.helper.util.Utils;
         return super.getRGB();
     }
 
-    @Override
-    public int getAlpha() {
+    @Override public int getAlpha() {
         return alpha;
     }
 }

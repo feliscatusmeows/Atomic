@@ -25,14 +25,14 @@ import java.util.Map;
 import java.util.Objects;
 
 public class ChestESP extends Module {
-    final SliderValue range = (SliderValue) this.config.create("Range", 30, 10, 100, 0).description("The range to scan for chests in");
+
+    final SliderValue       range          = (SliderValue) this.config.create("Range", 30, 10, 100, 0).description("The range to scan for chests in");
     final List<RenderBlock> blocksToRender = new ArrayList<>();
-    final Map<Block, Color> renders = new HashMap<>();
-    final Thread updater;
+    final Map<Block, Color> renders        = new HashMap<>();
+    final Thread            updater;
     int t = 0;
 
-    @SuppressWarnings("BusyWait")
-    public ChestESP() {
+    @SuppressWarnings("BusyWait") public ChestESP() {
         super("Chest ESP", "shows all chests", ModuleType.RENDER);
         renders.put(Blocks.CHEST, new Color(1, 161, 182));
         renders.put(Blocks.ENDER_CHEST, new Color(83, 3, 196));
@@ -41,31 +41,21 @@ public class ChestESP extends Module {
         renders.put(Blocks.DISPENSER, new Color(52, 52, 52));
         Color shulker = new Color(0, 130, 76);
         for (Block b : new Block[]{ // jesus fuck
-                Blocks.SHULKER_BOX,
-                Blocks.WHITE_SHULKER_BOX,
-                Blocks.ORANGE_SHULKER_BOX,
-                Blocks.MAGENTA_SHULKER_BOX,
-                Blocks.LIGHT_BLUE_SHULKER_BOX,
-                Blocks.YELLOW_SHULKER_BOX,
-                Blocks.LIME_SHULKER_BOX,
-                Blocks.PINK_SHULKER_BOX,
-                Blocks.GRAY_SHULKER_BOX,
-                Blocks.LIGHT_GRAY_SHULKER_BOX,
-                Blocks.CYAN_SHULKER_BOX,
-                Blocks.PURPLE_SHULKER_BOX,
-                Blocks.BLUE_SHULKER_BOX,
-                Blocks.BROWN_SHULKER_BOX,
-                Blocks.GREEN_SHULKER_BOX,
-                Blocks.RED_SHULKER_BOX,
-                Blocks.BLACK_SHULKER_BOX
-        })
+                Blocks.SHULKER_BOX, Blocks.WHITE_SHULKER_BOX, Blocks.ORANGE_SHULKER_BOX, Blocks.MAGENTA_SHULKER_BOX, Blocks.LIGHT_BLUE_SHULKER_BOX, Blocks.YELLOW_SHULKER_BOX, Blocks.LIME_SHULKER_BOX,
+                Blocks.PINK_SHULKER_BOX, Blocks.GRAY_SHULKER_BOX, Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX, Blocks.BROWN_SHULKER_BOX,
+                Blocks.GREEN_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.BLACK_SHULKER_BOX}) {
             renders.put(b, shulker);
+        }
         updater = new Thread(() -> {
             while (true) {
                 try {
                     Thread.sleep(50);
-                    if (!this.isEnabled()) continue;
-                    if (Atomic.client.player == null || Atomic.client.world == null) continue;
+                    if (!this.isEnabled()) {
+                        continue;
+                    }
+                    if (Atomic.client.player == null || Atomic.client.world == null) {
+                        continue;
+                    }
                     t++;
                     if (t > 40) { // scan every 2 secs on another thread to avoid lag
                         scan();
@@ -87,7 +77,9 @@ public class ChestESP extends Module {
                     Vec3d pos = new Vec3d(x, y, z);
                     BlockPos bp = new BlockPos(pos);
                     BlockPos bp1 = Objects.requireNonNull(Atomic.client.player).getBlockPos().add(bp);
-                    if (!Objects.requireNonNull(Atomic.client.world).isInBuildLimit(bp1)) break;
+                    if (!Objects.requireNonNull(Atomic.client.world).isInBuildLimit(bp1)) {
+                        break;
+                    }
                     BlockState state = Atomic.client.world.getBlockState(bp1);
                     if (getBlock(state.getBlock()) != null) {
                         cache.add(new RenderBlock(bp1, state.getBlock()));
@@ -104,28 +96,23 @@ public class ChestESP extends Module {
         return renders.get(b);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
         for (RenderBlock blockPos : blocksToRender.toArray(new RenderBlock[0])) {
             Vec3d v = new Vec3d(blockPos.bp.getX(), blockPos.bp.getY(), blockPos.bp.getZ());
             Color c = getBlock(blockPos.b);
@@ -138,8 +125,7 @@ public class ChestESP extends Module {
         }
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 

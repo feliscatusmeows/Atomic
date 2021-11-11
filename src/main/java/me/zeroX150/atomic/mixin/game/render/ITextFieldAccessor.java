@@ -10,11 +10,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(TextFieldWidget.class)
-public interface ITextFieldAccessor {
-    @Accessor("maxLength")
-    int getMaxLength();
+@Mixin(TextFieldWidget.class) public interface ITextFieldAccessor {
 
-    @Invoker("onFocusedChanged")
-    void onFocusChanged(boolean newFocused);
+    @Accessor("maxLength") int getMaxLength();
+
+    @Invoker("onFocusedChanged") void onFocusChanged(boolean newFocused);
 }

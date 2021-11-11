@@ -12,12 +12,12 @@ import me.zeroX150.atomic.helper.util.Utils;
 import java.util.Objects;
 
 public class Say extends Command {
+
     public Say() {
         super("Say", "Says something", "say", "tell");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length == 0) {
             Utils.Client.sendMessage("not sure if i can say nothing");
             return;

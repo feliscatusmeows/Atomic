@@ -22,30 +22,27 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Objects;
 
 public class WaypointManagerScreen extends Screen implements FastTickable {
+
     double scroll = 0, renderScroll = 0;
 
     public WaypointManagerScreen() {
         super(Text.of(""));
     }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    @Override public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         scroll += amount * 20;
         return super.mouseScrolled(mouseX, mouseY, amount);
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         renderScroll = Transitions.transition(renderScroll, scroll, 7);
     }
 
-    @Override
-    public boolean isPauseScreen() {
+    @Override public boolean isPauseScreen() {
         return false;
     }
 
-    @Override
-    protected void init() {
+    @Override protected void init() {
         int yOff = 5;
         int xOff = 5;
         for (Waypoints.Waypoint waypoint : Waypoints.getWaypoints()) {
@@ -65,16 +62,16 @@ public class WaypointManagerScreen extends Screen implements FastTickable {
         super.init();
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
     }
 }
 
 class SingleManager extends Screen {
+
     final Waypoints.Waypoint manage;
-    final Screen parent;
+    final Screen             parent;
 
     public SingleManager(Waypoints.Waypoint w, Screen parent) {
         super(Text.of(""));
@@ -82,18 +79,15 @@ class SingleManager extends Screen {
         this.parent = parent;
     }
 
-    @Override
-    public void onClose() {
+    @Override public void onClose() {
         Atomic.client.setScreen(parent);
     }
 
-    @Override
-    public boolean isPauseScreen() {
+    @Override public boolean isPauseScreen() {
         return false;
     }
 
-    @Override
-    protected void init() {
+    @Override protected void init() {
         int buttonOffsets = 40;
         TextFieldWidget color = new TextFieldWidget(textRenderer, width / 2 - 70, height / 2 + buttonOffsets - 25 - 25 - 25 - 25 - 25, 140, 20, Text.of("SPECIAL:Color in HEX"));
         color.setMaxLength(6);
@@ -116,7 +110,9 @@ class SingleManager extends Screen {
             String newName;
             double newCX, newCZ;
             try {
-                if (c.length() != 6) throw new Exception();
+                if (c.length() != 6) {
+                    throw new Exception();
+                }
                 newColor = Integer.parseInt(c, 16);
                 color.setEditableColor(0xFFFFFF);
             } catch (Exception ignored) {
@@ -159,16 +155,14 @@ class SingleManager extends Screen {
         super.init();
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Override public boolean mouseClicked(double mouseX, double mouseY, int button) {
         for (Element child : children()) {
             child.mouseClicked(0, 0, button);
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         parent.render(matrices, 0, 0, delta);
         Renderer.R2D.fill(matrices, Themes.Theme.ATOMIC.getPalette().left(), width / 2d - 75, height / 2d + 40 + 30 + 25 + 20, width / 2d + 75, height / 2d + 40 - 25 - 25 - 25 - 25 - 25 - 5);
         super.render(matrices, mouseX, mouseY, delta);

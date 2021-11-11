@@ -67,13 +67,7 @@ public abstract class OnlineTexture {
         return alias;
     }
 
-    @Override
-    public String toString() {
-        return "TextureVariable{" +
-                "id='" + id + '\'' +
-                ", state='" + state + '\'' +
-                ", url='" + url + '\'' +
-                ", alias='" + alias + '\'' +
-                '}';
+    @Override public String toString() {
+        return "TextureVariable{" + "id='" + id + '\'' + ", state='" + state + '\'' + ", url='" + url + '\'' + ", alias='" + alias + '\'' + '}';
     }
 }

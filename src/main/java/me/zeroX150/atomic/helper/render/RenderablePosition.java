@@ -8,9 +8,10 @@ package me.zeroX150.atomic.helper.render;
 import net.minecraft.util.math.Vec3d;
 
 public class RenderablePosition {
-    protected final Vec3d pos;
-    protected final Vec3d dimensions;
-    protected CustomColor color;
+
+    protected final Vec3d       pos;
+    protected final Vec3d       dimensions;
+    protected       CustomColor color;
 
     public RenderablePosition(CustomColor color, Vec3d position, Vec3d dimensions) {
         this.color = color;

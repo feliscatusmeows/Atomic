@@ -32,12 +32,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class ConfigUtils extends Command {
+
     public ConfigUtils() {
         super("ConfigUtils", "config file management", "configUtils", "confu", "cu");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length == 0) {
             Utils.Client.sendMessage("I need an action, load or save");
             return;
@@ -80,7 +80,9 @@ public class ConfigUtils extends Command {
                             DynamicValue<?> val = m.config.get(cname);
                             if (val != null) {
                                 Object newValue = TypeConverter.convert(value, val.getType());
-                                if (newValue != null) val.setValue(newValue);
+                                if (newValue != null) {
+                                    val.setValue(newValue);
+                                }
                             }
                         }
                     }
@@ -93,7 +95,9 @@ public class ConfigUtils extends Command {
                             continue;
                         }
                         shouldBeEnabled.add(m);
-                        if (!m.isEnabled()) m.setEnabled(true);
+                        if (!m.isEnabled()) {
+                            m.setEnabled(true);
+                        }
                     }
                     for (Module module : ModuleRegistry.getModules()) {
                         if (!shouldBeEnabled.contains(module) && module.isEnabled()) {
@@ -122,20 +126,27 @@ public class ConfigUtils extends Command {
                     JsonArray enabled = new JsonArray();
                     JsonArray config = new JsonArray();
                     for (Module module : ModuleRegistry.getModules()) {
-                        if (module.getName().equalsIgnoreCase("Alts")) continue; // we do NOT want to include this
-                        if (module.isEnabled()) enabled.add(module.getName());
+                        if (module.getName().equalsIgnoreCase("Alts")) {
+                            continue; // we do NOT want to include this
+                        }
+                        if (module.isEnabled()) {
+                            enabled.add(module.getName());
+                        }
                         JsonObject currentConfig = new JsonObject();
                         currentConfig.addProperty("name", module.getName());
                         JsonArray pairs = new JsonArray();
                         for (DynamicValue<?> dynamicValue : module.config.getAll()) {
-                            if (dynamicValue.getValue().equals(TypeConverter.convert(dynamicValue.defaultValue, dynamicValue.getType())))
+                            if (dynamicValue.getValue().equals(TypeConverter.convert(dynamicValue.defaultValue, dynamicValue.getType()))) {
                                 continue; // no need to save that
+                            }
                             JsonObject jesus = new JsonObject();
                             jesus.addProperty("key", dynamicValue.getKey());
                             jesus.addProperty("value", dynamicValue.getValue() + "");
                             pairs.add(jesus);
                         }
-                        if (pairs.size() == 0) continue;
+                        if (pairs.size() == 0) {
+                            continue;
+                        }
                         currentConfig.add("pairs", pairs);
                         config.add(currentConfig);
                     }
@@ -143,7 +154,8 @@ public class ConfigUtils extends Command {
                     base.add("config", config);
                     FileUtils.writeStringToFile(out, base.toString(), Charsets.UTF_8, false);
                     LiteralText t = new LiteralText("[§9A§r] Saved config! Click to open");
-                    Style s = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.of("Click to open"))).withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, out.getAbsolutePath()));
+                    Style s = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Text.of("Click to open")))
+                            .withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_FILE, out.getAbsolutePath()));
                     t.setStyle(s);
                     Objects.requireNonNull(Atomic.client.player).sendMessage(t, false);
                 } catch (Exception e) {

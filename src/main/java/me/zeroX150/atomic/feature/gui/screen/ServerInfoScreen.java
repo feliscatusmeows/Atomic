@@ -25,17 +25,17 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class ServerInfoScreen extends Screen {
+
     static final List<Double> c2sLog = new ArrayList<>();
     static final List<Double> s2cLog = new ArrayList<>();
-    final int margin = 2;
+    final        int          margin = 2;
     int timer = 0;
 
     public ServerInfoScreen() {
         super(Text.of(""));
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         timer++;
         boolean activeFrame = timer > 20;
         float pSent = Objects.requireNonNull(Atomic.client.getNetworkHandler()).getConnection().getAveragePacketsSent();
@@ -45,13 +45,16 @@ public class ServerInfoScreen extends Screen {
             c2sLog.add((double) pSent);
             s2cLog.add((double) pRecv);
         }
-        while (c2sLog.size() > (width / 3) - 2) c2sLog.remove(0);
-        while (s2cLog.size() > (width / 3) - 2) s2cLog.remove(0);
+        while (c2sLog.size() > (width / 3) - 2) {
+            c2sLog.remove(0);
+        }
+        while (s2cLog.size() > (width / 3) - 2) {
+            s2cLog.remove(0);
+        }
         super.tick();
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
 
         float pSent = Objects.requireNonNull(Atomic.client.getNetworkHandler()).getConnection().getAveragePacketsSent();
@@ -72,12 +75,13 @@ public class ServerInfoScreen extends Screen {
         double baseY = h - (margin / 2d) - 1;
         for (Double aDouble : c2sLog) {
             double interY = (aDouble / max) * (h - 18);
-            if (lastY == 0) lastY = interY;
+            if (lastY == 0) {
+                lastY = interY;
+            }
             Renderer.R2D.lineScreenD(Utils.getCurrentRGB(), xOffset - 3, baseY - lastY, xOffset, baseY - interY);
             lastY = interY;
             xOffset += 3;
         }
-
 
         // s2c traffic
         Renderer.R2D.fill(c, margin, h + (margin / 2d), width - margin, (h + (margin / 2d)) * 2);
@@ -91,7 +95,9 @@ public class ServerInfoScreen extends Screen {
         double baseY1 = (h + (margin / 2d)) * 2 - 1;
         for (Double aDouble : s2cLog) {
             double interY = (aDouble / max1) * (h - 18);
-            if (lastY1 == 0) lastY1 = interY;
+            if (lastY1 == 0) {
+                lastY1 = interY;
+            }
             Renderer.R2D.lineScreenD(Utils.getCurrentRGB(), xOffset1 - 3, baseY1 - lastY1, xOffset1, baseY1 - interY);
             lastY1 = interY;
             xOffset1 += 3;
@@ -104,7 +110,8 @@ public class ServerInfoScreen extends Screen {
         contents.put("Is connection encrypted?", Atomic.client.getNetworkHandler().getConnection().isEncrypted() ? "Yes" : "No");
         contents.put("Is connection local?", Atomic.client.getNetworkHandler().getConnection().isLocal() ? "Yes" : "No");
         contents.put("Players", Atomic.client.getNetworkHandler().getPlayerList().size() + "");
-        contents.put("Players in render distance", StreamSupport.stream(Objects.requireNonNull(Atomic.client.world).getEntities().spliterator(), false).filter(entity -> entity instanceof PlayerEntity).count() + "");
+        contents.put("Players in render distance", StreamSupport.stream(Objects.requireNonNull(Atomic.client.world).getEntities().spliterator(), false).filter(entity -> entity instanceof PlayerEntity)
+                .count() + "");
 
         double maxWidth = 0;
         for (String s : contents.keySet()) {
@@ -122,8 +129,7 @@ public class ServerInfoScreen extends Screen {
         super.render(matrices, mouseX, mouseY, delta);
     }
 
-    @Override
-    public boolean isPauseScreen() {
+    @Override public boolean isPauseScreen() {
         return false;
     }
 }

@@ -23,7 +23,9 @@ public class CommandBlockPreview extends Module {
     public CommandBlockPreview() {
         super("Cmd Block Preview", "Shows you which command a command block runs", ModuleType.RENDER);
         Events.registerEventHandler(EventType.LORE_QUERY, event -> {
-            if (!this.isEnabled()) return;
+            if (!this.isEnabled()) {
+                return;
+            }
             LoreQueryEvent e = (LoreQueryEvent) event;
             ItemStack s = e.getSource();
             Item i = s.getItem();
@@ -32,47 +34,49 @@ public class CommandBlockPreview extends Module {
                 tagToSearchIn = "BlockEntityTag";
             } else if (Arrays.stream(EntitySpawnInfo.SPAWN_EGGS).anyMatch(item -> item == i)) {
                 tagToSearchIn = "EntityTag";
-            } else return;
+            } else {
+                return;
+            }
             try {
                 NbtCompound c = s.getOrCreateNbt();
-                if (!c.contains(tagToSearchIn, 10)) throw new Exception();
+                if (!c.contains(tagToSearchIn, 10)) {
+                    throw new Exception();
+                }
                 NbtCompound blockEntityTag = c.getCompound(tagToSearchIn);
-                if (!blockEntityTag.contains("Command", 8)) throw new Exception();
+                if (!blockEntityTag.contains("Command", 8)) {
+                    throw new Exception();
+                }
                 String cmd = blockEntityTag.getString("Command");
-                if (!cmd.startsWith("/")) cmd = "/" + cmd;
+                if (!cmd.startsWith("/")) {
+                    cmd = "/" + cmd;
+                }
                 e.addClientLore("Runs: " + cmd);
             } catch (Exception ignored) {
             }
         });
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

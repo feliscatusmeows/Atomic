@@ -25,21 +25,25 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class AutoEndermanAngry extends Module {
+
     Entity e;
-    int t = 0;
+    int    t = 0;
 
     public AutoEndermanAngry() {
         super("Auto Enderman Angry", "automatically makes the nearest enderman pissed", ModuleType.COMBAT);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         t++;
         if (t > 6) {
             t = 0;
-        } else return;
+        } else {
+            return;
+        }
         this.e = null;
-        List<Entity> e1 = StreamSupport.stream(Objects.requireNonNull(Atomic.client.world).getEntities().spliterator(), false).filter(entity -> entity.getType() == EntityType.ENDERMAN && entity.getPos().distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()) < 100 && !((EndermanEntity) entity).isProvoked() && this.e != entity).collect(Collectors.toList());
+        List<Entity> e1 = StreamSupport.stream(Objects.requireNonNull(Atomic.client.world).getEntities().spliterator(), false)
+                .filter(entity -> entity.getType() == EntityType.ENDERMAN && entity.getPos()
+                        .distanceTo(Objects.requireNonNull(Atomic.client.player).getPos()) < 100 && !((EndermanEntity) entity).isProvoked() && this.e != entity).collect(Collectors.toList());
         Collections.shuffle(e1);
         if (e1.size() > 0) {
             this.e = e1.get(0);
@@ -48,23 +52,19 @@ public class AutoEndermanAngry extends Module {
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
         if (e != null) {
             Vec3d dim = new Vec3d(e.getWidth() / 2, 0.05, e.getWidth() / 2);
             Renderer.R3D.renderOutline(e.getEyePos().subtract(dim), dim.multiply(2), Color.RED, matrices);
@@ -72,8 +72,7 @@ public class AutoEndermanAngry extends Module {
         }
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

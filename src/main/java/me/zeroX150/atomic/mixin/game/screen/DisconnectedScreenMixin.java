@@ -20,22 +20,20 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(DisconnectedScreen.class)
-public class DisconnectedScreenMixin extends Screen {
-    @Shadow
-    private int reasonHeight;
+@Mixin(DisconnectedScreen.class) public class DisconnectedScreenMixin extends Screen {
 
-    @Shadow
-    @Final
-    private Screen parent;
+    @Shadow private int reasonHeight;
+
+    @Shadow @Final private Screen parent;
 
     public DisconnectedScreenMixin() {
         super(Text.of(""));
     }
 
-    @Inject(method = "init", at = @At("TAIL"))
-    public void init(CallbackInfo ci) {
-        if (Utils.latestServerInfo == null) return;
+    @Inject(method = "init", at = @At("TAIL")) public void atomic_postInit(CallbackInfo ci) {
+        if (Utils.latestServerInfo == null) {
+            return;
+        }
         int var10004 = this.height / 2 + this.reasonHeight / 2;
         ButtonWidget reconnect = new ButtonWidget(this.width / 2 - 100, Math.min(var10004 + 9, this.height - 30) + 25, 200, 20, Text.of("Reconnect"), button -> ConnectScreen.connect(this.parent, Atomic.client, ServerAddress.parse(Utils.latestServerInfo.address), Utils.latestServerInfo));
         addDrawableChild(reconnect);

@@ -10,6 +10,7 @@ import me.zeroX150.atomic.feature.gui.hud.HudRenderer;
 import me.zeroX150.atomic.feature.gui.notifications.Notification;
 import me.zeroX150.atomic.feature.gui.notifications.NotificationRenderer;
 import me.zeroX150.atomic.feature.module.Module;
+import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.ModuleType;
 import me.zeroX150.atomic.feature.module.config.BooleanValue;
 import me.zeroX150.atomic.feature.module.config.SliderValue;
@@ -25,28 +26,32 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.awt.Color;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
 public class Hud extends Module {
-    public final SliderValue smoothSelectTransition = config.create("Selection smooth", 10, 1, 30, 1);
-    public final BooleanValue betterHotbar = (BooleanValue) config.create("Better hotbar", true).description("Makes the hotbar sexier");
-    final BooleanValue fps = (BooleanValue) config.create("FPS", true).description("Whether or not to show FPS");
-    final BooleanValue tps = (BooleanValue) config.create("TPS", true).description("Whether or not to show TPS");
-    final BooleanValue coords = (BooleanValue) config.create("Coordinates", true).description("Whether or not to show coordinates");
-    final BooleanValue time = (BooleanValue) config.create("Time", true).description("Whether or not to show the current IRL time");
-    final BooleanValue ping = (BooleanValue) config.create("Ping", true).description("Whether or not to show your ping");
-    final BooleanValue bps = (BooleanValue) config.create("Speed", true).description("Whether or not to show your speed in blocks per second");
-    final DateFormat df = new SimpleDateFormat("h:mm aa");
-    final DateFormat minSec = new SimpleDateFormat("mm:ss");
-    long lastTimePacketReceived;
-    double currentTps = 0;
-    double rNoConnectionPosY = -10d;
+
+    public final SliderValue  smoothSelectTransition = config.create("Selection smooth", 10, 1, 30, 1);
+    public final BooleanValue betterHotbar           = (BooleanValue) config.create("Better hotbar", true).description("Makes the hotbar sexier");
+    final        BooleanValue fps                    = (BooleanValue) config.create("FPS", true).description("Whether or not to show FPS");
+    final        BooleanValue tps                    = (BooleanValue) config.create("TPS", true).description("Whether or not to show TPS");
+    final        BooleanValue coords                 = (BooleanValue) config.create("Coordinates", true).description("Whether or not to show coordinates");
+    final        BooleanValue time                   = (BooleanValue) config.create("Time", true).description("Whether or not to show the current IRL time");
+    final        BooleanValue ping                   = (BooleanValue) config.create("Ping", true).description("Whether or not to show your ping");
+    final        BooleanValue bps                    = (BooleanValue) config.create("Speed", true).description("Whether or not to show your speed in blocks per second");
+    final        BooleanValue modules                = (BooleanValue) config.create("Modules", true).description("Whether or not to show the enabled modules");
+    final        DateFormat   df                     = new SimpleDateFormat("h:mm aa");
+    final        DateFormat   minSec                 = new SimpleDateFormat("mm:ss");
+    long         lastTimePacketReceived;
+    double       currentTps          = 0;
+    double       rNoConnectionPosY   = -10d;
     Notification serverNotResponding = null;
 
     public Hud() {
@@ -66,26 +71,21 @@ public class Hud extends Module {
         return (20.0 / Math.max((n - 1000.0) / (500.0), 1.0));
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
@@ -93,19 +93,23 @@ public class Hud extends Module {
         return System.currentTimeMillis() - lastTimePacketReceived > 2000;
     }
 
-    @Override
-    public void onHudRender() {
-        if (Atomic.client.getNetworkHandler() == null) return;
-        if (Atomic.client.player == null) return;
+    @Override public void onHudRender() {
+        if (Atomic.client.getNetworkHandler() == null) {
+            return;
+        }
+        if (Atomic.client.player == null) {
+            return;
+        }
         MatrixStack ms = Renderer.R3D.getEmptyMatrixStack();
         if (!shouldNoConnectionDropDown()) {
-            if (serverNotResponding != null) serverNotResponding.duration = 0;
+            if (serverNotResponding != null) {
+                serverNotResponding.duration = 0;
+            }
         } else {
-            if (serverNotResponding == null)
+            if (serverNotResponding == null) {
                 serverNotResponding = Notification.create(-1, "", true, "Server not responding! " + minSec.format(System.currentTimeMillis() - lastTimePacketReceived));
-            serverNotResponding.contents = new String[]{
-                    "Server not responding! " + minSec.format(System.currentTimeMillis() - lastTimePacketReceived)
-            };
+            }
+            serverNotResponding.contents = new String[]{"Server not responding! " + minSec.format(System.currentTimeMillis() - lastTimePacketReceived)};
         }
         if (!NotificationRenderer.topBarNotifications.contains(serverNotResponding)) {
             serverNotResponding = null;
@@ -117,7 +121,9 @@ public class Hud extends Module {
             BlockPos bp = Atomic.client.player.getBlockPos();
             entries.add(new HudEntry("XYZ", bp.getX() + " " + bp.getY() + " " + bp.getZ(), false, false));
         }
-        if (fps.getValue()) entries.add(new HudEntry("FPS", Atomic.client.fpsDebugString.split(" ")[0], false, false));
+        if (fps.getValue()) {
+            entries.add(new HudEntry("FPS", Atomic.client.fpsDebugString.split(" ")[0], false, false));
+        }
         if (tps.getValue()) {
             entries.add(new HudEntry("TPS", (currentTps == -1 ? "Calculating" : currentTps) + "", false, false));
         }
@@ -145,7 +151,9 @@ public class Hud extends Module {
             float width = FontRenderers.normal.getStringWidth(t);
             float offsetToUse = Atomic.client.getWindow().getScaledHeight() - (entry.renderTaskBar ? ((23 / 2f + FontRenderers.normal.getFontHeight() / 2f)) : yOffset);
             float xL = (entry.renderTaskBar && entry.renderRTaskBar) ? (Atomic.client.getWindow().getScaledWidth() - 5 - width) : xOffset;
-            if (xL == xOffset) xOffset += width + FontRenderers.normal.getStringWidth(" ");
+            if (xL == xOffset) {
+                xOffset += width + FontRenderers.normal.getStringWidth(" ");
+            }
             changedYOffset++;
             if (!entry.renderTaskBar && changedYOffset == 0) {
                 yOffset -= FontRenderers.normal.getFontHeight();
@@ -163,18 +171,49 @@ public class Hud extends Module {
                 //Atomic.client.textRenderer.draw(ms, t, xL, offsetToUse, Client.getCurrentRGB().getRGB());
             }
         }
+
+        if (modules.getValue()) {
+            int moduleOffset = 0;
+            float rgbIncrementer = 0.03f;
+            float currentRgbSeed = (System.currentTimeMillis() % 4500) / 4500f;
+            // jesus fuck
+            Module[] v = ModuleRegistry.getModules().stream().filter(Module::isEnabled)
+                    .sorted(Comparator.comparingDouble(value -> FontRenderers.normal.getStringWidth(value.getName() + (value.getContext() != null ? " " + value.getContext() : "")))) // i mean it works?
+                    .toArray(Module[]::new);
+            ArrayUtils.reverse(v);
+            float maxWidth = 0;
+            for (Module module : v) {
+                currentRgbSeed %= 1f;
+                int r = Color.HSBtoRGB(currentRgbSeed, 0.7f, 1f);
+                currentRgbSeed += rgbIncrementer;
+                String w = module.getName() + (module.getContext() == null ? "" : " " + module.getContext());
+                float totalWidth = FontRenderers.normal.getStringWidth(w);
+                maxWidth = Math.max(maxWidth, totalWidth);
+                Color c = new Color(r);
+                Color inv = new Color(255 - c.getRed(), 255 - c.getGreen(), 255 - c.getBlue());
+                MatrixStack stack = Renderer.R3D.getEmptyMatrixStack();
+                FontRenderers.normal.drawString(stack, module.getName(), Atomic.client.getWindow().getScaledWidth() - 4 - totalWidth, moduleOffset + .5, r);
+                Renderer.R2D.fill(stack, c, Atomic.client.getWindow().getScaledWidth() - 2, moduleOffset, Atomic.client.getWindow()
+                        .getScaledWidth(), moduleOffset + FontRenderers.normal.getFontHeight() + 1);
+                if (module.getContext() != null) {
+                    FontRenderers.normal.drawString(stack, module.getContext(), Atomic.client.getWindow()
+                            .getScaledWidth() - 4 - totalWidth + FontRenderers.normal.getStringWidth(module.getName() + " "), moduleOffset + .5, inv.getRGB());
+                }
+                moduleOffset += FontRenderers.normal.getFontHeight() + 1;
+            }
+        }
         HudRenderer.getInstance().render();
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         rNoConnectionPosY = Transitions.transition(rNoConnectionPosY, shouldNoConnectionDropDown() ? 10 : -10, 10);
         HudRenderer.getInstance().fastTick();
     }
 
     static class HudEntry {
-        public final String t;
-        public final String v;
+
+        public final String  t;
+        public final String  v;
         public final boolean renderTaskBar;
         public final boolean renderRTaskBar;
 

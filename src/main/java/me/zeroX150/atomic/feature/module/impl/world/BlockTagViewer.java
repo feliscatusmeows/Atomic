@@ -26,15 +26,15 @@ import java.util.List;
 import java.util.Objects;
 
 public class BlockTagViewer extends Module {
+
     List<Entry> entries = new ArrayList<>();
-    float mw = 0;
+    float       mw      = 0;
 
     public BlockTagViewer() {
         super("Block Tag Viewer", "Shows data about the viewed block", ModuleType.WORLD);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         HitResult hr = Atomic.client.crosshairTarget;
         if (hr instanceof BlockHitResult bhr) {
             BlockPos bp = bhr.getBlockPos();
@@ -46,38 +46,39 @@ public class BlockTagViewer extends Module {
             }
 
             for (String s : c) {
-                if (entries.stream().noneMatch(entry -> entry.v.equalsIgnoreCase(s))) entries.add(new Entry(s));
+                if (entries.stream().noneMatch(entry -> entry.v.equalsIgnoreCase(s))) {
+                    entries.add(new Entry(s));
+                }
             }
             for (Entry entry : new ArrayList<>(entries)) {
-                if (c.stream().noneMatch(entry.v::equals)) entry.removed = true;
+                if (c.stream().noneMatch(entry.v::equals)) {
+                    entry.removed = true;
+                }
             }
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         for (Entry entry : new ArrayList<>(entries)) {
             double c = 0.05;
-            if (entry.removed) c *= -1;
+            if (entry.removed) {
+                c *= -1;
+            }
             entry.animProg += c;
             entry.animProg = MathHelper.clamp(entry.animProg, 0, 1);
             if (entry.animProg == 0 && entry.removed) {
@@ -90,12 +91,13 @@ public class BlockTagViewer extends Module {
         return x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
         List<Entry> l = new ArrayList<>(entries);
         l.sort(Comparator.comparingDouble(value -> -FontRenderers.mono.getStringWidth(value.v)));
         entries = l;
-        if (l.isEmpty()) return;
+        if (l.isEmpty()) {
+            return;
+        }
         float w = Atomic.client.getWindow().getScaledWidth() / 2f;
         float h = Atomic.client.getWindow().getScaledHeight() / 2f;
         MatrixStack s = new MatrixStack();
@@ -119,7 +121,7 @@ public class BlockTagViewer extends Module {
             double prog = e(entry.animProg);
             double c = prog * FontRenderers.mono.getFontHeight();
             s.scale(1, (float) prog, 1);
-            Renderer.R2D.fill(s, new CustomColor(0, 0, 0, (int) (prog * 100)), 0, 0, mw, 10);
+            Renderer.R2D.fill(s, new CustomColor(0, 0, 0, (int) (prog * 100)), 0, 0, mw, FontRenderers.mono.getFontHeight());
             FontRenderers.mono.drawString(s, entry.v, 2, 0.5f, new CustomColor(255, 255, 255, (int) (prog * 255)).getRGB());
             s.pop();
             s.translate(0, c, 0);
@@ -128,9 +130,10 @@ public class BlockTagViewer extends Module {
     }
 
     static class Entry {
-        public final String v;
-        public double animProg = 0;
-        public boolean removed = false;
+
+        public final String  v;
+        public       double  animProg = 0;
+        public       boolean removed  = false;
 
         public Entry(String v) {
             this.v = v;

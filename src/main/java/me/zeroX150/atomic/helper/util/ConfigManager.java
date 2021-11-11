@@ -26,11 +26,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
-public class ConfigManager {
-    static final List<Module> toBeEnabled = new ArrayList<>();
-    static final File CONFIG_FILE;
-    static final String TOP_NOTE = """
+@SuppressWarnings("ResultOfMethodCallIgnored") public class ConfigManager {
+
+    static final  List<Module> toBeEnabled = new ArrayList<>();
+    static final  File         CONFIG_FILE;
+    static final  String       TOP_NOTE    = """
             // !!! READ ME, BEFORE DOING ANYTHING IN HERE !!!
             // UNLESS YOU 100% KNOW WHAT YOU ARE DOING, NEVER SHARE THIS FILE WITH SOMEONE ELSE.
             // YOUR ALTS ARE SAVED IN HERE. UNLESS YOU KNOW HOW TO REMOVE THEM, DO NOT SHARE THIS FILE.
@@ -39,8 +39,8 @@ public class ConfigManager {
             // also uh, you could break stuff if you directly modify shit in here, so dont do that unless you know what you're doing.
             // back this shit up before doing anything in case you do a major fuck
             """;
-    public static boolean loaded = false;
-    public static boolean enabled = false;
+    public static boolean      loaded      = false;
+    public static boolean      enabled     = false;
 
     static {
         CONFIG_FILE = new File(Atomic.client.runDirectory.getAbsolutePath() + "/config.atomic");
@@ -56,7 +56,9 @@ public class ConfigManager {
         JsonArray enabled = new JsonArray();
         JsonArray config = new JsonArray();
         for (Module module : ModuleRegistry.getModules()) {
-            if (module.isEnabled()) enabled.add(module.getName());
+            if (module.isEnabled()) {
+                enabled.add(module.getName());
+            }
             JsonObject currentConfig = new JsonObject();
             currentConfig.addProperty("name", module.getName());
             JsonArray pairs = new JsonArray();
@@ -81,11 +83,17 @@ public class ConfigManager {
     }
 
     public static void loadState() {
-        if (loaded) return;
+        if (loaded) {
+            return;
+        }
         loaded = true;
         try {
-            if (!CONFIG_FILE.isFile()) CONFIG_FILE.delete();
-            if (!CONFIG_FILE.exists()) return;
+            if (!CONFIG_FILE.isFile()) {
+                CONFIG_FILE.delete();
+            }
+            if (!CONFIG_FILE.exists()) {
+                return;
+            }
             String retrv = FileUtils.readFileToString(CONFIG_FILE, Charsets.UTF_8);
             JsonObject config = new JsonParser().parse(retrv).getAsJsonObject();
             if (config.has("config") && config.get("config").isJsonArray()) {
@@ -95,7 +103,9 @@ public class ConfigManager {
                         JsonObject jobj = jsonElement.getAsJsonObject();
                         String name = jobj.get("name").getAsString();
                         Module j = ModuleRegistry.getByName(name);
-                        if (j == null) continue;
+                        if (j == null) {
+                            continue;
+                        }
                         if (jobj.has("pairs") && jobj.get("pairs").isJsonArray()) {
                             JsonArray pairs = jobj.get("pairs").getAsJsonArray();
                             for (JsonElement pair : pairs) {
@@ -105,7 +115,9 @@ public class ConfigManager {
                                 DynamicValue<?> val = j.config.get(key);
                                 if (val != null) {
                                     Object newValue = TypeConverter.convert(value, val.getType());
-                                    if (newValue != null) val.setValue(newValue);
+                                    if (newValue != null) {
+                                        val.setValue(newValue);
+                                    }
                                 }
                             }
                         }
@@ -117,7 +129,9 @@ public class ConfigManager {
                 for (JsonElement enabled : config.get("enabled").getAsJsonArray()) {
                     String name = enabled.getAsString();
                     Module m = ModuleRegistry.getByName(name);
-                    if (m != null) toBeEnabled.add(m);
+                    if (m != null) {
+                        toBeEnabled.add(m);
+                    }
                 }
             }
 
@@ -130,7 +144,9 @@ public class ConfigManager {
     }
 
     public static void enableModules() {
-        if (enabled) return;
+        if (enabled) {
+            return;
+        }
         enabled = true;
         for (Module module : toBeEnabled) {
             module.setEnabled(true);

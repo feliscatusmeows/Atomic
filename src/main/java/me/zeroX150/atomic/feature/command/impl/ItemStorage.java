@@ -36,10 +36,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
-public class ItemStorage extends Command {
+@SuppressWarnings("ResultOfMethodCallIgnored") public class ItemStorage extends Command {
+
     public static final List<ItemEntry> items = new ArrayList<>();
-    static final File CONFIG_FILE;
+    static final        File            CONFIG_FILE;
 
     static {
         CONFIG_FILE = new File(Atomic.client.runDirectory.getAbsolutePath() + "/items.atomic");
@@ -84,7 +84,9 @@ public class ItemStorage extends Command {
             Atomic.log(Level.INFO, "No items to save");
             return;
         }
-        if (!CONFIG_FILE.isFile()) CONFIG_FILE.delete();
+        if (!CONFIG_FILE.isFile()) {
+            CONFIG_FILE.delete();
+        }
         JsonArray flist = new JsonArray();
         for (ItemEntry entry : items) {
             JsonObject bruh = new JsonObject();
@@ -101,10 +103,9 @@ public class ItemStorage extends Command {
         }
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length == 0) {
-            onExecute(new String[]{ "help" });
+            onExecute(new String[]{"help"});
             return;
         }
         switch (args[0].toLowerCase()) {
@@ -136,7 +137,8 @@ public class ItemStorage extends Command {
                         ItemStack source = new ItemStack(item.type);
                         source.setNbt(item.tag);
                         HoverEvent.ItemStackContent ics = new HoverEvent.ItemStackContent(source);
-                        Style s = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, ics)).withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, ".items get " + item.name));
+                        Style s = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_ITEM, ics))
+                                .withClickEvent(new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, ".items get " + item.name));
                         bruh.setStyle(s);
                         Objects.requireNonNull(Atomic.client.player).sendMessage(bruh, false);
                     }
@@ -155,7 +157,8 @@ public class ItemStorage extends Command {
                 }
                 ItemStack stack = new ItemStack(item.get().type());
                 stack.setNbt(item.get().tag());
-                CreativeInventoryActionC2SPacket p = new CreativeInventoryActionC2SPacket(Utils.Inventory.slotIndexToId(Objects.requireNonNull(Atomic.client.player).getInventory().selectedSlot), stack);
+                CreativeInventoryActionC2SPacket p = new CreativeInventoryActionC2SPacket(Utils.Inventory.slotIndexToId(Objects.requireNonNull(Atomic.client.player)
+                        .getInventory().selectedSlot), stack);
                 Objects.requireNonNull(Atomic.client.getNetworkHandler()).sendPacket(p);
                 //Atomic.client.player.getInventory().addPickBlock(stack);
                 Utils.Client.sendMessage("Generated item " + n);
@@ -186,5 +189,6 @@ public class ItemStorage extends Command {
     }
 
     public record ItemEntry(String name, Item type, NbtCompound tag) {
+
     }
 }

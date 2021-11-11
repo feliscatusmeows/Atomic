@@ -23,19 +23,20 @@ import java.util.List;
 import java.util.Optional;
 
 public class Window implements FastTickable {
-    private final List<ClickableWidget> drawables = Lists.newArrayList();
-    public String title;
-    protected double trackedScroll = 0;
+
+    private final List<ClickableWidget> drawables     = Lists.newArrayList();
+    public        String                title;
+    protected     double                trackedScroll = 0;
     double oPosX, oPosY;
     double posX, posY;
     double width, height;
-    boolean clicked = false;
-    double titlePadding = 2;
-    double inset = 2;
-    boolean discarded = false;
+    boolean clicked      = false;
+    double  titlePadding = 2;
+    double  inset        = 2;
+    boolean discarded    = false;
     boolean isCloseable;
-    double sourceHeight;
-    double scroll = 0;
+    double  sourceHeight;
+    double  scroll       = 0;
 
     public Window(String title, double posX, double posY, double width, double height, boolean closeable) {
         this.posX = this.oPosX = posX;
@@ -88,8 +89,9 @@ public class Window implements FastTickable {
 
         Renderer.R2D.fill(stack, new Color(20, 20, 20, 100), 0, 0, width, height); // frame
         FontRenderers.normal.drawCenteredString(stack, title, width / 2, titlePadding, 0xFFFFFF); // title
-        if (isCloseable)
+        if (isCloseable) {
             FontRenderers.normal.drawString(stack, "X", width - FontRenderers.normal.getStringWidth("X") - inset, titlePadding, 0xFFFFFF);
+        }
         Renderer.R2D.fill(stack, new Color(20, 20, 20, 20), inset, titlePadding * 2 + 8, width - inset, height - inset);
         stack.translate(inset, titlePadding * 2 + 8, 0);
 
@@ -137,12 +139,16 @@ public class Window implements FastTickable {
             discarded = true;
             return true;
         }
-        if (isInWindow && !isInContent) clicked = true;
+        if (isInWindow && !isInContent) {
+            clicked = true;
+        }
         if (isInContent) {
             mouseX -= posX + inset;
             mouseY -= posY + titlePadding * 2 + 8 - trackedScroll;
             for (Element child : drawables) {
-                if (child.mouseClicked(mouseX, mouseY, button)) break;
+                if (child.mouseClicked(mouseX, mouseY, button)) {
+                    break;
+                }
             }
         }
         return isInWindow;
@@ -150,7 +156,9 @@ public class Window implements FastTickable {
 
     public void charTyped(char chr, int modifiers) {
         for (Element child : drawables) {
-            if (child.charTyped(chr, modifiers)) break;
+            if (child.charTyped(chr, modifiers)) {
+                break;
+            }
         }
     }
 
@@ -161,13 +169,17 @@ public class Window implements FastTickable {
             scroll(1);
         }
         for (Element child : drawables) {
-            if (child.keyPressed(keyCode, scanCode, modifiers)) break;
+            if (child.keyPressed(keyCode, scanCode, modifiers)) {
+                break;
+            }
         }
     }
 
     public void keyReleased(int keyCode, int scanCode, int modifiers) {
         for (Element child : drawables) {
-            if (child.keyReleased(keyCode, scanCode, modifiers)) break;
+            if (child.keyReleased(keyCode, scanCode, modifiers)) {
+                break;
+            }
         }
     }
 
@@ -176,7 +188,9 @@ public class Window implements FastTickable {
         mouseX -= posX + inset;
         mouseY -= posY + titlePadding * 2 + 8 - trackedScroll;
         for (Element child : drawables) {
-            if (child.mouseReleased(mouseX, mouseY, button)) break;
+            if (child.mouseReleased(mouseX, mouseY, button)) {
+                break;
+            }
         }
     }
 
@@ -198,7 +212,9 @@ public class Window implements FastTickable {
         mouseX -= posX + inset;
         mouseY -= posY + titlePadding * 2 + 8 - trackedScroll;
         for (Element child : drawables) {
-            if (child.mouseScrolled(mouseX, mouseY, amount)) break;
+            if (child.mouseScrolled(mouseX, mouseY, amount)) {
+                break;
+            }
         }
         return isInContent;
     }
@@ -211,7 +227,9 @@ public class Window implements FastTickable {
         mouseX -= posX + inset;
         mouseY -= posY + titlePadding * 2 + 8 - trackedScroll;
         for (Element child : drawables) {
-            if (child.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)) break;
+            if (child.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)) {
+                break;
+            }
         }
     }
 }

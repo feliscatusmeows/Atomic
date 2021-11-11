@@ -13,23 +13,29 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(LivingEntityRenderer.class)
-public class LivingEntityRendererMixin {
-    @ModifyVariable(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 2, at = @At(value = "STORE", ordinal = 0))
-    public float changeYaw(float oldValue, LivingEntity le) {
-        if (Rotations.isEnabled() && le.equals(Atomic.client.player)) return Rotations.getClientYaw();
+@Mixin(LivingEntityRenderer.class) public class LivingEntityRendererMixin {
+
+    @ModifyVariable(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 2,
+            at = @At(value = "STORE", ordinal = 0)) public float atomic_overwriteYaw(float oldValue, LivingEntity le) {
+        if (Rotations.isEnabled() && le.equals(Atomic.client.player)) {
+            return Rotations.getClientYaw();
+        }
         return oldValue;
     }
 
-    @ModifyVariable(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 3, at = @At(value = "STORE", ordinal = 0))
-    public float changeHeadYaw(float oldValue, LivingEntity le) {
-        if (le.equals(Atomic.client.player) && Rotations.isEnabled()) return Rotations.getClientYaw();
+    @ModifyVariable(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 3,
+            at = @At(value = "STORE", ordinal = 0)) public float atomic_overwriteHeadYaw(float oldValue, LivingEntity le) {
+        if (le.equals(Atomic.client.player) && Rotations.isEnabled()) {
+            return Rotations.getClientYaw();
+        }
         return oldValue;
     }
 
-    @ModifyVariable(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 5, at = @At(value = "STORE", ordinal = 3))
-    public float changePitch(float oldValue, LivingEntity le) {
-        if (le.equals(Atomic.client.player) && Rotations.isEnabled()) return Rotations.getClientPitch();
+    @ModifyVariable(method = "render(Lnet/minecraft/entity/LivingEntity;FFLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V", ordinal = 5,
+            at = @At(value = "STORE", ordinal = 3)) public float atomic_overwritePitch(float oldValue, LivingEntity le) {
+        if (le.equals(Atomic.client.player) && Rotations.isEnabled()) {
+            return Rotations.getClientPitch();
+        }
         return oldValue;
     }
 

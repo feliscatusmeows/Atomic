@@ -21,30 +21,29 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Keyboard.class)
-public class KeyboardMixin {
-    @Shadow
-    private boolean repeatEvents;
+@Mixin(Keyboard.class) public class KeyboardMixin {
 
-    @Shadow
-    @Final
-    private MinecraftClient client;
+    @Shadow private boolean repeatEvents;
 
-    @Inject(method = "setRepeatEvents", at = @At("HEAD"), cancellable = true)
-    public void setRepeatEvents(boolean repeatEvents, CallbackInfo ci) {
+    @Shadow @Final private MinecraftClient client;
+
+    @Inject(method = "setRepeatEvents", at = @At("HEAD"), cancellable = true) public void atomic_overwriteRepeatEvents(boolean repeatEvents, CallbackInfo ci) {
         this.repeatEvents = true;
         ci.cancel();
     }
 
-    @Inject(method = "onKey", at = @At("RETURN"))
-    void keyPressed(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci) {
+    @Inject(method = "onKey", at = @At("RETURN")) void atomic_postKeyPressed(long window, int key, int scancode, int action, int modifiers, CallbackInfo ci) {
         if (ModuleRegistry.isDebuggerEnabled()) {
             Utils.Client.sendMessage(String.format("D_KeyEvent window=%s;key=%s;sc=%s;a=%s;mod=%s", window, key, scancode, action, modifiers));
-            if (ModuleRegistry.getDebugger().disableKeyEvent.getValue()) return;
+            if (ModuleRegistry.getDebugger().disableKeyEvent.getValue()) {
+                return;
+            }
         }
-        if (window == this.client.getWindow().getHandle() && Atomic.client.currentScreen == null && System.currentTimeMillis() - Atomic.lastScreenChange > 10) { // make sure we are in game and the screen has been there for at least 10 ms
-            if (Atomic.client.player == null || Atomic.client.world == null)
+        if (window == this.client.getWindow()
+                .getHandle() && Atomic.client.currentScreen == null && System.currentTimeMillis() - Atomic.lastScreenChange > 10) { // make sure we are in game and the screen has been there for at least 10 ms
+            if (Atomic.client.player == null || Atomic.client.world == null) {
                 return; // again, make sure we are in game and exist
+            }
             KeybindManager.updateSingle(key, action);
             Events.fireEvent(EventType.KEYBOARD, new KeyboardEvent(key, action));
         }

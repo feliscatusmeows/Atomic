@@ -17,12 +17,12 @@ import java.util.List;
 import java.util.Objects;
 
 public class InventoryCleaner extends Command {
+
     public InventoryCleaner() {
         super("InventoryCleaner", "Config for the inventory cleaner", "inventorycleaner", "invcleaner", "icleaner");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length == 0) {
             Utils.Client.sendMessage("You gotta give me a subcommand");
             return;

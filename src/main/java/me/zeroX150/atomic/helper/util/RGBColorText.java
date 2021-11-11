@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RGBColorText {
+
     public static RGBEntry NEWLINE = new RGBEntry("\n", 0xFFFFFF);
     List<RGBEntry> entries = new ArrayList<>();
 
@@ -27,7 +28,9 @@ public class RGBColorText {
     public RGBColorText append(String text, int color) {
         if (text.equals("\n")) {
             entries.add(NEWLINE);
-        } else entries.add(new RGBEntry(text, color));
+        } else {
+            entries.add(new RGBEntry(text, color));
+        }
         return this;
     }
 
@@ -45,5 +48,6 @@ public class RGBColorText {
     }
 
     public record RGBEntry(String value, int color) {
+
     }
 }

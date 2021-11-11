@@ -19,36 +19,44 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
 
 public class MessageScreen extends Screen implements FastTickable {
-    final String title;
-    final String description;
+
+    final String          title;
+    final String          description;
     final BooleanConsumer callback;
-    final ScreenType type;
-    final double width = 230;
-    Screen parent;
-    double height = 0;
-    double animation = 0;
-    boolean close = false;
+    final ScreenType      type;
+    final double          width = 230;
+    Screen  parent;
+    double  height    = 0;
+    double  animation = 0;
+    boolean close     = false;
 
     public MessageScreen(Screen parent, String title, String description, BooleanConsumer callback, ScreenType type) {
         super(Text.of(""));
         this.parent = parent;
-        if (this.parent == null) this.parent = Atomic.client.currentScreen;
+        if (this.parent == null) {
+            this.parent = Atomic.client.currentScreen;
+        }
         this.title = title;
         description = String.join("\n", Utils.splitLinesToWidth(description, width - 10, FontRenderers.mono));
         this.description = description;
         this.callback = callback;
         this.type = type;
-        if (!title.isEmpty()) height += 10; // title
-        if (!description.isEmpty()) height += description.split("\n").length * 10; // description
+        if (!title.isEmpty()) {
+            height += 10; // title
+        }
+        if (!description.isEmpty()) {
+            height += description.split("\n").length * 10; // description
+        }
         height += 10; // offset
         height += 20; // buttons
         height += 4; // padding
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         double a = 0.02;
-        if (close) a *= -1;
+        if (close) {
+            a *= -1;
+        }
         animation += a;
         animation = MathHelper.clamp(animation, 0, 1);
         if (close && animation == 0) {
@@ -56,13 +64,13 @@ public class MessageScreen extends Screen implements FastTickable {
         }
     }
 
-    @Override
-    public void onClose() {
-        if (type == ScreenType.OK) close = true;
+    @Override public void onClose() {
+        if (type == ScreenType.OK) {
+            close = true;
+        }
     }
 
-    @Override
-    protected void init() {
+    @Override protected void init() {
         close = false;
         animation = 0;
         double centerX = Atomic.client.getWindow().getScaledWidth() / 2d;
@@ -87,9 +95,10 @@ public class MessageScreen extends Screen implements FastTickable {
         }
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (parent != null) parent.render(matrices, mouseX, mouseY, delta);
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (parent != null) {
+            parent.render(matrices, mouseX, mouseY, delta);
+        }
         double centerX = Atomic.client.getWindow().getScaledWidth() / 2d;
         double centerY = Atomic.client.getWindow().getScaledHeight() / 2d;
         double ai = Transitions.easeOutExpo(animation);
@@ -114,8 +123,7 @@ public class MessageScreen extends Screen implements FastTickable {
         Renderer.R2D.unscissor();
     }
 
-    @Override
-    public boolean isPauseScreen() {
+    @Override public boolean isPauseScreen() {
         return false;
     }
 

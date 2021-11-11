@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class WindowScreen extends Screen implements FastTickable {
+
     protected List<Window> windows = new ArrayList<>();
 
     public WindowScreen(String name) {

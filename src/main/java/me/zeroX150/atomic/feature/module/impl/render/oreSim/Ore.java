@@ -18,30 +18,31 @@ import java.util.List;
 import java.util.Random;
 
 public class Ore {
-    private static final BooleanValue coal = new BooleanValue("Coal", false);
-    private static final BooleanValue iron = new BooleanValue("Iron", false);
-    private static final BooleanValue gold = new BooleanValue("Gold", false);
-    private static final BooleanValue redstone = new BooleanValue("Redstone", false);
-    private static final BooleanValue diamond = new BooleanValue("Diamond", true);
-    private static final BooleanValue lapis = new BooleanValue("Lapis", false);
-    private static final BooleanValue copper = new BooleanValue("Kappa", false);
-    private static final BooleanValue emerald = new BooleanValue("Emerald", false);
-    private static final BooleanValue quartz = new BooleanValue("Quartz", false);
-    private static final BooleanValue debris = new BooleanValue("Ancient Debris", false);
-    public static final List<BooleanValue> oreSettings = new ArrayList<>(Arrays.asList(coal, iron, gold, redstone, diamond, lapis, copper, emerald, quartz, debris));
-    public final Type type;
-    public final String dimension;
-    public final HashMap<String, Integer> index;
-    public final boolean depthAverage;
-    public final Generator generator;
-    public final int size;
-    public final BooleanValue enabled;
-    public final Color color;
-    public int step;
-    public IntProvider count;
-    public int minY;
-    public int maxY;
-    public long paperSeed;
+
+    private static final BooleanValue             coal        = new BooleanValue("Coal", false);
+    private static final BooleanValue             iron        = new BooleanValue("Iron", false);
+    private static final BooleanValue             gold        = new BooleanValue("Gold", false);
+    private static final BooleanValue             redstone    = new BooleanValue("Redstone", false);
+    private static final BooleanValue             diamond     = new BooleanValue("Diamond", true);
+    private static final BooleanValue             lapis       = new BooleanValue("Lapis", false);
+    private static final BooleanValue             copper      = new BooleanValue("Kappa", false);
+    private static final BooleanValue             emerald     = new BooleanValue("Emerald", false);
+    private static final BooleanValue             quartz      = new BooleanValue("Quartz", false);
+    private static final BooleanValue             debris      = new BooleanValue("Ancient Debris", false);
+    public static final  List<BooleanValue>       oreSettings = new ArrayList<>(Arrays.asList(coal, iron, gold, redstone, diamond, lapis, copper, emerald, quartz, debris));
+    public final         Type                     type;
+    public final         String                   dimension;
+    public final         HashMap<String, Integer> index;
+    public final         boolean                  depthAverage;
+    public final         Generator                generator;
+    public final         int                      size;
+    public final         BooleanValue             enabled;
+    public final         Color                    color;
+    public               int                      step;
+    public               IntProvider              count;
+    public               int                      minY;
+    public               int                      maxY;
+    public               long                     paperSeed;
 
     Ore(Type type, String dimension, HashMap<String, Integer> index, int step, IntProvider count, boolean depthAverage, int minY, int maxY, Generator generator, int size, BooleanValue enabled, Color color) {
         this.type = type;
@@ -58,7 +59,8 @@ public class Ore {
         this.color = color;
     }
 
-    Ore(Type type, String dimension, int index, int step, IntProvider count, boolean depthAverage, int minY, int maxY, @SuppressWarnings("SameParameterValue") Generator generator, int size, BooleanValue enabled, Color color) {
+    Ore(Type type, String dimension, int index, int step, IntProvider count, boolean depthAverage, int minY, int maxY,
+        @SuppressWarnings("SameParameterValue") Generator generator, int size, BooleanValue enabled, Color color) {
         this(type, dimension, indexToMap(index), step, count, depthAverage, minY, maxY, generator, size, enabled, color);
     }
 
@@ -72,7 +74,7 @@ public class Ore {
         List<Ore> ores = new ArrayList<>();
         HashMap<String, Integer> emeraldIndexes = new HashMap<>();
         emeraldIndexes.put("default", -1);
-        String[] emeraldBiomes = new String[]{ "mountains", "mountain_edge", "wooded_mountains", "gravelly_mountains", "modified_gravelly_mountains", "paper" };
+        String[] emeraldBiomes = new String[]{"mountains", "mountain_edge", "wooded_mountains", "gravelly_mountains", "modified_gravelly_mountains", "paper"};
         for (String emeraldBiome : emeraldBiomes) {
             emeraldIndexes.put(emeraldBiome, 17);
         }
@@ -84,7 +86,7 @@ public class Ore {
         LDebrisIndexes.forEach((biome, index) -> SDebrisIndexes.put(biome, index + 1));
         HashMap<String, Integer> extraGoldIndexes = new HashMap<>();
         extraGoldIndexes.put("default", -1);
-        String[] extraGoldBiomes = new String[]{ "badlands", "badlands_plateau", "modified_badlands_plateau", "wooded_badlands_plateau", "modified_wooded_badlands_plateau", "eroded_badlands", "paper" };
+        String[] extraGoldBiomes = new String[]{"badlands", "badlands_plateau", "modified_badlands_plateau", "wooded_badlands_plateau", "modified_wooded_badlands_plateau", "eroded_badlands", "paper"};
         for (String extraGoldBiome : extraGoldBiomes) {
             extraGoldIndexes.put(extraGoldBiome, 14);
         }
@@ -108,7 +110,9 @@ public class Ore {
         Random rand = new Random(paperSeed ^ 0x5DEECE66DL);
         int prevIndex = -4;
         for (Ore ore : oreList) {
-            if (!ore.dimension.endsWith("overworld")) continue;
+            if (!ore.dimension.endsWith("overworld")) {
+                continue;
+            }
 
             int index;
             if (ore.index.containsKey("paper")) {
@@ -131,10 +135,12 @@ public class Ore {
     private static List<Ore> V1_17() {
         List<Ore> ores = baseConfig();
         for (Ore ore : ores) {
-            if (ore.type.equals(Type.DIAMOND))
+            if (ore.type.equals(Type.DIAMOND)) {
                 ore.maxY = 17;
-            if (ore.type.equals(Type.EMERALD))
+            }
+            if (ore.type.equals(Type.EMERALD)) {
                 ore.count = UniformIntProvider.create(6, 24);
+            }
         }
         return ores;
     }

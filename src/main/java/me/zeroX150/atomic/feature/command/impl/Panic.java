@@ -16,14 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Panic extends Command {
+
     final List<Module> stored = new ArrayList<>();
 
     public Panic() {
         super("Panic", "oh shit", "panic", "p", "disableall", "dall", "fuck");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length == 0) {
             stored.clear();
             Utils.Client.sendMessage("Disabling all non-render modules");
@@ -47,8 +47,12 @@ public class Panic extends Command {
         } else if (args[0].equalsIgnoreCase("restore")) {
             if (stored.size() == 0) {
                 Utils.Client.sendMessage("The stored module list is empty");
-            } else for (Module module : stored) {
-                if (!module.isEnabled()) module.setEnabled(true);
+            } else {
+                for (Module module : stored) {
+                    if (!module.isEnabled()) {
+                        module.setEnabled(true);
+                    }
+                }
             }
             stored.clear();
         }

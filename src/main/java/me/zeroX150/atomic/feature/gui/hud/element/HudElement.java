@@ -8,11 +8,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
 
 public abstract class HudElement {
+
     static MatrixStack stack = new MatrixStack();
     double posX, posY;
     double width, height;
     boolean selected = false;
-    String id;
+    String  id;
 
     public HudElement(String id, double x, double y, double w, double h) {
         this.posX = x;

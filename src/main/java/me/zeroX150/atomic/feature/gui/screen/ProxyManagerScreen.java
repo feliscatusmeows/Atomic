@@ -22,14 +22,15 @@ import org.apache.commons.lang3.StringUtils;
 import java.awt.Color;
 
 public class ProxyManagerScreen extends Screen implements FastTickable {
-    public static Proxy currentProxy = null;
-    static boolean isSocks4 = true;
-    final Screen parent;
+
+    public static Proxy   currentProxy = null;
+    static        boolean isSocks4     = true;
+    final         Screen  parent;
     TextFieldWidget actualProxy;
     TextFieldWidget username;
     TextFieldWidget password;
-    double animProg = 0;
-    boolean shouldClose = false;
+    double          animProg    = 0;
+    boolean         shouldClose = false;
 
     public ProxyManagerScreen(Screen parent) {
         super(Text.of(""));
@@ -38,8 +39,12 @@ public class ProxyManagerScreen extends Screen implements FastTickable {
 
     boolean isValid(String n) {
         String[] split = n.split(":");
-        if (split.length != 2) return false;
-        if (!StringUtils.isNumeric(split[1])) return false;
+        if (split.length != 2) {
+            return false;
+        }
+        if (!StringUtils.isNumeric(split[1])) {
+            return false;
+        }
         int port = Integer.parseInt(split[1]);
         return port >= 1 && port <= 0xFFFF;
     }
@@ -52,14 +57,12 @@ public class ProxyManagerScreen extends Screen implements FastTickable {
         return (int) Math.floor(height / 2d);
     }
 
-    @Override
-    public void onClose() {
+    @Override public void onClose() {
         //Atomic.client.openScreen(parent);
         shouldClose = true;
     }
 
-    @Override
-    protected void init() {
+    @Override protected void init() {
         shouldClose = false;
         actualProxy = new TextFieldWidget(textRenderer, getW() - 90, getH() - 55, 180, 20, Text.of("SPECIAL:Proxy IP:PORT"));
         actualProxy.setMaxLength(100);
@@ -87,7 +90,9 @@ public class ProxyManagerScreen extends Screen implements FastTickable {
             if (!validProxy) {
                 actualProxy.setEditableColor(new Color(255, 20, 20).getRGB());
                 return;
-            } else actualProxy.setEditableColor(0xFFFFFF);
+            } else {
+                actualProxy.setEditableColor(0xFFFFFF);
+            }
             currentProxy = new Proxy(isSocks4, actualProxy.getText(), username.getText(), password.getText());
         });
         addDrawableChild(check);
@@ -98,8 +103,7 @@ public class ProxyManagerScreen extends Screen implements FastTickable {
 
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         if (shouldClose && animProg == 0) {
             Atomic.client.setScreen(parent);
             return;
@@ -107,38 +111,39 @@ public class ProxyManagerScreen extends Screen implements FastTickable {
 
         parent.render(matrices, -1, -1, delta);
 
-        double m = Transitions.easeOutBack(animProg);
+        double m = Transitions.easeOutExpo(animProg);
         double mr = 1 - m;
         double pw = getW() * mr;
         double ph = getH() * mr;
         matrices.translate(pw, ph, 0);
         matrices.scale((float) m, (float) m, 1);
-        DrawableHelper.fill(matrices, 0, 0, width, height, new Color(0, 0, 0, 50).getRGB());
+        DrawableHelper.fill(Renderer.R3D.getEmptyMatrixStack(), 0, 0, width, height, new Color(0, 0, 0, (int) (animProg * 50)).getRGB());
         DrawableHelper.fill(matrices, getW() - 100, getH() - 75, getW() + 100, getH() + 75, Renderer.Util.modify(Themes.currentActiveTheme.center(), -1, -1, -1, 170).getRGB());
 
         FontRenderers.normal.drawCenteredString(matrices, "Proxy manager" + (currentProxy == null ? "" : " (Using proxy)"), getW(), getH() - 70, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Override public boolean mouseClicked(double mouseX, double mouseY, int button) {
         super.mouseClicked(0, 0, 0);
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    @Override
-    public void onFastTick() {
-        double a = 0.02;
-        if (shouldClose) a *= -1;
+    @Override public void onFastTick() {
+        double a = 0.04;
+        if (shouldClose) {
+            a *= -1;
+        }
         animProg += a;
         animProg = MathHelper.clamp(animProg, 0, 1);
     }
 
     public static class Proxy {
-        public final String ipPort;
+
+        public final String    ipPort;
         public final ProxyType type;
-        public final String username;
-        public final String password;
+        public final String    username;
+        public final String    password;
 
         public Proxy(boolean isSocks4, String ipPort, String username, String password) {
             this.type = isSocks4 ? ProxyType.SOCKS4 : ProxyType.SOCKS5;
@@ -156,8 +161,7 @@ public class ProxyManagerScreen extends Screen implements FastTickable {
         }
 
         public enum ProxyType {
-            SOCKS4,
-            SOCKS5
+            SOCKS4, SOCKS5
         }
     }
 }

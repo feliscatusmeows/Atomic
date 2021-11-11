@@ -18,32 +18,31 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 
-@Mixin(ClientPlayNetworkHandler.class)
-public class ClientPlayNetworkHandlerMixin {
+@Mixin(ClientPlayNetworkHandler.class) public class ClientPlayNetworkHandlerMixin {
+
     OreSim oresim;
 
-    @Inject(method = "onChunkData", at = @At(value = "TAIL"))
-    private void onChunkData(ChunkDataS2CPacket packet, CallbackInfo ci) {
-        if (oresim == null)
+    @Inject(method = "onChunkData", at = @At(value = "TAIL")) private void atomic_onChunkDataReceived(ChunkDataS2CPacket packet, CallbackInfo ci) {
+        if (oresim == null) {
             oresim = ModuleRegistry.getByClass(OreSim.class);
+        }
         if (Objects.requireNonNull(oresim).isEnabled()) {
             oresim.doMathOnChunk(packet.getX(), packet.getZ());
         }
     }
 
-    @Inject(method = "onGameJoin", at = @At(value = "TAIL"))
-    private void onGameJoin(GameJoinS2CPacket packet, CallbackInfo ci) {
+    @Inject(method = "onGameJoin", at = @At(value = "TAIL")) private void atomic_onGameJoined(GameJoinS2CPacket packet, CallbackInfo ci) {
         reloadOresim();
     }
 
-    @Inject(method = "onPlayerRespawn", at = @At("TAIL"))
-    private void respawn(PlayerRespawnS2CPacket packet, CallbackInfo ci) {
+    @Inject(method = "onPlayerRespawn", at = @At("TAIL")) private void atomic_onPlayerRespawned(PlayerRespawnS2CPacket packet, CallbackInfo ci) {
         reloadOresim();
     }
 
     private void reloadOresim() {
-        if (oresim == null)
+        if (oresim == null) {
             oresim = ModuleRegistry.getByClass(OreSim.class);
+        }
         if (Objects.requireNonNull(oresim).isEnabled()) {
             oresim.reload();
         }

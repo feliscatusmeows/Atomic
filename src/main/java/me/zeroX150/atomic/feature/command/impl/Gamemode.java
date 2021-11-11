@@ -11,13 +11,15 @@ import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.world.GameMode;
 
 public class Gamemode extends Command {
+
     public Gamemode() {
         super("Gamemode", "Switch gamemodes client side", "gamemode", "gm", "gmode", "gamemodespoof", "gmspoof");
     }
 
-    @Override
-    public void onExecute(String[] args) {
-        if (Atomic.client.interactionManager == null) return;
+    @Override public void onExecute(String[] args) {
+        if (Atomic.client.interactionManager == null) {
+            return;
+        }
         if (args.length == 0) {
             Utils.Client.sendMessage("gamemode pls");
         } else {

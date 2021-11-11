@@ -42,6 +42,7 @@ public class Renderer {
 
     public static class R3D {
 
+        static         MatrixStack empty           = new MatrixStack();
         private static MatrixStack lastRenderStack = new MatrixStack();
 
         public static void renderOutlineIntern(Vec3d start, Vec3d dimensions, MatrixStack stack, BufferBuilder buffer) {
@@ -112,8 +113,7 @@ public class Renderer {
             RenderSystem.setShaderColor(red, green, blue, alpha);
             //RenderSystem.lineWidth(2f);
             BufferBuilder buffer = Tessellator.getInstance().getBuffer();
-            buffer.begin(VertexFormat.DrawMode.DEBUG_LINES,
-                    VertexFormats.POSITION);
+            buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION);
             return buffer;
         }
 
@@ -130,7 +130,8 @@ public class Renderer {
         }
 
         public static MatrixStack getEmptyMatrixStack() {
-            return new MatrixStack();
+            empty.loadIdentity(); // essentially clear the stack
+            return empty;
         }
 
         public static void renderFilled(Vec3d start, Vec3d dimensions, Color color, MatrixStack stack, int GLMODE) {
@@ -156,8 +157,7 @@ public class Renderer {
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableBlend();
             RenderSystem.disableCull();
-            buffer.begin(VertexFormat.DrawMode.QUADS,
-                    VertexFormats.POSITION_COLOR);
+            buffer.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION_COLOR);
             buffer.vertex(matrix, x1, y2, z1).color(red, green, blue, alpha).next();
             buffer.vertex(matrix, x1, y2, z2).color(red, green, blue, alpha).next();
             buffer.vertex(matrix, x2, y2, z2).color(red, green, blue, alpha).next();
@@ -218,8 +218,7 @@ public class Renderer {
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableBlend();
-            buffer.begin(VertexFormat.DrawMode.DEBUG_LINES,
-                    VertexFormats.POSITION_COLOR);
+            buffer.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
 
             buffer.vertex(matrix, x1, y1, z1).color(red, green, blue, alpha).next();
             buffer.vertex(matrix, x2, y2, z2).color(red, green, blue, alpha).next();
@@ -464,14 +463,17 @@ public class Renderer {
         }
 
         public static void renderBackgroundTexture() {
-            if (Atomic.client.currentScreen instanceof SocialInteractionsScreen) return;
+            if (Atomic.client.currentScreen instanceof SocialInteractionsScreen) {
+                return;
+            }
             int width = Atomic.client.getWindow().getScaledWidth();
             int height = Atomic.client.getWindow().getScaledHeight();
             RenderSystem.setShaderColor(1, 1, 1, 1);
             RenderSystem.setShaderTexture(0, OPTIONS_BACKGROUND_TEXTURE);
             Screen.drawTexture(R3D.getEmptyMatrixStack(), 0, 0, 0, 0, width, height, width, height);
-            if (!(Atomic.client.currentScreen instanceof HomeScreen))
+            if (!(Atomic.client.currentScreen instanceof HomeScreen)) {
                 DrawableHelper.fill(R3D.getEmptyMatrixStack(), 0, 0, width, height, new Color(0, 0, 0, 60).getRGB());
+            }
         }
     }
 
@@ -486,10 +488,7 @@ public class Renderer {
         }
 
         public static Color lerp(Color a, Color b, double c) {
-            return new Color(lerp(a.getRed(), b.getRed(), c),
-                    lerp(a.getGreen(), b.getGreen(), c),
-                    lerp(a.getBlue(), b.getBlue(), c),
-                    lerp(a.getAlpha(), b.getAlpha(), c));
+            return new Color(lerp(a.getRed(), b.getRed(), c), lerp(a.getGreen(), b.getGreen(), c), lerp(a.getBlue(), b.getBlue(), c), lerp(a.getAlpha(), b.getAlpha(), c));
         }
 
         /**

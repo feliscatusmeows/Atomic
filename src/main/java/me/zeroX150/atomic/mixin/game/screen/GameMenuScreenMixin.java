@@ -19,12 +19,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameMenuScreen.class) // who the fuck named it that way i searched like 20 minutes for this
 public class GameMenuScreenMixin extends Screen {
+
     public GameMenuScreenMixin() {
         super(Text.of(""));
     }
 
-    @Inject(method = "initWidgets", at = @At("RETURN"))
-    public void init(CallbackInfo ci) {
+    @Inject(method = "initWidgets", at = @At("RETURN")) public void atomic_postInitWidgets(CallbackInfo ci) {
         ButtonWidget bw = new ButtonWidget(2, 2, 150, 20, Text.of("Server info"), button -> Atomic.client.setScreen(new ServerInfoScreen()));
         this.addDrawableChild(bw);
 

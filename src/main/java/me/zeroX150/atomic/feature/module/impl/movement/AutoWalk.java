@@ -16,18 +16,18 @@ import net.minecraft.util.math.Direction;
 import java.util.Objects;
 
 public class AutoWalk extends Module {
+
     final BooleanValue autoJump;
     final BooleanValue fixatedLook = (BooleanValue) this.config.create("Fixate look", true).description("Fix look to a perfect angle");
-    Input previous = null;
-    Direction look = null;
+    Input     previous = null;
+    Direction look     = null;
 
     public AutoWalk() {
         super("Auto Walk", "Walks automatically for you, in one direction", ModuleType.MOVEMENT);
         autoJump = (BooleanValue) this.config.create("Auto jump", true).description("Automatically jumps while module is active");
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         if (fixatedLook.getValue()) {
             Objects.requireNonNull(Atomic.client.player).setYaw(look.asRotation());
         }
@@ -36,14 +36,14 @@ public class AutoWalk extends Module {
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
         look = Objects.requireNonNull(Atomic.client.player).getMovementDirection();
-        if (previous == null) previous = Atomic.client.player.input;
+        if (previous == null) {
+            previous = Atomic.client.player.input;
+        }
         //Utils.InputManagement.startBlockingMovement();
         Atomic.client.player.input = new Input() {
-            @Override
-            public void tick(boolean slowDown) {
+            @Override public void tick(boolean slowDown) {
                 this.movementForward = 1f;
                 this.pressingForward = true;
                 super.tick(slowDown);
@@ -51,23 +51,19 @@ public class AutoWalk extends Module {
         };
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
         Objects.requireNonNull(Atomic.client.player).input = previous;
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

@@ -23,56 +23,55 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Objects;
 
 public class WaterClutch extends Module {
+
     public WaterClutch() {
         super("Water Clutch", "Places blocks below you when you are on water", ModuleType.WORLD);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
     }
 
-    @Override
-    public void enable() {
-
-    }
-
-    @Override
-    public void disable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public void disable() {
+
+    }
+
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         Vec3d ppos = Objects.requireNonNull(Atomic.client.player).getPos();
         Vec3d np = ppos.subtract(0, MathHelper.clamp(-Atomic.client.player.getVelocity().getY(), 0, 6), 0);
         BlockPos bp = new BlockPos(np);
         BlockState bs = Objects.requireNonNull(Atomic.client.world).getBlockState(bp);
-        if (bs.getFluidState().getLevel() == 0) return;
+        if (bs.getFluidState().getLevel() == 0) {
+            return;
+        }
         int selIndex = Atomic.client.player.getInventory().selectedSlot;
-        if (!(Atomic.client.player.getInventory().getStack(selIndex).getItem() instanceof BlockItem))
+        if (!(Atomic.client.player.getInventory().getStack(selIndex).getItem() instanceof BlockItem)) {
             for (int i = 0; i < 9; i++) {
                 ItemStack is = Atomic.client.player.getInventory().getStack(i);
-                if (is.getItem() == Items.AIR) continue;
+                if (is.getItem() == Items.AIR) {
+                    continue;
+                }
                 if (is.getItem() instanceof BlockItem) {
                     selIndex = i;
                     break;
                 }
             }
+        }
         if (Atomic.client.player.getInventory().getStack(selIndex).getItem() != Items.AIR) {
             // fucking multithreading moment
             int finalSelIndex = selIndex;

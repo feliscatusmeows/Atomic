@@ -12,15 +12,11 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(DimensionType.class)
-public class DimensionTypeMixin implements OreSim.DimensionTypeCaller {
+@Mixin(DimensionType.class) public class DimensionTypeMixin implements OreSim.DimensionTypeCaller {
 
-    @Shadow
-    @Final
-    private Identifier infiniburn;
+    @Shadow @Final private Identifier infiniburn;
 
-    @Override
-    public Identifier getInfiniburn() {
+    @Override public Identifier getInfiniburn() {
         return this.infiniburn;
     }
 

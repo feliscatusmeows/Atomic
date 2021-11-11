@@ -10,23 +10,30 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 
 public class AttackManager {
-    public static final long MAX_ATTACK_TIMEOUT = 5000;
-    static long lastAttack = 0;
-    static LivingEntity lastAttacked;
+
+    public static final long         MAX_ATTACK_TIMEOUT = 5000;
+    static              long         lastAttack         = 0;
+    static              LivingEntity lastAttacked;
 
     public static LivingEntity getLastAttackInTimeRange() {
-        if (getLastAttack() + MAX_ATTACK_TIMEOUT < System.currentTimeMillis() || Atomic.client.player == null || Atomic.client.player.isDead())
+        if (getLastAttack() + MAX_ATTACK_TIMEOUT < System.currentTimeMillis() || Atomic.client.player == null || Atomic.client.player.isDead()) {
             lastAttacked = null;
+        }
         if (lastAttacked != null) {
-            if (lastAttacked.getPos().distanceTo(Atomic.client.player.getPos()) > 16 || lastAttacked.isDead())
+            if (lastAttacked.getPos().distanceTo(Atomic.client.player.getPos()) > 16 || lastAttacked.isDead()) {
                 lastAttacked = null;
+            }
         }
         return lastAttacked;
     }
 
     public static void registerLastAttacked(LivingEntity entity) {
-        if (entity.getType() != EntityType.PLAYER) return;
-        if (entity.equals(Atomic.client.player)) return;
+        if (entity.getType() != EntityType.PLAYER) {
+            return;
+        }
+        if (entity.equals(Atomic.client.player)) {
+            return;
+        }
         lastAttacked = entity;
         lastAttack = System.currentTimeMillis();
     }

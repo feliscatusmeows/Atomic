@@ -13,6 +13,7 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Objects;
 
 public class Packets {
+
     public static void sendServerSideLook(Vec3d target1) {
         double vec = 57.2957763671875;
         Vec3d target = target1.subtract(Objects.requireNonNull(Atomic.client.player).getEyePos());

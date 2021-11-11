@@ -16,19 +16,16 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.Vec3d;
 
 public class HologramManager {
+
     public static Hologram generateDefault(String text, Vec3d pos) {
         return new Hologram().position(pos).text(text).isEgg(false).isSmall(false);
     }
 
     public static class Hologram {
-        String text;
-        Vec3d pos;
-        boolean isEgg = false,
-                isChild = false,
-                isVisible = false,
-                hasGravity = false,
-                wrapName = true,
-                isMarker = true;
+
+        String  text;
+        Vec3d   pos;
+        boolean isEgg = false, isChild = false, isVisible = false, hasGravity = false, wrapName = true, isMarker = true;
 
         public Hologram() {
             this.text = "";
@@ -60,8 +57,7 @@ public class HologramManager {
             return this;
         }
 
-        @SuppressWarnings("UnusedReturnValue")
-        public Hologram wrapsName(boolean wrapName) {
+        @SuppressWarnings("UnusedReturnValue") public Hologram wrapsName(boolean wrapName) {
             this.wrapName = wrapName;
             return this;
         }
@@ -91,7 +87,9 @@ public class HologramManager {
             tag.put("Small", NbtByte.of(isChild));
             tag.put("Marker", NbtByte.of(isMarker));
             tag.put("Pos", pos);
-            if (isEgg) tag.put("id", NbtString.of("minecraft:armor_stand"));
+            if (isEgg) {
+                tag.put("id", NbtString.of("minecraft:armor_stand"));
+            }
             stack.setSubNbt("EntityTag", tag);
             stack.setCustomName(Text.of("§r§cHologram"));
             return stack;

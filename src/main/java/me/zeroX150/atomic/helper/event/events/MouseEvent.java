@@ -8,7 +8,8 @@ package me.zeroX150.atomic.helper.event.events;
 import me.zeroX150.atomic.helper.event.events.base.NonCancellableEvent;
 
 public class MouseEvent extends NonCancellableEvent {
-    final int button;
+
+    final int            button;
     final MouseEventType type;
 
     public MouseEvent(int button, int action) {

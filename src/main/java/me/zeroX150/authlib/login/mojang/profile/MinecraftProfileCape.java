@@ -25,5 +25,4 @@ public class MinecraftProfileCape extends OnlineTexture {
         super(id, state, url, alias);
     }
 
-
 }

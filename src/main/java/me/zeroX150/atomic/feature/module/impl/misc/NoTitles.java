@@ -18,10 +18,13 @@ import net.minecraft.network.packet.s2c.play.TitleFadeS2CPacket;
 import net.minecraft.network.packet.s2c.play.TitleS2CPacket;
 
 public class NoTitles extends Module {
+
     public NoTitles() {
         super("No Titles", "Completely removes any titles from rendering", ModuleType.MISC);
         Events.registerEventHandler(EventType.PACKET_RECEIVE, event -> {
-            if (!this.isEnabled()) return;
+            if (!this.isEnabled()) {
+                return;
+            }
             PacketEvent pe = (PacketEvent) event;
             if (pe.getPacket() instanceof TitleS2CPacket packet) {
                 Notification.create(8000, "", true, "Blocked title \"" + packet.getTitle().getString() + "§r\"");
@@ -37,32 +40,26 @@ public class NoTitles extends Module {
         });
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
     }
 
-    @Override
-    public void enable() {
-
-    }
-
-    @Override
-    public void disable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public void disable() {
+
+    }
+
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

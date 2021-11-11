@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TypeConverter {
+
     static final Map<String, Method> CONVERTERS = new HashMap<>();
 
     static {
@@ -18,8 +19,7 @@ public class TypeConverter {
         for (Method method : methods) {
             if (method.getParameterTypes().length == 1) {
                 // Converter should accept 1 argument. This skips the convert() method.
-                CONVERTERS.put(method.getParameterTypes()[0].getName() + "_"
-                        + method.getReturnType().getName(), method);
+                CONVERTERS.put(method.getParameterTypes()[0].getName() + "_" + method.getReturnType().getName(), method);
             }
         }
     }
@@ -32,8 +32,7 @@ public class TypeConverter {
      * @return The converted object value.
      * @throws NullPointerException          If 'to' is null.
      * @throws UnsupportedOperationException If no suitable converter can be found.
-     * @throws RuntimeException              If conversion failed somehow. This can be caused by at least
-     *                                       an ExceptionInInitializerError, IllegalAccessException or InvocationTargetException.
+     * @throws RuntimeException              If conversion failed somehow. This can be caused by at least an ExceptionInInitializerError, IllegalAccessException or InvocationTargetException.
      */
     public static <T> T convert(Object from, Class<T> to) {
 

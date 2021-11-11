@@ -26,42 +26,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.awt.Color;
 
-@SuppressWarnings("ConstantConditions")
-@Mixin(ClickableWidget.class)
-public abstract class AButtonWidgetMixin implements FastTickable {
+@SuppressWarnings("ConstantConditions") @Mixin(ClickableWidget.class) public abstract class AButtonWidgetMixin implements FastTickable {
 
-    final Color unselectedColor = new Color(25, 44, 49, 70);
-    final Color disabledColor = new Color(0, 0, 0, 70);
-    @Shadow
-    public int x;
-    @Shadow
-    public int y;
-    @Shadow
-    public boolean active;
-    @Shadow
-    protected int width;
-    @Shadow
-    protected int height;
+    final             Color   unselectedColor = new Color(25, 44, 49, 70);
+    final             Color   disabledColor   = new Color(0, 0, 0, 70);
+    @Shadow public    int     x;
+    @Shadow public    int     y;
+    @Shadow public    boolean active;
+    @Shadow protected int     width;
+    @Shadow protected int     height;
     double animProg = 0;
 
-    @Shadow
-    public abstract boolean isHovered();
+    @Shadow public abstract boolean isHovered();
 
-    @Shadow
-    public abstract Text getMessage();
+    @Shadow public abstract Text getMessage();
 
-    @Override
-    public void onFastTick() {
+    @Override public void onFastTick() {
         double e = 0.03d;
-        if (!this.isHovered() || !this.active) e *= -1;
+        if (!this.isHovered() || !this.active) {
+            e *= -1;
+        }
         //else if (animProg < 0.3) animProg = 0.3d;
         animProg += e;
         animProg = MathHelper.clamp(animProg, 0, 1);
     }
 
-    @Inject(method = "renderButton", at = @At("HEAD"), cancellable = true)
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if (!ClientConfig.customButtons.getValue()) return;
+    @Inject(method = "renderButton", at = @At("HEAD"), cancellable = true) public void atomic_renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if (!ClientConfig.customButtons.getValue()) {
+            return;
+        }
         int dxStart, dyStart, dWidth, dHeight;
 
         if ((((Object) this) instanceof ButtonWidget) || (((Object) this) instanceof CyclingButtonWidget<?>)) {
@@ -76,7 +69,9 @@ public abstract class AButtonWidgetMixin implements FastTickable {
             dWidth = 4;
             dxStart = (int) (x + (prog * (width - 4))); // wtf why
             dyStart = y;
-        } else return;
+        } else {
+            return;
+        }
         ci.cancel();
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
@@ -86,8 +81,9 @@ public abstract class AButtonWidgetMixin implements FastTickable {
         boolean isSlider = ((Object) this) instanceof SliderWidget;
         if (!isSlider) {
             double rw = Renderer.Util.lerp(width, 0, interpolatedAProg) / 2d;
-            if (rw != 0)
+            if (rw != 0) {
                 Renderer.R2D.fill(matrices, new Color(0, 194, 111, 255), x + (width / 2d) - rw, y + height - 1, x + (width / 2d) + rw, y + height);
+            }
         } else {
             DrawableHelper.fill(matrices, dxStart, dyStart, dxStart + dWidth, dyStart + dHeight, new Color(0, 194, 111, 255).getRGB());
         }

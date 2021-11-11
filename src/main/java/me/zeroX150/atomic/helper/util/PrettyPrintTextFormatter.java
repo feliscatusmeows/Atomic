@@ -37,23 +37,24 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
 public class PrettyPrintTextFormatter implements NbtElementVisitor {
+
     private static final Map<String, List<String>> ENTRY_ORDER_OVERRIDES = Util.make(Maps.newHashMap(), (map) -> {
         map.put("{}", Lists.newArrayList("DataVersion", "author", "size", "data", "entities", "palette", "palettes"));
         map.put("{}.data.[].{}", Lists.newArrayList("pos", "state", "nbt"));
         map.put("{}.entities.[].{}", Lists.newArrayList("blockPos", "pos"));
     });
-    private static final Set<String> IGNORED_PATHS = Sets.newHashSet("{}.size.[]", "{}.data.[].{}", "{}.palette.[].{}", "{}.entities.[].{}");
-    private static final Pattern SIMPLE_NAME = Pattern.compile("[A-Za-z0-9._+-]+");
-    private static final String KEY_VALUE_SEPARATOR = String.valueOf(':');
-    private static final String ENTRY_SEPARATOR = String.valueOf(',');
-    private static final int NAME_COLOR = 0x55FFFF;
-    private static final int STRING_COLOR = 0x55FF55;
-    private static final int NUMBER_COLOR = 0xFFAA00;
-    private static final int TYPE_SUFFIX_COLOR = 0xFF5555;
-    private final String prefix;
-    private final int indentationLevel;
-    private final List<String> pathParts;
-    private RGBColorText result;
+    private static final Set<String>               IGNORED_PATHS         = Sets.newHashSet("{}.size.[]", "{}.data.[].{}", "{}.palette.[].{}", "{}.entities.[].{}");
+    private static final Pattern                   SIMPLE_NAME           = Pattern.compile("[A-Za-z0-9._+-]+");
+    private static final String                    KEY_VALUE_SEPARATOR   = String.valueOf(':');
+    private static final String                    ENTRY_SEPARATOR       = String.valueOf(',');
+    private static final int                       NAME_COLOR            = 0x55FFFF;
+    private static final int                       STRING_COLOR          = 0x55FF55;
+    private static final int                       NUMBER_COLOR          = 0xFFAA00;
+    private static final int                       TYPE_SUFFIX_COLOR     = 0xFF5555;
+    private final        String                    prefix;
+    private final        int                       indentationLevel;
+    private final        List<String>              pathParts;
+    private              RGBColorText              result;
 
     public PrettyPrintTextFormatter() {
         this("    ", 0, Lists.newArrayList());
@@ -194,7 +195,8 @@ public class PrettyPrintTextFormatter implements NbtElementVisitor {
                 String string2 = iterator.next();
                 NbtElement nbtElement = compound.get(string2);
                 this.pushPathPart(string2);
-                stringBuilder.append(Strings.repeat(string, this.indentationLevel + 1)).append(escapeName(string2), NAME_COLOR).append(KEY_VALUE_SEPARATOR).append(" ").append((new PrettyPrintTextFormatter(string, this.indentationLevel + 1, this.pathParts)).apply(Objects.requireNonNull(nbtElement)));
+                stringBuilder.append(Strings.repeat(string, this.indentationLevel + 1)).append(escapeName(string2), NAME_COLOR).append(KEY_VALUE_SEPARATOR).append(" ")
+                        .append((new PrettyPrintTextFormatter(string, this.indentationLevel + 1, this.pathParts)).apply(Objects.requireNonNull(nbtElement)));
                 this.popPathPart();
                 if (iterator.hasNext()) {
                     stringBuilder.append(ENTRY_SEPARATOR).append(string.isEmpty() ? " " : "\n");

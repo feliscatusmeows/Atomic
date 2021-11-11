@@ -48,14 +48,7 @@ public class MinecraftProfileSkin extends OnlineTexture {
     }
 
 
-    @Override
-    public String toString() {
-        return "MinecraftSkin{" +
-                "id='" + getId() + '\'' +
-                ", state='" + getState() + '\'' +
-                ", url='" + getUrl() + '\'' +
-                ", alias='" + getAlias() + '\'' +
-                "variant='" + variant + '\'' +
-                '}';
+    @Override public String toString() {
+        return "MinecraftSkin{" + "id='" + getId() + '\'' + ", state='" + getState() + '\'' + ", url='" + getUrl() + '\'' + ", alias='" + getAlias() + '\'' + "variant='" + variant + '\'' + '}';
     }
 }

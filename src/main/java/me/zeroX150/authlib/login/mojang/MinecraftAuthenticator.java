@@ -32,8 +32,7 @@ public class MinecraftAuthenticator extends Authenticator<me.zeroX150.authlib.lo
      */
     protected final MicrosoftAuthenticator microsoftAuthenticator = new MicrosoftAuthenticator();
 
-    @Override
-    public me.zeroX150.authlib.login.mojang.MinecraftToken login(String email, String password) {
+    @Override public me.zeroX150.authlib.login.mojang.MinecraftToken login(String email, String password) {
         try {
             URL url = new URL("https://authserver.mojang.com/authenticate");
             URLConnection urlConnection = url.openConnection();
@@ -49,7 +48,6 @@ public class MinecraftAuthenticator extends Authenticator<me.zeroX150.authlib.lo
             request.addProperty("username", email);
             request.addProperty("password", password);
             request.addProperty("requestUser", false);
-
 
             String requestBody = request.toString();
 
@@ -67,7 +65,6 @@ public class MinecraftAuthenticator extends Authenticator<me.zeroX150.authlib.lo
         } catch (IOException exception) {
             throw new AuthFailureException(String.format("Authentication error. Request could not be made! Cause: '%s'", exception.getMessage()));
         }
-
 
     }
 
@@ -174,7 +171,9 @@ public class MinecraftAuthenticator extends Authenticator<me.zeroX150.authlib.lo
      * @throws IllegalArgumentException the illegal argument exception
      */
     public UUID generateUUID(String trimmedUUID) throws IllegalArgumentException {
-        if (trimmedUUID == null) throw new IllegalArgumentException();
+        if (trimmedUUID == null) {
+            throw new IllegalArgumentException();
+        }
         StringBuilder builder = new StringBuilder(trimmedUUID.trim());
         try {
             builder.insert(20, "-");

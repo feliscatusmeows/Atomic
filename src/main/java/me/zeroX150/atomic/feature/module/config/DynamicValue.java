@@ -9,13 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DynamicValue<T> {
-    public final List<SelectorRunnable> selectors = new ArrayList<>();
-    public final T defaultValue;
-    private final List<Runnable> onChangedListeners = new ArrayList<>();
-    private final String key;
-    protected T value;
-    private String description = "";
-    private boolean isInvalid = false;
+
+    public final  List<SelectorRunnable> selectors          = new ArrayList<>();
+    public final  T                      defaultValue;
+    private final List<Runnable>         onChangedListeners = new ArrayList<>();
+    private final String                 key;
+    protected     T                      value;
+    private       String                 description        = "";
+    private       boolean                isInvalid          = false;
 
     public DynamicValue(String key, T value) {
         this.key = key;
@@ -36,7 +37,9 @@ public class DynamicValue<T> {
 
     @SuppressWarnings("unchecked") // fucking monkey shut up
     public void setValue(Object value) {
-        if (getType() != value.getClass()) return;
+        if (getType() != value.getClass()) {
+            return;
+        }
         this.value = (T) value;
         onValueChanged();
     }
@@ -59,10 +62,11 @@ public class DynamicValue<T> {
         return value.getClass();
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean shouldShow() {
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted") public boolean shouldShow() {
         for (SelectorRunnable selector : selectors) {
-            if (!selector.shouldShow()) return false;
+            if (!selector.shouldShow()) {
+                return false;
+            }
         }
         return true;
     }
@@ -85,8 +89,8 @@ public class DynamicValue<T> {
     }
 
     public interface SelectorRunnable {
-        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-        boolean shouldShow();
+
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted") boolean shouldShow();
     }
 
 }

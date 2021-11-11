@@ -6,7 +6,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.hud.element.HudElement;
-import me.zeroX150.atomic.feature.gui.hud.element.ModulesList;
 import me.zeroX150.atomic.feature.gui.hud.element.TargetHUD;
 import me.zeroX150.atomic.helper.event.EventType;
 import me.zeroX150.atomic.helper.event.Events;
@@ -22,24 +21,31 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HudRenderer {
-    static File CONFIG = new File(Atomic.client.runDirectory, "hud.atomic");
+
+    static         File        CONFIG = new File(Atomic.client.runDirectory, "hud.atomic");
     private static HudRenderer INSTANCE;
-    boolean isEditing = false;
-    boolean mouseHeldDown = false;
-    List<HudElement> elements = register();
-    double prevX = Utils.Mouse.getMouseX();
-    double prevY = Utils.Mouse.getMouseY();
+    boolean          isEditing     = false;
+    boolean          mouseHeldDown = false;
+    List<HudElement> elements      = register();
+    double           prevX         = Utils.Mouse.getMouseX();
+    double           prevY         = Utils.Mouse.getMouseY();
+    double           prevWX        = Atomic.client.getWindow().getScaledWidth();
+    double           prevWY        = Atomic.client.getWindow().getScaledHeight();
 
     private HudRenderer() {
         Events.registerEventHandler(EventType.MOUSE_EVENT, event -> {
-            if (!isEditing) return;
+            if (!isEditing) {
+                return;
+            }
             MouseEvent me = (MouseEvent) event;
             if (me.getAction() == MouseEvent.MouseEventType.MOUSE_CLICKED) {
                 mouseHeldDown = true;
                 prevX = Utils.Mouse.getMouseX();
                 prevY = Utils.Mouse.getMouseY();
                 for (HudElement element : elements) {
-                    if (element.mouseClicked(Utils.Mouse.getMouseX(), Utils.Mouse.getMouseY())) break;
+                    if (element.mouseClicked(Utils.Mouse.getMouseX(), Utils.Mouse.getMouseY())) {
+                        break;
+                    }
                 }
             } else if (me.getAction() == MouseEvent.MouseEventType.MOUSE_RELEASED) {
                 mouseHeldDown = false;
@@ -48,20 +54,19 @@ public class HudRenderer {
                 }
             }
         });
-        Events.registerEventHandler(EventType.CONFIG_SAVE, event -> {
-            saveConfig();
-        });
+        Events.registerEventHandler(EventType.CONFIG_SAVE, event -> saveConfig());
         loadConfig();
     }
 
     public static HudRenderer getInstance() {
-        if (INSTANCE == null) INSTANCE = new HudRenderer();
+        if (INSTANCE == null) {
+            INSTANCE = new HudRenderer();
+        }
         return INSTANCE;
     }
 
     static List<HudElement> register() {
         List<HudElement> he = new ArrayList<>();
-        he.add(new ModulesList());
         he.add(new TargetHUD());
         return he;
     }
@@ -83,10 +88,11 @@ public class HudRenderer {
         }
     }
 
-    @SuppressWarnings("ResultOfMethodCallIgnored")
-    void loadConfig() {
+    @SuppressWarnings("ResultOfMethodCallIgnored") void loadConfig() {
         Atomic.log(Level.INFO, "Loading hud");
-        if (!CONFIG.isFile()) CONFIG.delete();
+        if (!CONFIG.isFile()) {
+            CONFIG.delete();
+        }
         if (!CONFIG.exists()) {
             Atomic.log(Level.INFO, "Skipping hud loading because file doesn't exist");
             return;
@@ -113,6 +119,24 @@ public class HudRenderer {
     }
 
     public void fastTick() {
+        double currentWX = Atomic.client.getWindow().getScaledWidth();
+        double currentWY = Atomic.client.getWindow().getScaledHeight();
+        if (currentWX != prevWX) {
+            for (HudElement element : elements) {
+                double px = element.getPosX();
+                double perX = px / prevWX;
+                element.setPosX(currentWX * perX);
+            }
+            prevWX = currentWX;
+        }
+        if (currentWY != prevWY) {
+            for (HudElement element : elements) {
+                double py = element.getPosY();
+                double perY = py / prevWY;
+                element.setPosY(currentWY * perY);
+            }
+            prevWY = currentWY;
+        }
         isEditing = Atomic.client.currentScreen instanceof ChatScreen;
         if (mouseHeldDown) {
             for (HudElement element : elements) {
@@ -129,7 +153,9 @@ public class HudRenderer {
     public void render() {
         for (HudElement element : elements) {
             element.render();
-            if (isEditing) element.renderOutline();
+            if (isEditing) {
+                element.renderOutline();
+            }
         }
     }
 }

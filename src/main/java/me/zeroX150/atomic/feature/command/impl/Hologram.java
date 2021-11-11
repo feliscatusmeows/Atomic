@@ -17,12 +17,12 @@ import java.util.Arrays;
 import java.util.Objects;
 
 public class Hologram extends Command {
+
     public Hologram() {
         super("Hologram", "generate a hologram", "hologram", "holo", "hlg");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length < 2) {
             Utils.Client.sendMessage("i need options and text pls. example: \".hologram eb your text\". specify option \"h\" to show help");
             return;

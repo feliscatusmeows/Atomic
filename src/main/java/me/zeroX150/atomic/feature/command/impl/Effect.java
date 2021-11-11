@@ -12,13 +12,15 @@ import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.entity.effect.StatusEffectInstance;
 
 public class Effect extends Command {
+
     public Effect() {
         super("Effect", "gives you an effect client side", "effect", "eff");
     }
 
-    @Override
-    public void onExecute(String[] args) {
-        if (Atomic.client.player == null) return;
+    @Override public void onExecute(String[] args) {
+        if (Atomic.client.player == null) {
+            return;
+        }
         if (args.length == 0) {
             Utils.Client.sendMessage("action please");
             return;

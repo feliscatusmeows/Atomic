@@ -14,9 +14,10 @@ import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
 public class KeyListenerButton extends ButtonWidget {
-    final Module parent;
-    public boolean listening = false;
-    public long stoppedScanning = 0;
+
+    final  Module  parent;
+    public boolean listening       = false;
+    public long    stoppedScanning = 0;
     int kc;
 
     public KeyListenerButton(int x, int y, int width, Module parent) {
@@ -26,14 +27,14 @@ public class KeyListenerButton extends ButtonWidget {
         this.parent = parent;
     }
 
-    @Override
-    public void onClick(double mouseX, double mouseY) {
+    @Override public void onClick(double mouseX, double mouseY) {
         listening = true;
     }
 
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (!this.listening) return false;
+    @Override public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (!this.listening) {
+            return false;
+        }
         stoppedScanning = System.currentTimeMillis();
         if (keyCode == 47 || "-".equals(GLFW.glfwGetKeyName(kc, GLFW.glfwGetKeyScancode(kc)))) {
             listening = false;
@@ -50,16 +51,19 @@ public class KeyListenerButton extends ButtonWidget {
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
-    @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (listening) this.setMessage(Text.of("... (- to clear)"));
-        else {
+    @Override public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (listening) {
+            this.setMessage(Text.of("... (- to clear)"));
+        } else {
             String n = kc == -1 ? "None" : GLFW.glfwGetKeyName(kc, GLFW.glfwGetKeyScancode(kc));
-            if (n == null) n = "kc." + kc;
+            if (n == null) {
+                n = "kc." + kc;
+            }
             this.setMessage(Text.of(n));
         }
         fill(matrices, x, y, x + width, y + height, (this.isHovered() ? Themes.currentActiveTheme.left() : Themes.currentActiveTheme.center()).getRGB());
-        FontRenderers.normal.drawCenteredString(matrices, this.getMessage().getString(), x + width / 2f, y + height / 2f - FontRenderers.normal.getFontHeight() / 2f, Themes.currentActiveTheme.fontColor().getRGB());
+        FontRenderers.normal.drawCenteredString(matrices, this.getMessage()
+                .getString(), x + width / 2f, y + height / 2f - FontRenderers.normal.getFontHeight() / 2f, Themes.currentActiveTheme.fontColor().getRGB());
         //DrawableHelper.drawCenteredText(matrices, Atomic.client.textRenderer, this.getMessage(), x + (width / 2), y + (height / 2 - 9 / 2), 0xFFFFFF);
     }
 }

@@ -19,27 +19,26 @@ import net.minecraft.text.Text;
 import java.awt.Color;
 
 public class ColorConfig extends ClickableWidget {
+
     final ColorValue prop;
-    final Slider red;
-    final Slider green;
-    final Slider blue;
+    final Slider     red;
+    final Slider     green;
+    final Slider     blue;
     final Toggleable isRGB;
-    final int padding = 2;
+    final int        padding = 2;
     boolean selected = false;
 
     public ColorConfig(int x, int y, int width, ColorValue orig) {
         super(x, y, width, 12, Text.of(""));
         this.prop = orig;
         red = new Slider(x, y - 12, 99 - 10, new SliderValue("0", orig.getColor().getRed(), 0, 255, 0) {
-            @Override
-            public void setValue(Object value) {
+            @Override public void setValue(Object value) {
                 super.setValue(value);
                 Color v = orig.getColor();
                 orig.setValue(Renderer.Util.modify(v, (int) Math.floor(this.getValue()), -1, -1, -1).getRGB() + (orig.isRGB() ? ";" : ""));
             }
         }) {
-            @Override
-            public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            @Override public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                 if (orig.isRGB()) {
                     this.value = orig.getColor().getRed();
                 }
@@ -47,15 +46,13 @@ public class ColorConfig extends ClickableWidget {
             }
         };
         green = new Slider(x, y - 12 - 12, 99 - 10, new SliderValue("0", orig.getColor().getGreen(), 0, 255, 0) {
-            @Override
-            public void setValue(Object value) {
+            @Override public void setValue(Object value) {
                 super.setValue(value);
                 Color v = orig.getColor();
                 orig.setValue(Renderer.Util.modify(v, -1, (int) Math.floor(this.getValue()), -1, -1).getRGB() + (orig.isRGB() ? ";" : ""));
             }
         }) {
-            @Override
-            public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            @Override public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                 if (orig.isRGB()) {
                     this.value = orig.getColor().getGreen();
                 }
@@ -63,15 +60,13 @@ public class ColorConfig extends ClickableWidget {
             }
         };
         blue = new Slider(x, y - 12 - 12 - 12, 99 - 10, new SliderValue("0", orig.getColor().getBlue(), 0, 255, 0) {
-            @Override
-            public void setValue(Object value) {
+            @Override public void setValue(Object value) {
                 super.setValue(value);
                 Color v = orig.getColor();
                 orig.setValue(Renderer.Util.modify(v, -1, -1, (int) Math.floor(this.getValue()), -1).getRGB() + (orig.isRGB() ? ";" : ""));
             }
         }) {
-            @Override
-            public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            @Override public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                 if (orig.isRGB()) {
                     this.value = orig.getColor().getBlue();
                 }
@@ -79,8 +74,7 @@ public class ColorConfig extends ClickableWidget {
             }
         };
         isRGB = new Toggleable(x, y, 90, new BooleanValue("0", orig.isRGB()) {
-            @Override
-            public void setValue(Object value) {
+            @Override public void setValue(Object value) {
                 super.setValue(value);
                 orig.setRGB(this.value);
                 red.value = orig.getColor().getRed();
@@ -88,16 +82,14 @@ public class ColorConfig extends ClickableWidget {
                 blue.value = orig.getColor().getBlue();
             }
         }) {
-            @Override
-            public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+            @Override public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
                 parent.setValue(orig.isRGB());
                 super.renderButton(matrices, mouseX, mouseY, delta);
             }
         };
     }
 
-    @Override
-    public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         Color c = prop.getColor();
         if (selected) {
             int width = 100;
@@ -137,8 +129,7 @@ public class ColorConfig extends ClickableWidget {
         //super.renderButton(matrices, mouseX, mouseY, delta);
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Override public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (isHovered()) {
             this.selected = !selected;
         }
@@ -152,8 +143,7 @@ public class ColorConfig extends ClickableWidget {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+    @Override public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (selected) {
             red.mouseReleased(mouseX, mouseY, button);
             green.mouseReleased(mouseX, mouseY, button);
@@ -163,8 +153,7 @@ public class ColorConfig extends ClickableWidget {
         return super.mouseReleased(mouseX, mouseY, button);
     }
 
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    @Override public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (selected) {
             red.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
             green.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -174,8 +163,7 @@ public class ColorConfig extends ClickableWidget {
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
-    @Override
-    public void appendNarrations(NarrationMessageBuilder builder) {
+    @Override public void appendNarrations(NarrationMessageBuilder builder) {
 
     }
     //public ColorConfig(ColorValue value)

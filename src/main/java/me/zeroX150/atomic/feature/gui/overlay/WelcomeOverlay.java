@@ -38,20 +38,17 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("ResultOfMethodCallIgnored")
-public class WelcomeOverlay extends Overlay {
-    final String[] texts = new String[]{
-            "Loading...",
-            "Welcome, " + Atomic.client.getSession().getUsername() + ", to Atomic."
-    };
-    List<LogEntry> logs = new ArrayList<>();
-    double d = 0;
-    boolean done = false;
-    boolean decl = false;
-    float prevVal = 0;
-    boolean finishedLoading = false;
-    boolean isLoading = false;
-    Thread loader;
+@SuppressWarnings("ResultOfMethodCallIgnored") public class WelcomeOverlay extends Overlay {
+
+    final String[] texts = new String[]{"Loading...", "Welcome, " + Atomic.client.getSession().getUsername() + ", to Atomic."};
+    List<LogEntry> logs            = new ArrayList<>();
+    double         d               = 0;
+    boolean        done            = false;
+    boolean        decl            = false;
+    float          prevVal         = 0;
+    boolean        finishedLoading = false;
+    boolean        isLoading       = false;
+    Thread         loader;
 
     void log(String v) {
         logs.add(new LogEntry(v));
@@ -67,33 +64,39 @@ public class WelcomeOverlay extends Overlay {
     }
 
     void load() {
-        if (isLoading) return;
+        if (isLoading) {
+            return;
+        }
         isLoading = true;
         loader = new Thread(() -> {
             try {
-                for (Module module : ModuleRegistry.getModules().stream().sorted(Comparator.comparingDouble(value -> -FontRenderers.mono.getStringWidth(value.getName()))).collect(Collectors.toList())) {
+                for (Module module : ModuleRegistry.getModules().stream().sorted(Comparator.comparingDouble(value -> -FontRenderers.mono.getStringWidth(value.getName())))
+                        .collect(Collectors.toList())) {
                     log("Loaded module " + module.getName());
-                    Thread.sleep(20);
+                    Thread.sleep(5);
                 }
                 log("Downloading capes...");
                 File capes = new File(Atomic.client.runDirectory.getAbsolutePath() + "/aCapes");
-                if (!capes.isDirectory()) capes.delete();
-                if (!capes.exists()) capes.mkdir();
+                if (!capes.isDirectory()) {
+                    capes.delete();
+                }
+                if (!capes.exists()) {
+                    capes.mkdir();
+                }
                 Map<String, String> alreadyDownloadedWithFN = new HashMap<>();
                 //List<String> alreadyDownloaded = new ArrayList<>();
-                HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL)
-                        .connectTimeout(Duration.ofSeconds(10))
-                        .build();
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create("https://raw.githubusercontent.com/cornos/atomicFiles/master/capes.txt"))
-                        .timeout(Duration.ofSeconds(10))
-                        .GET().build();
+                HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.NORMAL).connectTimeout(Duration.ofSeconds(10)).build();
+                HttpRequest request = HttpRequest.newBuilder().uri(URI.create("https://raw.githubusercontent.com/cornos/atomicFiles/master/capes.txt")).timeout(Duration.ofSeconds(10)).GET().build();
                 client.sendAsync(request, HttpResponse.BodyHandlers.ofString()).thenApply(HttpResponse::body).thenAccept(s -> {
                     for (String s1 : s.split("\n")) { // all capes, dumped into here
-                        if (s1.startsWith("#")) continue; // ignore comments
+                        if (s1.startsWith("#")) {
+                            continue; // ignore comments
+                        }
                         Atomic.log(Level.INFO, s1);
                         String[] split = s1.split(" +"); // split everything at a space
-                        if (split.length != 2) continue; // we only want "uuid capeUrl" format
+                        if (split.length != 2) {
+                            continue; // we only want "uuid capeUrl" format
+                        }
                         String uuid = split[0];
                         String capeUrl = split[1];
                         try {
@@ -126,8 +129,7 @@ public class WelcomeOverlay extends Overlay {
         loader.start();
     }
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         int w = Atomic.client.getWindow().getScaledWidth();
         int h = Atomic.client.getWindow().getScaledHeight();
         if (done) {
@@ -140,19 +142,26 @@ public class WelcomeOverlay extends Overlay {
 
         double vd = 2.35 * delta;
         if (d > 90) {
-            if (finishedLoading) d += vd;
-            else {
+            if (finishedLoading) {
+                d += vd;
+            } else {
                 load();
             }
-        } else d += vd;
+        } else {
+            d += vd;
+        }
         float c = (float) Math.abs(Math.sin(Math.toRadians(d)));
         int index = (int) Math.floor(d / 180);
         int c1 = Color.BLACK.getRGB();
         int a = 255;
         if (index >= texts.length - 1) {
-            if (prevVal > c) decl = true;
+            if (prevVal > c) {
+                decl = true;
+            }
             if (decl) {
-                if (Atomic.client.currentScreen == null) Atomic.client.setScreen(new HomeScreen());
+                if (Atomic.client.currentScreen == null) {
+                    Atomic.client.setScreen(new HomeScreen());
+                }
                 Atomic.client.currentScreen.render(matrices, mouseX, mouseY, delta);
                 c1 = BackgroundHelper.ColorMixer.getArgb((int) (c * 255), 0, 0, 0);
                 a = (int) (c * 255);
@@ -197,9 +206,10 @@ public class WelcomeOverlay extends Overlay {
     }
 
     static class LogEntry {
+
         final String a;
         boolean removed = false;
-        double aProg = 0;
+        double  aProg   = 0;
 
         public LogEntry(String v) {
             a = v;

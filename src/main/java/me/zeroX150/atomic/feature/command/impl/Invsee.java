@@ -15,12 +15,12 @@ import net.minecraft.entity.player.PlayerEntity;
 import java.util.Objects;
 
 public class Invsee extends Command {
+
     public Invsee() {
         super("Invsee", "Shows you the inv of another player", "invsee", "isee");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length == 0) {
             Utils.Client.sendMessage("i need username");
             return;

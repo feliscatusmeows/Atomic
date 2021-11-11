@@ -35,39 +35,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Objects;
 
 
-@Mixin(HandledScreen.class)
-public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> extends Screen {
-    final KeyBinding arrowRight = new KeyBinding("", GLFW.GLFW_KEY_RIGHT, "");
-    final KeyBinding arrowLeft = new KeyBinding("", GLFW.GLFW_KEY_LEFT, "");
-    final KeyBinding arrowUp = new KeyBinding("", GLFW.GLFW_KEY_UP, "");
-    final KeyBinding arrowDown = new KeyBinding("", GLFW.GLFW_KEY_DOWN, "");
-    @Shadow
-    @Final
-    protected T handler;
-    @Shadow
-    protected int x;
-    @Shadow
-    protected int y;
+@Mixin(HandledScreen.class) public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> extends Screen {
+
+    final                    KeyBinding arrowRight = new KeyBinding("", GLFW.GLFW_KEY_RIGHT, "");
+    final                    KeyBinding arrowLeft  = new KeyBinding("", GLFW.GLFW_KEY_LEFT, "");
+    final                    KeyBinding arrowUp    = new KeyBinding("", GLFW.GLFW_KEY_UP, "");
+    final                    KeyBinding arrowDown  = new KeyBinding("", GLFW.GLFW_KEY_DOWN, "");
+    @Shadow @Final protected T          handler;
+    @Shadow protected        int        x;
+    @Shadow protected        int        y;
     boolean isSelecting = false;
 
     SimpleTextWidget tw;
-    ButtonWidget slotSpammer;
+    ButtonWidget     slotSpammer;
 
     protected AGenericContainerScreenMixin(Text title) {
         super(title);
     }
 
-    @Shadow
-    protected abstract boolean isPointOverSlot(Slot slot, double pointX, double pointY);
+    @Shadow protected abstract boolean isPointOverSlot(Slot slot, double pointX, double pointY);
 
-    @Inject(method = "init", at = @At("TAIL"))
-    public void initCustom(CallbackInfo ci) {
+    @Inject(method = "init", at = @At("TAIL")) public void atomic_postInit(CallbackInfo ci) {
         int cw = 110;
         int ch = 5 + 11 + 20 + 5;
         slotSpammer = new ButtonWidget(cw / 2 - 100 / 2, 5 + 11, 100, 20, Text.of("Slot spammer"), button -> {
             if (ModuleRegistry.getByClass(SlotSpammer.class).isEnabled()) {
                 ModuleRegistry.getByClass(SlotSpammer.class).setEnabled(false);
-            } else isSelecting = !isSelecting;
+            } else {
+                isSelecting = !isSelecting;
+            }
         });
         tw = new SimpleTextWidget(cw / 2d, 5, "Slot spammer", 0xFFFFFF);
         tw.setCenter(true);
@@ -86,9 +82,10 @@ public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> exte
         bind.setPressed(keyPressed(bind));
     }
 
-    @Inject(method = "tick", at = @At("HEAD"))
-    public void tick(CallbackInfo ci) {
-        if (!ModuleRegistry.getByClass(InventoryWalk.class).isEnabled()) return;
+    @Inject(method = "tick", at = @At("HEAD")) public void atomic_preTick(CallbackInfo ci) {
+        if (!ModuleRegistry.getByClass(InventoryWalk.class).isEnabled()) {
+            return;
+        }
         GameOptions go = Atomic.client.options;
         setState(go.keyForward);
         setState(go.keyRight);
@@ -99,16 +96,23 @@ public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> exte
 
         float yawOffset = 0f;
         float pitchOffset = 0f;
-        if (keyPressed(arrowRight)) yawOffset += 5f;
-        if (keyPressed(arrowLeft)) yawOffset -= 5f;
-        if (keyPressed(arrowUp)) pitchOffset -= 5f;
-        if (keyPressed(arrowDown)) pitchOffset += 5f;
+        if (keyPressed(arrowRight)) {
+            yawOffset += 5f;
+        }
+        if (keyPressed(arrowLeft)) {
+            yawOffset -= 5f;
+        }
+        if (keyPressed(arrowUp)) {
+            pitchOffset -= 5f;
+        }
+        if (keyPressed(arrowDown)) {
+            pitchOffset += 5f;
+        }
         Objects.requireNonNull(Atomic.client.player).setYaw(Atomic.client.player.getYaw() + yawOffset);
         Atomic.client.player.setPitch(Atomic.client.player.getPitch() + pitchOffset);
     }
 
-    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    public void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true) public void atomic_preMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (isSelecting) {
             Slot s = null;
             for (Slot slot : this.handler.slots) {
@@ -127,8 +131,7 @@ public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> exte
         }
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    @Inject(method = "render", at = @At("TAIL")) public void atomic_postRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         String t = "disabled";
         if (ModuleRegistry.getByClass(SlotSpammer.class).isEnabled()) {
             slotSpammer.setMessage(Text.of("Click to disable"));
@@ -136,7 +139,9 @@ public abstract class AGenericContainerScreenMixin<T extends ScreenHandler> exte
         } else if (isSelecting) {
             slotSpammer.setMessage(Text.of("Click a slot..."));
             t = "selecting";
-        } else slotSpammer.setMessage(Text.of("Slot spammer"));
+        } else {
+            slotSpammer.setMessage(Text.of("Slot spammer"));
+        }
         tw.setText("Slot spammer " + t);
         //DrawableHelper.drawCenteredText(matrices, textRenderer, "Slot spammer " + t, width / 2, 1, 0xFFFFFF);
         if (SlotSpammer.slotToSpam != null) {

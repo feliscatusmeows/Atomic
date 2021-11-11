@@ -16,14 +16,11 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(PlayerListEntry.class)
-public class PlayerListEntryMixin {
-    @Shadow
-    @Final
-    private GameProfile profile;
+@Mixin(PlayerListEntry.class) public class PlayerListEntryMixin {
 
-    @Inject(method = "getCapeTexture", at = @At("HEAD"), cancellable = true)
-    public void getCapeTexture(CallbackInfoReturnable<Identifier> cir) {
+    @Shadow @Final private GameProfile profile;
+
+    @Inject(method = "getCapeTexture", at = @At("HEAD"), cancellable = true) public void atomic_overwriteCapes(CallbackInfoReturnable<Identifier> cir) {
         GameProfile context = this.profile;
         boolean hasCape = Atomic.capes.containsKey(context.getId());
         if (hasCape) {

@@ -3,7 +3,6 @@
   "package": "me.zeroX150.atomic.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
-    "game.ClientPlayerEntityMixin",
     "game.DimensionTypeMixin",
     "game.GameOptionsMixin",
     "game.IClientPlayerInteractionManagerAccessor",

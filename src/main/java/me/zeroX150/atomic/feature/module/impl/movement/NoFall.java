@@ -21,9 +21,10 @@ import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
  * @see IPlayerMoveC2SPacketAccessor
  */
 public class NoFall extends Module {
-    public static MultiValue mode;
-    final SliderValue fallDist = (SliderValue) this.config.create("Fall distance", 3, 0, 10, 1).description("The distance to fall for to enable the module");
-    public boolean enabled = true;
+
+    public static MultiValue  mode;
+    final         SliderValue fallDist = (SliderValue) this.config.create("Fall distance", 3, 0, 10, 1).description("The distance to fall for to enable the module");
+    public        boolean     enabled  = true;
 
     public NoFall() {
         super("No Fall", "no fall damage", ModuleType.MOVEMENT);
@@ -32,7 +33,9 @@ public class NoFall extends Module {
         mode.description("The mode of the module");
         this.fallDist.showOnlyIf(() -> !mode.getValue().equalsIgnoreCase("onground"));
         Events.registerEventHandler(EventType.PACKET_SEND, event1 -> {
-            if (!this.isEnabled() || !enabled) return;
+            if (!this.isEnabled() || !enabled) {
+                return;
+            }
             PacketEvent event = (PacketEvent) event1;
             if (event.getPacket() instanceof PlayerMoveC2SPacket) {
                 if (mode.getValue().equalsIgnoreCase("onground")) {
@@ -42,9 +45,10 @@ public class NoFall extends Module {
         });
     }
 
-    @Override
-    public void tick() {
-        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
+    @Override public void tick() {
+        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) {
+            return;
+        }
         if (Atomic.client.player.fallDistance > fallDist.getValue()) {
             switch (mode.getValue().toLowerCase()) {
                 case "packet" -> Atomic.client.getNetworkHandler().sendPacket(new PlayerMoveC2SPacket.OnGroundOnly(true));
@@ -56,28 +60,23 @@ public class NoFall extends Module {
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return mode.getValue();
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

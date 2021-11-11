@@ -12,9 +12,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public class SimpleTextWidget extends ClickableWidget {
+
     double x, y;
-    int color;
-    String text;
+    int     color;
+    String  text;
     boolean center = false;
 
     public SimpleTextWidget(double x, double y, String text, int color) {
@@ -50,9 +51,11 @@ public class SimpleTextWidget extends ClickableWidget {
     }
 
 
-    @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        if (center) FontRenderers.normal.drawCenteredString(matrices, text, x, y, color);
-        else FontRenderers.normal.drawString(matrices, text, x, y, color);
+    @Override public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        if (center) {
+            FontRenderers.normal.drawCenteredString(matrices, text, x, y, color);
+        } else {
+            FontRenderers.normal.drawString(matrices, text, x, y, color);
+        }
     }
 }

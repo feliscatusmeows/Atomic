@@ -18,11 +18,12 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Objects;
 
 public class Rotations {
-    static boolean enabled = false;
-    private static float clientPitch;
-    private static float clientYaw;
-    private static long lastModificationTime = 0;
-    private static Vec3d targetV3;
+
+    static         boolean enabled              = false;
+    private static float   clientPitch;
+    private static float   clientYaw;
+    private static long    lastModificationTime = 0;
+    private static Vec3d   targetV3;
 
     static {
         Events.registerEventHandler(EventType.PACKET_SEND, event1 -> {
@@ -36,8 +37,11 @@ public class Rotations {
     }
 
     static void timeoutCheck() {
-        if (System.currentTimeMillis() - lastModificationTime > 1000) disable();
-        else enable();
+        if (System.currentTimeMillis() - lastModificationTime > 1000) {
+            disable();
+        } else {
+            enable();
+        }
     }
 
     static void tick() {
@@ -60,7 +64,9 @@ public class Rotations {
         delta = MathHelper.wrapDegrees(required - Atomic.client.player.getYaw());
         speed = Math.abs(delta / laziness);
         add = speed * (delta >= 0 ? 1 : -1);
-        if ((add >= 0 && add > delta) || (add < 0 && add < delta)) add = delta;
+        if ((add >= 0 && add > delta) || (add < 0 && add < delta)) {
+            add = delta;
+        }
         Atomic.client.player.setYaw(Atomic.client.player.getYaw() + (float) add);
 
         // setting pitch
@@ -69,7 +75,9 @@ public class Rotations {
         delta = MathHelper.wrapDegrees(required - Atomic.client.player.getPitch());
         speed = Math.abs(delta / laziness);
         add = speed * (delta >= 0 ? 1 : -1);
-        if ((add >= 0 && add > delta) || (add < 0 && add < delta)) add = delta;
+        if ((add >= 0 && add > delta) || (add < 0 && add < delta)) {
+            add = delta;
+        }
         Atomic.client.player.setPitch(Atomic.client.player.getPitch() + (float) add);
     }
 

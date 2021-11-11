@@ -8,6 +8,7 @@ package me.zeroX150.atomic.feature.module.config;
 import net.minecraft.util.math.MathHelper;
 
 public class SliderValue extends DynamicValue<Double> {
+
     final int prec;
     double min, max, sliderMin, sliderMax;
 
@@ -20,9 +21,10 @@ public class SliderValue extends DynamicValue<Double> {
         this.prec = MathHelper.clamp(precision, 0, 10);
     }
 
-    @Override
-    public void setValue(Object value) {
-        if (!(value instanceof Double)) return;
+    @Override public void setValue(Object value) {
+        if (!(value instanceof Double)) {
+            return;
+        }
         this.value = MathHelper.clamp((double) value, min, max);
 
         onValueChanged();

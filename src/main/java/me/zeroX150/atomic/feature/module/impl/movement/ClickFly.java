@@ -22,14 +22,15 @@ import net.minecraft.util.math.Vec3d;
 import java.awt.Color;
 
 public class ClickFly extends Module {
+
     final BooleanValue autoDisable = (BooleanValue) this.config.create("Auto disable", false).description("Automatically disable when the goal is reached");
     final BooleanValue smartTarget = (BooleanValue) this.config.create("Smart target", true).description("Whether or not to target the goal with some iq");
 
     final ColorValue color = new ColorValue("Color", Color.BLACK);
 
     BlockPos goingToTeleportTo = null;
-    boolean flag = false;
-    boolean tpInProgress = false;
+    boolean  flag              = false;
+    boolean  tpInProgress      = false;
 
     public ClickFly() {
         super("Click Fly", "Flies you to whereever you look at", ModuleType.MOVEMENT);
@@ -37,30 +38,39 @@ public class ClickFly extends Module {
         this.config.getAll().add(color);
     }
 
-    @Override
-    public void tick() {
-        if (Atomic.client.player == null || Atomic.client.world == null) return;
+    @Override public void tick() {
+        if (Atomic.client.player == null || Atomic.client.world == null) {
+            return;
+        }
         HitResult hr = Atomic.client.player.raycast(200, 0, false);
-        if (!(hr instanceof BlockHitResult bhr)) goingToTeleportTo = null;
-        else {
+        if (!(hr instanceof BlockHitResult bhr)) {
+            goingToTeleportTo = null;
+        } else {
             BlockState br = Atomic.client.world.getBlockState(bhr.getBlockPos());
             if (!tpInProgress) {
                 if (!br.isAir()) {
                     boolean set = true;
                     if (smartTarget.getValue()) {
-                        set = !Atomic.client.world.getBlockState(bhr.getBlockPos().up()).getMaterial().blocksMovement()
-                                && !Atomic.client.world.getBlockState(bhr.getBlockPos().up().up()).getMaterial().blocksMovement();
+                        set = !Atomic.client.world.getBlockState(bhr.getBlockPos().up()).getMaterial().blocksMovement() && !Atomic.client.world.getBlockState(bhr.getBlockPos().up().up()).getMaterial()
+                                .blocksMovement();
                     }
-                    if (set) goingToTeleportTo = bhr.getBlockPos();
-                    else goingToTeleportTo = null;
-                } else goingToTeleportTo = null;
+                    if (set) {
+                        goingToTeleportTo = bhr.getBlockPos();
+                    } else {
+                        goingToTeleportTo = null;
+                    }
+                } else {
+                    goingToTeleportTo = null;
+                }
             }
         }
         if (Atomic.client.options.keyUse.isPressed() && !flag) {
             if (goingToTeleportTo != null) {
                 flag = true;
                 if (!tpInProgress) {
-                    if (autoDisable.getValue()) toggle();
+                    if (autoDisable.getValue()) {
+                        toggle();
+                    }
                     new Thread(() -> {
                         tpInProgress = true;
                         Vec3d base = Atomic.client.player.getPos();
@@ -73,7 +83,9 @@ public class ClickFly extends Module {
                         for (double i = 0; i < dist; i += 0.2) {
                             Vec3d c = new Vec3d(Renderer.Util.lerp(base.x, goal.x, i / dist), Renderer.Util.lerp(base.y, goal.y, i / dist), Renderer.Util.lerp(base.z, goal.z, i / dist));
                             BlockState bs = Atomic.client.world.getBlockState(new BlockPos(c));
-                            if (bs.getMaterial().blocksMovement()) continue;
+                            if (bs.getMaterial().blocksMovement()) {
+                                continue;
+                            }
                             Atomic.client.player.updatePosition(c.x, c.y, c.z);
                             finVel = c.subtract(last);
                             last = c;
@@ -89,22 +101,23 @@ public class ClickFly extends Module {
                     }).start();
                 }
             }
-        } else if (!Atomic.client.options.keyUse.isPressed()) flag = false;
+        } else if (!Atomic.client.options.keyUse.isPressed()) {
+            flag = false;
+        }
     }
 
-    @Override
-    public void enable() {
-
-    }
-
-    @Override
-    public void disable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public String getContext() {
-        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return null;
+    @Override public void disable() {
+
+    }
+
+    @Override public String getContext() {
+        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) {
+            return null;
+        }
         if (goingToTeleportTo != null) {
             Vec3d v = new Vec3d(goingToTeleportTo.getX(), goingToTeleportTo.getY(), goingToTeleportTo.getZ());
             return (int) Utils.Math.roundToDecimal(v.distanceTo(Atomic.client.player.getPos()), 0) + "";
@@ -112,16 +125,14 @@ public class ClickFly extends Module {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
         if (goingToTeleportTo != null) {
             Vec3d bruh = new Vec3d(goingToTeleportTo.getX(), goingToTeleportTo.getY(), goingToTeleportTo.getZ());
             Renderer.R3D.renderFilled(bruh, new Vec3d(1, 1, 1), color.getColor(), matrices);
         }
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

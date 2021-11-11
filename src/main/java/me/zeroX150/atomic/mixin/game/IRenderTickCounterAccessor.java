@@ -10,12 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(RenderTickCounter.class)
-public interface IRenderTickCounterAccessor {
-    @Accessor("tickTime")
-    float getTickTime();
+@Mixin(RenderTickCounter.class) public interface IRenderTickCounterAccessor {
 
-    @Mutable
-    @Accessor("tickTime")
-    void setTickTime(float v);
+    @Mutable @Accessor("tickTime") void setTickTime(float v);
 }

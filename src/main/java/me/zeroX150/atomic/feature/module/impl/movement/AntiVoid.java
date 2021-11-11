@@ -18,6 +18,7 @@ import net.minecraft.util.math.Vec3d;
 import java.util.Objects;
 
 public class AntiVoid extends Module {
+
     final SliderValue distance = (SliderValue) this.config.create("Fall dist", 3, 2, 10, 1).description("how many blocks to fall before tping");
     Vec3d lastOnGround = null;
 
@@ -25,8 +26,7 @@ public class AntiVoid extends Module {
         super("Anti Fall", "Prevents you from falling too far", ModuleType.MOVEMENT);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         if (Objects.requireNonNull(Atomic.client.world).getBlockState(new BlockPos(Objects.requireNonNull(Atomic.client.player).getPos().subtract(0, 0.4, 0))).getMaterial().blocksMovement()) {
             lastOnGround = Atomic.client.player.getPos();
         }
@@ -40,33 +40,28 @@ public class AntiVoid extends Module {
         }
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         if (Objects.requireNonNull(Atomic.client.player).fallDistance > 2) {
             return Utils.Math.roundToDecimal(Atomic.client.player.fallDistance, 1) + " / " + distance.getValue();
         }
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
         if (lastOnGround != null && Objects.requireNonNull(Atomic.client.player).fallDistance > 2) {
             Renderer.R3D.line(Atomic.client.player.getPos(), lastOnGround, Utils.getCurrentRGB(), matrices);
         }
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

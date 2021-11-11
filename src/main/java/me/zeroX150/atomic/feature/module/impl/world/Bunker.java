@@ -22,7 +22,8 @@ import java.awt.Color;
 import java.util.Objects;
 
 public class Bunker extends Module {
-    Vec3d current;
+
+    Vec3d  current;
     double xP = 0;
     double yP = 0;
 
@@ -30,8 +31,7 @@ public class Bunker extends Module {
         super("Bunker", "makes a bunker", ModuleType.WORLD);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         boolean isAir = true;
         BlockPos cp1 = null;
         while (isAir) {
@@ -51,31 +51,31 @@ public class Bunker extends Module {
             isAir = !bs.getMaterial().isReplaceable();
             cp1 = cp2;
         }
-        if (cp1 == null) return;
+        if (cp1 == null) {
+            return;
+        }
         current = new Vec3d(cp1.getX(), cp1.getY(), cp1.getZ());
         BlockHitResult bhr = new BlockHitResult(current, Direction.DOWN, cp1, false);
         Objects.requireNonNull(Atomic.client.interactionManager).interactBlock(Atomic.client.player, Atomic.client.world, Hand.MAIN_HAND, bhr);
         Rotations.lookAtV3(current.add(0.5, 0.5, 0.5));
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
-        if (current != null) Renderer.R3D.renderFilled(current, new Vec3d(1, 1, 1), Color.RED, matrices);
+    @Override public void onWorldRender(MatrixStack matrices) {
+        if (current != null) {
+            Renderer.R3D.renderFilled(current, new Vec3d(1, 1, 1), Color.RED, matrices);
+        }
     }
 
     boolean incr() {
@@ -93,8 +93,7 @@ public class Bunker extends Module {
         return false;
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

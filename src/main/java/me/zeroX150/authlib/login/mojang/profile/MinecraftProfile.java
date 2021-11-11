@@ -8,8 +8,8 @@ import java.util.UUID;
  */
 public class MinecraftProfile {
 
-    private UUID uuid;
-    private String username;
+    private UUID                       uuid;
+    private String                     username;
     private List<MinecraftProfileSkin> skins;
     private List<MinecraftProfileCape> capes;
 
@@ -70,13 +70,7 @@ public class MinecraftProfile {
         return capes;
     }
 
-    @Override
-    public String toString() {
-        return "MinecraftProfile{" +
-                "uuid=" + uuid +
-                ", username='" + username + '\'' +
-                ", skins=" + skins +
-                ", capes=" + capes +
-                '}';
+    @Override public String toString() {
+        return "MinecraftProfile{" + "uuid=" + uuid + ", username='" + username + '\'' + ", skins=" + skins + ", capes=" + capes + '}';
     }
 }

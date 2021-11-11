@@ -10,41 +10,25 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(PlayerMoveC2SPacket.class)
-public interface IPlayerMoveC2SPacketAccessor {
-    @Mutable
-    @Accessor("onGround")
-    void setOnGround(boolean onGround);
+@Mixin(PlayerMoveC2SPacket.class) public interface IPlayerMoveC2SPacketAccessor {
 
-    @Accessor("x")
-    double getX();
+    @Mutable @Accessor("onGround") void setOnGround(boolean onGround);
 
-    @Mutable
-    @Accessor("x")
-    void setX(double x);
+    @Accessor("x") double getX();
 
-    @Accessor("y")
-    double getY();
+    @Mutable @Accessor("x") void setX(double x);
 
-    @Mutable
-    @Accessor("y")
-    void setY(double y);
+    @Accessor("y") double getY();
 
-    @Accessor("z")
-    double getZ();
+    @Mutable @Accessor("y") void setY(double y);
 
-    @Mutable
-    @Accessor("z")
-    void setZ(double z);
+    @Accessor("z") double getZ();
 
-    @Accessor("yaw")
-    float getYaw();
+    @Mutable @Accessor("z") void setZ(double z);
 
-    @Mutable
-    @Accessor("yaw")
-    void setYaw(float yaw);
+    @Accessor("yaw") float getYaw();
 
-    @Mutable
-    @Accessor("pitch")
-    void setPitch(float pitch);
+    @Mutable @Accessor("yaw") void setYaw(float yaw);
+
+    @Mutable @Accessor("pitch") void setPitch(float pitch);
 }

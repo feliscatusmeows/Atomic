@@ -10,6 +10,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 public class MultiValue extends DynamicValue<String> {
+
     final List<String> possible;
 
     public MultiValue(String key, String value, String... values) {
@@ -21,10 +22,13 @@ public class MultiValue extends DynamicValue<String> {
         return possible.indexOf(this.value);
     }
 
-    @Override
-    public void setValue(Object value) {
-        if (!(value instanceof String)) return;
-        if (!possible.contains(value)) return;
+    @Override public void setValue(Object value) {
+        if (!(value instanceof String)) {
+            return;
+        }
+        if (!possible.contains(value)) {
+            return;
+        }
         this.value = (String) value;
 
         onValueChanged();
@@ -32,12 +36,13 @@ public class MultiValue extends DynamicValue<String> {
 
     public void cycle() {
         int next = getIndex() + 1;
-        if (next >= possible.size()) next = 0;
+        if (next >= possible.size()) {
+            next = 0;
+        }
         this.setValue(possible.get(next));
     }
 
-    @SuppressWarnings("unused")
-    public List<String> getPossible() {
+    @SuppressWarnings("unused") public List<String> getPossible() {
         return possible;
     }
 }

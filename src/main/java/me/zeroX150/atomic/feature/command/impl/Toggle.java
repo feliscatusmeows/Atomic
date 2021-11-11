@@ -11,12 +11,12 @@ import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.helper.util.Utils;
 
 public class Toggle extends Command {
+
     public Toggle() {
         super("Toggle", "toggles a module", "toggle", "t");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length == 0) {
             Utils.Client.sendMessage("ima need the module name");
             return;
@@ -24,6 +24,8 @@ public class Toggle extends Command {
         Module m = ModuleRegistry.getByName(String.join(" ", args));
         if (m == null) {
             Utils.Client.sendMessage("Module not found bruh");
-        } else m.toggle();
+        } else {
+            m.toggle();
+        }
     }
 }

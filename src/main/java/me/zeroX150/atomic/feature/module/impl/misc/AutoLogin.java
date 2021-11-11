@@ -20,13 +20,16 @@ import org.apache.commons.lang3.RandomStringUtils;
 import java.util.Objects;
 
 public class AutoLogin extends Module {
-    final DynamicValue<String> pw = this.config.create("Password", RandomStringUtils.randomAlphanumeric(10)).description("The password to use");
+
+    final DynamicValue<String> pw     = this.config.create("Password", RandomStringUtils.randomAlphanumeric(10)).description("The password to use");
     final DynamicValue<String> toggle = this.config.create("Toggle", "login").description("The trigger for the module");
 
     public AutoLogin() {
         super("Auto Login", "Logins on servers with a custom password", ModuleType.MISC);
         Events.registerEventHandler(EventType.PACKET_SEND, event -> {
-            if (!this.isEnabled()) return;
+            if (!this.isEnabled()) {
+                return;
+            }
             PacketEvent pe = (PacketEvent) event;
             if (pe.getPacket() instanceof ChatMessageC2SPacket chatMessageC2SPacket) {
                 String msg = chatMessageC2SPacket.getChatMessage();
@@ -47,33 +50,27 @@ public class AutoLogin extends Module {
         Objects.requireNonNull(Atomic.client.player).sendChatMessage("/register " + pw.getValue() + " " + pw.getValue());
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
         Utils.Client.sendMessage("Send the sentence you configured in chat to /register and /login");
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return toggle.getValue();
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

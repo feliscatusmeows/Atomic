@@ -18,40 +18,38 @@ import net.minecraft.util.Hand;
 import java.util.Objects;
 
 public class SpinAutism extends Module {
+
     final SliderValue speed = (SliderValue) this.config.create("Timeout", 5, 0, 100, 0).description("How much to wait between rotations");
-    final double r = 0;
+    final double      r     = 0;
     int timeout = 0;
 
     public SpinAutism() {
         super("Spin Autism", "Spins around like a maniac and throws whatever you have", ModuleType.FUN);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
     }
 
-    @Override
-    public void enable() {
-
-    }
-
-    @Override
-    public void disable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public void disable() {
+
+    }
+
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
     }
 
     @Override public void onFastTick() {
         timeout--; // decrease timeout
-        if (timeout > 0) return; // if timeout isnt expired, do nothing
+        if (timeout > 0) {
+            return; // if timeout isnt expired, do nothing
+        }
         timeout = (int) Math.floor(speed.getValue()); // timeout expired, set it back to full
         Rotations.setClientPitch((float) ((Math.random() * 60) - 30));
         Rotations.setClientYaw((float) (Math.random() * 360));
@@ -61,8 +59,7 @@ public class SpinAutism extends Module {
         Atomic.client.getNetworkHandler().sendPacket(p1);
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

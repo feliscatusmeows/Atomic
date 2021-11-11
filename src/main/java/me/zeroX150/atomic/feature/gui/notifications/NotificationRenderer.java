@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class NotificationRenderer {
-    public static final List<Notification> notifications = new ArrayList<>();
+
+    public static final List<Notification> notifications       = new ArrayList<>();
     public static final List<Notification> topBarNotifications = new ArrayList<>();
 
     public static void render() {
@@ -45,7 +46,9 @@ public class NotificationRenderer {
 
     public static void renderTop() {
         MatrixStack ms = Renderer.R3D.getEmptyMatrixStack();
-        if (!Objects.requireNonNull(ModuleRegistry.getByClass(Hud.class)).isEnabled()) return;
+        if (!Objects.requireNonNull(ModuleRegistry.getByClass(Hud.class)).isEnabled()) {
+            return;
+        }
         int baseX = Atomic.client.getWindow().getScaledWidth() / 2;
         int height = 16;
         int baseY = -height - 5;
@@ -68,7 +71,9 @@ public class NotificationRenderer {
             }
             if (!notificationExpired) {
                 notification.posY = currentYOffset;
-                if (Math.abs(notification.posY - notification.renderPosY) < 5) notification.animationGoal = 1;
+                if (Math.abs(notification.posY - notification.renderPosY) < 5) {
+                    notification.animationGoal = 1;
+                }
             } else {
                 notification.animationGoal = 0;
                 if (notification.animationProgress < 0.005) {
@@ -109,7 +114,9 @@ public class NotificationRenderer {
 
     public static void renderSide() {
         MatrixStack ms = Renderer.R3D.getEmptyMatrixStack();
-        if (!Objects.requireNonNull(ModuleRegistry.getByClass(Hud.class)).isEnabled()) return;
+        if (!Objects.requireNonNull(ModuleRegistry.getByClass(Hud.class)).isEnabled()) {
+            return;
+        }
         int currentYOffset = -20;
         int baseX = Atomic.client.getWindow().getScaledWidth() - 160;
         int baseY = Atomic.client.getWindow().getScaledHeight() - 50;
@@ -130,8 +137,12 @@ public class NotificationRenderer {
                     continue;
                 }
             }
-            if (notification.renderPosY == 0) notification.renderPosY = notification.posY;
-            if (notification.renderPosX == 0) notification.renderPosX = baseX + 150;
+            if (notification.renderPosY == 0) {
+                notification.renderPosY = notification.posY;
+            }
+            if (notification.renderPosX == 0) {
+                notification.renderPosX = baseX + 150;
+            }
             Renderer.R2D.fill(new Color(28, 28, 28, 170), notification.renderPosX, notification.renderPosY, notification.renderPosX + 151, notification.renderPosY + notifHeight);
             Color GREEN = new Color(100, 255, 20);
             Color RED = new Color(255, 50, 20);

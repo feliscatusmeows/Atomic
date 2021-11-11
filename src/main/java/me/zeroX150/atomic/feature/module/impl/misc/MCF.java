@@ -19,11 +19,13 @@ import net.minecraft.util.hit.EntityHitResult;
 import net.minecraft.util.hit.HitResult;
 
 public class MCF extends Module {
+
     public MCF() {
         super("MCF", "Manage friends by clicking the middle mouse button", ModuleType.MISC);
         Events.registerEventHandler(EventType.MOUSE_EVENT, event -> {
-            if (!this.isEnabled() || Atomic.client.currentScreen != null || Atomic.client.player == null || Atomic.client.crosshairTarget == null)
+            if (!this.isEnabled() || Atomic.client.currentScreen != null || Atomic.client.player == null || Atomic.client.crosshairTarget == null) {
                 return;
+            }
             MouseEvent me = ((MouseEvent) event);
             if (me.getButton() == 2 && me.getAction() == MouseEvent.MouseEventType.MOUSE_CLICKED) { // middle click
                 HitResult hr = Atomic.client.crosshairTarget;
@@ -38,37 +40,34 @@ public class MCF extends Module {
     }
 
     void toggleFriend(PlayerEntity pe) {
-        if (Friends.isAFriend(pe)) Friends.removeFriend(pe);
-        else Friends.addFriend(pe);
+        if (Friends.isAFriend(pe)) {
+            Friends.removeFriend(pe);
+        } else {
+            Friends.addFriend(pe);
+        }
     }
 
-    @Override
-    public void tick() {
-
-    }
-
-    @Override
-    public void enable() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public void disable() {
+
+    }
+
+    @Override public String getContext() {
         return Friends.getFriends().size() + "";
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

@@ -20,10 +20,13 @@ import net.minecraft.network.packet.s2c.play.ResourcePackSendS2CPacket;
 import java.util.Objects;
 
 public class TexPackSpoof extends Module {
+
     public TexPackSpoof() {
         super("Tex Pack Spoof", "Tells the server you accepted their shitty resource pack", ModuleType.MISC);
         Events.registerEventHandler(EventType.PACKET_RECEIVE, event1 -> {
-            if (!this.isEnabled()) return;
+            if (!this.isEnabled()) {
+                return;
+            }
             PacketEvent event = (PacketEvent) event1;
             if (event.getPacket() instanceof ResourcePackSendS2CPacket pack) {
                 event.setCancelled(true);
@@ -38,33 +41,27 @@ public class TexPackSpoof extends Module {
         });
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

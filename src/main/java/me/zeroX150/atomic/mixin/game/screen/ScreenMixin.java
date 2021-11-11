@@ -38,21 +38,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.awt.Color;
 import java.util.Arrays;
 
-@Mixin(Screen.class)
-public abstract class ScreenMixin extends DrawableHelper {
-    @Shadow
-    public int width;
-    @Shadow
-    public int height;
-    @Shadow
-    @Nullable
-    protected MinecraftClient client;
+@Mixin(Screen.class) public abstract class ScreenMixin extends DrawableHelper {
+
+    @Shadow public              int             width;
+    @Shadow public              int             height;
+    @Shadow @Nullable protected MinecraftClient client;
 
     @Shadow protected abstract void clearChildren();
 
-    @Inject(method = "sendMessage(Ljava/lang/String;Z)V", at = @At("HEAD"), cancellable = true)
-    public void sendMessage(String message, boolean toHud, CallbackInfo ci) {
-        if (this.client == null) return;
+    @Inject(method = "sendMessage(Ljava/lang/String;Z)V", at = @At("HEAD"), cancellable = true) public void atomic_preSendMessage(String message, boolean toHud, CallbackInfo ci) {
+        if (this.client == null) {
+            return;
+        }
         if (message.toLowerCase().startsWith(ClientConfig.chatPrefix.getValue().toLowerCase())) {
             ci.cancel();
             this.client.inGameHud.getChatHud().addToMessageHistory(message);
@@ -60,19 +57,18 @@ public abstract class ScreenMixin extends DrawableHelper {
             String command = args[0].toLowerCase();
             args = Arrays.copyOfRange(args, 1, args.length);
             Command c = CommandRegistry.getByAlias(command);
-            if (c == null) Utils.Client.sendMessage("Command not found.");
-            else {
+            if (c == null) {
+                Utils.Client.sendMessage("Command not found.");
+            } else {
                 Utils.Client.sendMessage(command);
                 c.onExecute(args);
             }
         }
     }
 
-    @Redirect(method = "renderBackground(Lnet/minecraft/client/util/math/MatrixStack;I)V", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/screen/Screen;fillGradient(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"
-    ))
-    public void renderBackgroundOverride(Screen screen, MatrixStack matrices, int startX, int startY, int endX, int endY, int colorStart, int colorEnd) {
+    @Redirect(method = "renderBackground(Lnet/minecraft/client/util/math/MatrixStack;I)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;fillGradient(Lnet/minecraft/client/util/math/MatrixStack;IIIIII)V"))
+    public void atomic_replaceBackground(Screen screen, MatrixStack matrices, int startX, int startY, int endX, int endY, int colorStart, int colorEnd) {
         if (ModuleRegistry.getByClass(CleanGUI.class).isEnabled()) {
             int i = CleanGUI.mode.getIndex();
             switch (i) {
@@ -122,20 +118,18 @@ public abstract class ScreenMixin extends DrawableHelper {
                 }
                 case 2 -> DrawableHelper.fill(matrices, startX, startY, endX, endY, new Color(0, 0, 0, 60).getRGB());
             }
-        } else this.fillGradient(matrices, startX, startY, endX, endY, colorStart, colorEnd);
+        } else {
+            this.fillGradient(matrices, startX, startY, endX, endY, colorStart, colorEnd);
+        }
     }
 
-    @Inject(method = "renderBackgroundTexture", at = @At("HEAD"), cancellable = true)
-    public void renderBackgroundTexture(int vOffset, CallbackInfo ci) {
+    @Inject(method = "renderBackgroundTexture", at = @At("HEAD"), cancellable = true) public void atomic_renderBackgroundTexture(int vOffset, CallbackInfo ci) {
         ci.cancel();
         Renderer.R2D.renderBackgroundTexture();
     }
 
-    @Redirect(method = "handleTextClick", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/screen/Screen;sendMessage(Ljava/lang/String;Z)V"
-    ))
-    public void warnUserAboutClickedText(Screen screen, String message, boolean toHud) {
+    @Redirect(method = "handleTextClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/Screen;sendMessage(Ljava/lang/String;Z)V"))
+    public void atomic_warnUserAboutClickedText(Screen screen, String message, boolean toHud) {
         MessageScreen confirmScreen = new MessageScreen(screen, "Careful!", "Clicking that would send this message:\n" + message + "\nDo you want to do that?", t -> {
             if (t) {
                 screen.sendMessage(message, toHud);
@@ -146,11 +140,10 @@ public abstract class ScreenMixin extends DrawableHelper {
         Utils.TickManager.runInNTicks(0, () -> Atomic.client.setScreen(confirmScreen));
     }
 
-    @Redirect(method = "init(Lnet/minecraft/client/MinecraftClient;II)V", at = @At(
-            value = "INVOKE",
-            target = "net/minecraft/client/gui/screen/Screen.clearChildren()V"
-    ))
-    void e(Screen instance) {
-        if (!(instance instanceof NonClearingInit)) this.clearChildren();
+    @Redirect(method = "init(Lnet/minecraft/client/MinecraftClient;II)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screen/Screen.clearChildren()V"))
+    void atomic_preventChildrenClear(Screen instance) {
+        if (!(instance instanceof NonClearingInit)) {
+            this.clearChildren();
+        }
     }
 }

@@ -18,21 +18,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Arrays;
 
-@Mixin(NarratorOptionsScreen.class)
-public abstract class NarratorOptionsScreenMixin {
+@Mixin(NarratorOptionsScreen.class) public abstract class NarratorOptionsScreenMixin {
 
     @Shadow @Final private Option[] options;
 
-    @Mutable
-    @Accessor("options")
-    abstract void setOptions(Option[] options);
+    @Mutable @Accessor("options") abstract void setOptions(Option[] options);
 
-    @Inject(method = "init", at = @At("HEAD"))
-    private void removeAutoJump(CallbackInfo ci) {
-        setOptions(Arrays.stream(this.options)
-                .filter(option -> option != Option.AUTO_JUMP)
-                .filter(option -> option != Option.NARRATOR)
-                .toArray(Option[]::new));
+    @Inject(method = "init", at = @At("HEAD")) private void atomic_removeAutoJump(CallbackInfo ci) {
+        setOptions(Arrays.stream(this.options).filter(option -> option != Option.AUTO_JUMP).filter(option -> option != Option.NARRATOR).toArray(Option[]::new));
     }
 
 }

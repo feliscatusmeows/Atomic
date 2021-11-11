@@ -12,12 +12,12 @@ import me.zeroX150.atomic.helper.util.Utils;
 import java.util.Arrays;
 
 public class ChatSequence extends Command {
+
     public ChatSequence() {
         super("ChatSequence", "Configuration for the ChatSequence module", "chatsequence", "csequence", "cseq");
     }
 
-    @Override
-    public void onExecute(String[] args) {
+    @Override public void onExecute(String[] args) {
         if (args.length == 0) {
             Utils.Client.sendMessage("you gotta give me a command");
             return;
@@ -25,9 +25,9 @@ public class ChatSequence extends Command {
         switch (args[0].toLowerCase()) {
             case "messages" -> {
                 if (args.length == 1) {
-                    if (me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.messages.isEmpty())
+                    if (me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.messages.isEmpty()) {
                         Utils.Client.sendMessage("No messages saved rn");
-                    else {
+                    } else {
                         Utils.Client.sendMessage("Messages:");
                         for (int i = 0; i < me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.messages.size(); i++) {
                             Utils.Client.sendMessage("  #" + (i + 1) + "  " + me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.messages.get(i));
@@ -67,7 +67,7 @@ public class ChatSequence extends Command {
                             Utils.Client.sendMessage("Removed message \"" + m + "\"");
                             me.zeroX150.atomic.feature.module.impl.misc.ChatSequence.messages.remove(v);
                         }
-                        case "list" -> onExecute(new String[]{ "messages" });
+                        case "list" -> onExecute(new String[]{"messages"});
                         default -> Utils.Client.sendMessage("chatSequence:messages subcommands: add, remove, list");
                     }
                 }

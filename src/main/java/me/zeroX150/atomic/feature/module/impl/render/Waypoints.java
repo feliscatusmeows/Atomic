@@ -35,15 +35,16 @@ import java.util.List;
 import java.util.Objects;
 
 public class Waypoints extends Module {
-    public static final File WAYPOINTS_FILE;
-    static final String TOP_NOTE = """
+
+    public static final File           WAYPOINTS_FILE;
+    static final        String         TOP_NOTE  = """
             // ! WARNING
             // ! THIS IS SENSITIVE INFORMATION
             // ! DO NOT GIVE SOMEONE THIS FILE, IF THEY ASK FOR IT FOR NO REASON
             // ! DO ALSO NOT TAMPER WITH THIS FILE, IT COULD BREAK THE CONFIG
             // as you may be able to tell, this stores waypoints. refer to line nr. 3 to not leak important coords
             """;
-    static final List<Waypoint> waypoints = new ArrayList<>();
+    static final        List<Waypoint> waypoints = new ArrayList<>();
 
     static {
         WAYPOINTS_FILE = new File(Atomic.client.runDirectory.getAbsolutePath() + "/waypoints.atomic");
@@ -80,7 +81,9 @@ public class Waypoints extends Module {
         if (!WAYPOINTS_FILE.isFile()) {
             Atomic.log(Level.WARN, "Waypoints \"file\" is not actually a file, resetting..");
             boolean deleted = WAYPOINTS_FILE.delete();
-            if (!deleted) Atomic.log(Level.ERROR, "Failed to delete waypoints file, what the fuck is going on?");
+            if (!deleted) {
+                Atomic.log(Level.ERROR, "Failed to delete waypoints file, what the fuck is going on?");
+            }
         }
 
         try {
@@ -89,16 +92,15 @@ public class Waypoints extends Module {
             JsonArray ja = jo.getAsJsonArray("waypoints");
             for (JsonElement jsonElement : ja) {
                 JsonObject current = (JsonObject) jsonElement;
-                Waypoint w = new Waypoint(current.get("posX").getAsDouble(),
-                        current.get("posZ").getAsDouble(),
-                        current.get("color").getAsInt(),
-                        current.get("name").getAsString());
+                Waypoint w = new Waypoint(current.get("posX").getAsDouble(), current.get("posZ").getAsDouble(), current.get("color").getAsInt(), current.get("name").getAsString());
                 waypoints.add(w);
             }
         } catch (Exception e) {
             Atomic.log(Level.ERROR, "Failed to read waypoints file! Is it corrupted?");
             boolean s = WAYPOINTS_FILE.delete();
-            if (!s) Atomic.log(Level.ERROR, "Also failed to delete the file, what is going on?");
+            if (!s) {
+                Atomic.log(Level.ERROR, "Also failed to delete the file, what is going on?");
+            }
         }
     }
 
@@ -106,28 +108,23 @@ public class Waypoints extends Module {
         return waypoints;
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
         Vec3d ppos = Objects.requireNonNull(Atomic.client.player).getPos();
         Camera c = Atomic.client.gameRenderer.getCamera();
         for (Waypoint waypoint : new ArrayList<>(getWaypoints())) {
@@ -136,8 +133,9 @@ public class Waypoints extends Module {
             int g = BackgroundHelper.ColorMixer.getGreen(waypoint.color);
             int b = BackgroundHelper.ColorMixer.getBlue(waypoint.color);
             Vec3d vv = new Vec3d(waypoint.posX + .5, c.getPos().y, waypoint.posZ + .5);
-            if (tracers.getValue())
+            if (tracers.getValue()) {
                 Renderer.R3D.line(vv, Renderer.R3D.getCrosshairVector(), new CustomColor(r, g, b), matrices);
+            }
             Vec3d screenSpaceCenter = Renderer.R2D.getScreenSpaceCoordinate(vv);
             double distance = vv.distanceTo(ppos);
             int a = 255;
@@ -149,19 +147,20 @@ public class Waypoints extends Module {
                 Utils.TickManager.runOnNextRender(() -> {
                     float w = FontRenderers.mono.getStringWidth(waypoint.name);
                     float pad = 2;
-                    Renderer.R2D.fill(Themes.Theme.ATOMIC.getPalette().left(), screenSpaceCenter.x - w / 2 - pad, screenSpaceCenter.y - pad, screenSpaceCenter.x + w / 2 + pad, screenSpaceCenter.y + FontRenderers.mono.getFontHeight() + pad);
+                    Renderer.R2D.fill(Themes.Theme.ATOMIC.getPalette()
+                            .left(), screenSpaceCenter.x - w / 2 - pad, screenSpaceCenter.y - pad, screenSpaceCenter.x + w / 2 + pad, screenSpaceCenter.y + FontRenderers.mono.getFontHeight() + pad);
                     FontRenderers.mono.drawCenteredString(Renderer.R3D.getEmptyMatrixStack(), waypoint.name, screenSpaceCenter.x, screenSpaceCenter.y, 0xFFFFFF);
                 });
             }
         }
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 
     public static record Waypoint(double posX, double posZ, int color, String name) {
+
     }
 }
 

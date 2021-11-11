@@ -9,6 +9,7 @@ import me.zeroX150.atomic.Atomic;
 import net.minecraft.client.util.InputUtil;
 
 public class Keybind {
+
     public final int keycode;
     boolean pressedbefore = false;
 
@@ -17,25 +18,27 @@ public class Keybind {
     }
 
     public boolean isHeld() {
-        if (keycode < 0)
+        if (keycode < 0) {
             return false;
-        return InputUtil.isKeyPressed(Atomic.client.getWindow().getHandle(), keycode)
-                && Atomic.client.currentScreen == null;
+        }
+        return InputUtil.isKeyPressed(Atomic.client.getWindow().getHandle(), keycode) && Atomic.client.currentScreen == null;
     }
 
-    @SuppressWarnings("unused")
-    public boolean isPressed() {
-        if (Atomic.client.currentScreen != null)
+    @SuppressWarnings("unused") public boolean isPressed() {
+        if (Atomic.client.currentScreen != null) {
             return false;
-        if (keycode < 0)
+        }
+        if (keycode < 0) {
             return false;
+        }
         boolean flag1 = InputUtil.isKeyPressed(Atomic.client.getWindow().getHandle(), keycode);
         if (flag1 && !pressedbefore) {
             pressedbefore = true;
             return true;
         }
-        if (!flag1)
+        if (!flag1) {
             pressedbefore = false;
+        }
         return false;
     }
 }

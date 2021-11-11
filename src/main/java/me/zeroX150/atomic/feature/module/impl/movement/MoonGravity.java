@@ -11,39 +11,36 @@ import me.zeroX150.atomic.feature.module.ModuleType;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class MoonGravity extends Module {
+
     public MoonGravity() {
         super("Moon Gravity", "what would you do if you'd be on the moon?", ModuleType.MOVEMENT);
     }
 
-    @Override
-    public void tick() {
-        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
+    @Override public void tick() {
+        if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) {
+            return;
+        }
         Atomic.client.player.addVelocity(0, 0.0568000030517578, 0);
         // yea thats literally it
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

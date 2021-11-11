@@ -15,21 +15,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChatSequence extends Module {
-    public static final List<String> messages = new ArrayList<>();
-    public static long delay = 30;
-    public static volatile boolean shouldRun = false;
+
+    public static final    List<String> messages  = new ArrayList<>();
+    public static          long         delay     = 30;
+    public static volatile boolean      shouldRun = false;
     Thread runner = null;
 
     public ChatSequence() {
         super("Chat Sequence", "Follows a script and sends every message in chat", ModuleType.MISC);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
         if (!shouldRun) {
             this.setEnabled(false);
             Notification.create(6000, "ChatSequence warning", "Please only use this module via the .chatSequence command!");
@@ -42,9 +41,12 @@ public class ChatSequence extends Module {
         }
         runner = new Thread(() -> {
             for (String s : messages) {
-                if (!shouldRun) break;
-                if (Atomic.client.player == null || Atomic.client.world == null || Atomic.client.getNetworkHandler() == null)
+                if (!shouldRun) {
                     break;
+                }
+                if (Atomic.client.player == null || Atomic.client.world == null || Atomic.client.getNetworkHandler() == null) {
+                    break;
+                }
                 Atomic.client.player.sendChatMessage(s);
                 try {
                     Thread.sleep(delay);
@@ -59,24 +61,20 @@ public class ChatSequence extends Module {
         runner.start();
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
         shouldRun = false;
         Notification.create(5000, "ChatSequence", "Waiting for sender thread cleanup...");
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

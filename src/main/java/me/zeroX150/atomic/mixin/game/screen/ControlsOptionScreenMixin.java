@@ -11,15 +11,11 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(ControlsOptionsScreen.class)
-public class ControlsOptionScreenMixin {
+@Mixin(ControlsOptionsScreen.class) public class ControlsOptionScreenMixin {
 
-    @Redirect(method = "init", at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/client/gui/screen/option/ControlsOptionsScreen;addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;",
-            ordinal = 1
-    ))
-    private Element removeAutoJump(ControlsOptionsScreen instance, Element element) {
+    @Redirect(method = "init",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/option/ControlsOptionsScreen;addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;",
+                    ordinal = 1)) private Element atomic_removeAutoJump(ControlsOptionsScreen instance, Element element) {
         return null;
     }
 

@@ -1,7 +1,7 @@
 package me.zeroX150.atomic.helper.font;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import me.zeroX150.atomic.helper.render.Renderer;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.render.BufferBuilder;
 import net.minecraft.client.render.BufferRenderer;
 import net.minecraft.client.render.Tessellator;
@@ -9,20 +9,22 @@ import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 
-import java.awt.Color;
 import java.awt.Font;
-import java.util.Locale;
+import java.io.InputStream;
 import java.util.Objects;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_LINEAR;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
+import static org.lwjgl.opengl.GL11.GL_TEXTURE_MAG_FILTER;
 
 public class GlyphPageFontRenderer {
 
     /**
-     * Array of RGB triplets defining the 16 standard chat colors followed by 16
-     * darker version of the same colors for drop shadows.
+     * Array of RGB triplets defining the 16 standard chat colors followed by 16 darker version of the same colors for drop shadows.
      */
-    private final int[] colorCode = new int[32];
+    private final int[]     colorCode = new int[32];
     private final GlyphPage regularGlyphPage;
     private final GlyphPage boldGlyphPage;
     private final GlyphPage italicGlyphPage;
@@ -30,31 +32,30 @@ public class GlyphPageFontRenderer {
     /**
      * Current X coordinate at which to draw the next character.
      */
-    private float posX;
+    private       float     posX;
     /**
      * Current Y coordinate at which to draw the next character.
      */
-    private float posY;
+    private       float     posY;
     /**
      * Set if the "l" style (bold) is active in currently rendering string
      */
-    private boolean boldStyle;
+    private       boolean   boldStyle;
     /**
      * Set if the "o" style (italic) is active in currently rendering string
      */
-    private boolean italicStyle;
+    private       boolean   italicStyle;
     /**
      * Set if the "n" style (underlined) is active in currently rendering string
      */
-    private boolean underlineStyle;
+    private       boolean   underlineStyle;
     /**
      * Set if the "m" style (strikethrough) is active in currently rendering string
      */
-    private boolean strikethroughStyle;
+    private       boolean   strikethroughStyle;
 
 
-    public GlyphPageFontRenderer(GlyphPage regularGlyphPage, GlyphPage boldGlyphPage, GlyphPage italicGlyphPage,
-                                 GlyphPage boldItalicGlyphPage) {
+    public GlyphPageFontRenderer(GlyphPage regularGlyphPage, GlyphPage boldGlyphPage, GlyphPage italicGlyphPage, GlyphPage boldItalicGlyphPage) {
         this.regularGlyphPage = regularGlyphPage;
         this.boldGlyphPage = boldGlyphPage;
         this.italicGlyphPage = italicGlyphPage;
@@ -80,8 +81,7 @@ public class GlyphPageFontRenderer {
         }
     }
 
-    public static GlyphPageFontRenderer create(String fontName, int size, boolean bold, boolean italic,
-                                               boolean boldItalic) {
+    public static GlyphPageFontRenderer create(String fontName, int size, boolean bold, boolean italic, boolean boldItalic) {
         char[] chars = new char[256];
 
         for (int i = 0; i < chars.length; i++) {
@@ -123,8 +123,7 @@ public class GlyphPageFontRenderer {
         return new GlyphPageFontRenderer(regularPage, boldPage, italicPage, boldItalicPage);
     }
 
-    public static GlyphPageFontRenderer createFromID(String id, int size, boolean bold, boolean italic,
-                                                     boolean boldItalic) {
+    public static GlyphPageFontRenderer createFromStream(InputStream inp, int size, boolean bold, boolean italic, boolean boldItalic) {
         char[] chars = new char[256];
 
         for (int i = 0; i < chars.length; i++) {
@@ -134,8 +133,7 @@ public class GlyphPageFontRenderer {
         Font font = null;
 
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(GlyphPageFontRenderer.class.getClassLoader().getResourceAsStream(id)))
-                    .deriveFont(Font.PLAIN, size);
+            font = Font.createFont(Font.TRUETYPE_FONT, inp).deriveFont(Font.PLAIN, size);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -152,30 +150,78 @@ public class GlyphPageFontRenderer {
 
         try {
             if (bold) {
-                boldPage = new GlyphPage(
-                        Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(GlyphPageFontRenderer.class.getClassLoader().getResourceAsStream(id)))
-                                .deriveFont(Font.BOLD, size),
-                        true, true);
+                boldPage = new GlyphPage(Font.createFont(Font.TRUETYPE_FONT, inp).deriveFont(Font.BOLD, size), true, true);
 
                 boldPage.generateGlyphPage(chars);
                 boldPage.setupTexture();
             }
 
             if (italic) {
-                italicPage = new GlyphPage(
-                        Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(GlyphPageFontRenderer.class.getClassLoader().getResourceAsStream(id)))
-                                .deriveFont(Font.ITALIC, size),
-                        true, true);
+                italicPage = new GlyphPage(Font.createFont(Font.TRUETYPE_FONT, inp).deriveFont(Font.ITALIC, size), true, true);
 
                 italicPage.generateGlyphPage(chars);
                 italicPage.setupTexture();
             }
 
             if (boldItalic) {
-                boldItalicPage = new GlyphPage(
-                        Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(GlyphPageFontRenderer.class.getClassLoader().getResourceAsStream(id)))
-                                .deriveFont(Font.BOLD | Font.ITALIC, size),
-                        true, true);
+                boldItalicPage = new GlyphPage(Font.createFont(Font.TRUETYPE_FONT, inp).deriveFont(Font.BOLD | Font.ITALIC, size), true, true);
+
+                boldItalicPage.generateGlyphPage(chars);
+                boldItalicPage.setupTexture();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return new GlyphPageFontRenderer(regularPage, boldPage, italicPage, boldItalicPage);
+    }
+
+    public static GlyphPageFontRenderer createFromID(String id, int size, boolean bold, boolean italic, boolean boldItalic) {
+        char[] chars = new char[256];
+
+        for (int i = 0; i < chars.length; i++) {
+            chars[i] = (char) i;
+        }
+
+        Font font = null;
+
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(GlyphPageFontRenderer.class.getClassLoader().getResourceAsStream(id))).deriveFont(Font.PLAIN, size);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        GlyphPage regularPage;
+
+        regularPage = new GlyphPage(font, true, true);
+        regularPage.generateGlyphPage(chars);
+        regularPage.setupTexture();
+
+        GlyphPage boldPage = regularPage;
+        GlyphPage italicPage = regularPage;
+        GlyphPage boldItalicPage = regularPage;
+
+        try {
+            if (bold) {
+                boldPage = new GlyphPage(Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(GlyphPageFontRenderer.class.getClassLoader().getResourceAsStream(id)))
+                        .deriveFont(Font.BOLD, size), true, true);
+
+                boldPage.generateGlyphPage(chars);
+                boldPage.setupTexture();
+            }
+
+            if (italic) {
+                italicPage = new GlyphPage(Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(GlyphPageFontRenderer.class.getClassLoader().getResourceAsStream(id)))
+                        .deriveFont(Font.ITALIC, size), true, true);
+
+                italicPage.generateGlyphPage(chars);
+                italicPage.setupTexture();
+            }
+
+            if (boldItalic) {
+                boldItalicPage = new GlyphPage(Font.createFont(Font.TRUETYPE_FONT, Objects.requireNonNull(GlyphPageFontRenderer.class.getClassLoader().getResourceAsStream(id)))
+                        .deriveFont(Font.BOLD | Font.ITALIC, size), true, true);
 
                 boldItalicPage.generateGlyphPage(chars);
                 boldItalicPage.setupTexture();
@@ -230,8 +276,7 @@ public class GlyphPageFontRenderer {
     }
 
     /**
-     * Render single line string by setting GL color, current (posX,posY), and
-     * calling renderStringAtPos()
+     * Render single line string by setting GL color, current (posX,posY), and calling renderStringAtPos()
      */
     private int renderString(MatrixStack matrices, String text, float x, float y, int color, boolean dropShadow) {
         if (text == null) {
@@ -243,9 +288,7 @@ public class GlyphPageFontRenderer {
             }
 
             if (dropShadow) {
-                Color orig = new Color(color);
-                color = Renderer.Util.modify(orig, orig.getRed() / 255 * 50, orig.getGreen() / 255 * 50, orig.getBlue() / 255 * 50, 100 * (orig.getAlpha() / 255)).getRGB();
-                //color = (color & 0xfcfcfc) >> 2 | color & 0xff000000;
+                color = 0xFF323232;
             }
             this.posX = x * 2.0f;
             this.posY = y * 2.0f;
@@ -268,9 +311,9 @@ public class GlyphPageFontRenderer {
 
         matrices.scale(0.5F, 0.5F, 0.5F);
 
-        GlStateManager._enableBlend();
-        GlStateManager._blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        GlStateManager._enableTexture();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        RenderSystem.enableTexture();
 
         glyphPage.bindTexture();
 
@@ -279,14 +322,11 @@ public class GlyphPageFontRenderer {
         for (int i = 0; i < text.length(); ++i) {
             char c0 = text.charAt(i);
 
-            if (c0 == 167 && i + 1 < text.length()) {
-                int i1 = "0123456789abcdefklmnor".indexOf(text.toLowerCase(Locale.ENGLISH).charAt(i + 1));
+            if (c0 == '§' && i + 1 < text.length()) {
+                int i1 = "0123456789abcdefklmnor".indexOf(text.toLowerCase().charAt(i + 1));
 
                 if (i1 < 16) {
-                    this.boldStyle = false;
-                    this.strikethroughStyle = false;
-                    this.underlineStyle = false;
-                    this.italicStyle = false;
+                    resetStyles();
 
                     if (i1 < 0) {
                         i1 = 15;
@@ -309,11 +349,8 @@ public class GlyphPageFontRenderer {
                     this.underlineStyle = true;
                 } else if (i1 == 20) {
                     this.italicStyle = true;
-                } else {
-                    this.boldStyle = false;
-                    this.strikethroughStyle = false;
-                    this.underlineStyle = false;
-                    this.italicStyle = false;
+                } else if (i1 == 21) {
+                    resetStyles();
                     alpha = (float) (color >> 24 & 255) / 255.0F;
                     r = (float) (color >> 16 & 255) / 255.0F;
                     g = (float) (color >> 8 & 255) / 255.0F;
@@ -322,54 +359,38 @@ public class GlyphPageFontRenderer {
 
                 ++i;
             } else {
-                glyphPage = getCurrentGlyphPage();
-
-                glyphPage.bindTexture();
-
                 float f = glyphPage.drawChar(matrices, c0, posX, posY, r, b, g, alpha);
 
                 doDraw(f, glyphPage);
             }
         }
 
-        glyphPage.unbindTexture();
+        //glyphPage.unbindTexture();
         matrices.pop();
 
     }
 
     private void doDraw(float f, GlyphPage glyphPage) {
+        BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
+        GlStateManager._disableTexture();
         if (this.strikethroughStyle) {
-            BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-            GlStateManager._disableTexture();
             bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
-            bufferBuilder
-                    .vertex(this.posX, this.posY + (float) (glyphPage.getMaxFontHeight() / 2), 0.0D)
-                    .next();
-            bufferBuilder.vertex(this.posX + f,
-                    this.posY + (float) (glyphPage.getMaxFontHeight() / 2), 0.0D).next();
-            bufferBuilder.vertex(this.posX + f,
-                    this.posY + (float) (glyphPage.getMaxFontHeight() / 2) - 1.0F, 0.0D).next();
-            bufferBuilder.vertex(this.posX,
-                    this.posY + (float) (glyphPage.getMaxFontHeight() / 2) - 1.0F, 0.0D).next();
+            bufferBuilder.vertex(this.posX, this.posY + (float) (glyphPage.getMaxFontHeight() / 2), 0.0D).next();
+            bufferBuilder.vertex(this.posX + f, this.posY + (float) (glyphPage.getMaxFontHeight() / 2), 0.0D).next();
+            bufferBuilder.vertex(this.posX + f, this.posY + (float) (glyphPage.getMaxFontHeight() / 2) - 1.0F, 0.0D).next();
+            bufferBuilder.vertex(this.posX, this.posY + (float) (glyphPage.getMaxFontHeight() / 2) - 1.0F, 0.0D).next();
             bufferBuilder.end();
             BufferRenderer.draw(bufferBuilder);
             GlStateManager._enableTexture();
         }
 
         if (this.underlineStyle) {
-            BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-            GlStateManager._disableTexture();
             bufferBuilder.begin(VertexFormat.DrawMode.QUADS, VertexFormats.POSITION);
             int l = this.underlineStyle ? -1 : 0;
-            bufferBuilder.vertex(this.posX + (float) l,
-                    this.posY + (float) glyphPage.getMaxFontHeight(), 0.0D).next();
-            bufferBuilder
-                    .vertex(this.posX + f, this.posY + (float) glyphPage.getMaxFontHeight(), 0.0D)
-                    .next();
-            bufferBuilder.vertex(this.posX + f,
-                    this.posY + (float) glyphPage.getMaxFontHeight() - 1.0F, 0.0D).next();
-            bufferBuilder.vertex(this.posX + (float) l,
-                    this.posY + (float) glyphPage.getMaxFontHeight() - 1.0F, 0.0D).next();
+            bufferBuilder.vertex(this.posX + (float) l, this.posY + (float) glyphPage.getMaxFontHeight(), 0.0D).next();
+            bufferBuilder.vertex(this.posX + f, this.posY + (float) glyphPage.getMaxFontHeight(), 0.0D).next();
+            bufferBuilder.vertex(this.posX + f, this.posY + (float) glyphPage.getMaxFontHeight() - 1.0F, 0.0D).next();
+            bufferBuilder.vertex(this.posX + (float) l, this.posY + (float) glyphPage.getMaxFontHeight() - 1.0F, 0.0D).next();
             bufferBuilder.end();
             BufferRenderer.draw(bufferBuilder);
             GlStateManager._enableTexture();
@@ -379,19 +400,19 @@ public class GlyphPageFontRenderer {
     }
 
     private GlyphPage getCurrentGlyphPage() {
-        if (boldStyle && italicStyle)
+        if (boldStyle && italicStyle) {
             return boldItalicGlyphPage;
-        else if (boldStyle)
+        } else if (boldStyle) {
             return boldGlyphPage;
-        else if (italicStyle)
+        } else if (italicStyle) {
             return italicGlyphPage;
-        else
+        } else {
             return regularGlyphPage;
+        }
     }
 
     /**
-     * Reset all style flag fields in the class to false; called at the start of
-     * string rendering
+     * Reset all style flag fields in the class to false; called at the start of string rendering
      */
     private void resetStyles() {
         this.boldStyle = false;
@@ -419,9 +440,9 @@ public class GlyphPageFontRenderer {
         for (int i = 0; i < size; i++) {
             char character = text.charAt(i);
 
-            if (character == '�')
+            if (character == '§') {
                 on = true;
-            else if (on && character >= '0' && character <= 'r') {
+            } else if (on && character >= '0' && character <= 'r') {
                 int colorIndex = "0123456789abcdefklmnor".indexOf(character);
                 if (colorIndex < 16) {
                     boldStyle = false;
@@ -434,17 +455,18 @@ public class GlyphPageFontRenderer {
                     boldStyle = false;
                     italicStyle = false;
                 }
-                i++;
                 on = false;
             } else {
-                if (on)
-                    i--;
-
+                /*if (on) {
+                    i--; // include the §, because color code is invalid
+                }*/
+                on = false;
                 character = text.charAt(i);
 
                 currentPage = getCurrentGlyphPage();
 
                 width += currentPage.getWidth(character) - 8;
+                //i++;
             }
         }
 
@@ -475,9 +497,9 @@ public class GlyphPageFontRenderer {
         for (int i = j; i >= 0 && i < text.length() && i < maxWidth; i += k) {
             char character = text.charAt(i);
 
-            if (character == '�')
+            if (character == '§') {
                 on = true;
-            else if (on && character >= '0' && character <= 'r') {
+            } else if (on && character >= '0' && character <= 'r') {
                 int colorIndex = "0123456789abcdefklmnor".indexOf(character);
                 if (colorIndex < 16) {
                     boldStyle = false;
@@ -490,12 +512,11 @@ public class GlyphPageFontRenderer {
                     boldStyle = false;
                     italicStyle = false;
                 }
-                i++;
                 on = false;
             } else {
-                if (on)
-                    i--;
-
+                if (on) {
+                    i--; // include the §, because color code is invalid
+                }
                 character = text.charAt(i);
 
                 currentPage = getCurrentGlyphPage();

@@ -28,33 +28,33 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class Tracers extends Module {
-    final BooleanValue fancy = (BooleanValue) this.config.create("Fancy tracers", false).description("Whether or not to show fancy tracers");
+
+    final BooleanValue fancy    = (BooleanValue) this.config.create("Fancy tracers", false).description("Whether or not to show fancy tracers");
     final BooleanValue entities = (BooleanValue) this.config.create("Show Entities", false).description("Whether or not to show entities");
-    final BooleanValue players = (BooleanValue) this.config.create("Show Players", true).description("Whether or not to show players");
+    final BooleanValue players  = (BooleanValue) this.config.create("Show Players", true).description("Whether or not to show players");
 
     public Tracers() {
         super("Tracers", "shows where shit is", ModuleType.RENDER);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
-        if (Atomic.client.world == null || Atomic.client.player == null) return null;
-        return StreamSupport.stream(Atomic.client.world.getEntities().spliterator(), false).filter(entity -> entity.squaredDistanceTo(Atomic.client.player) < 4096 && entity.getUuid() != Atomic.client.player.getUuid() && isEntityApplicable(entity)).count() + "";
+    @Override public String getContext() {
+        if (Atomic.client.world == null || Atomic.client.player == null) {
+            return null;
+        }
+        return StreamSupport.stream(Atomic.client.world.getEntities().spliterator(), false)
+                .filter(entity -> entity.squaredDistanceTo(Atomic.client.player) < 4096 && entity.getUuid() != Atomic.client.player.getUuid() && isEntityApplicable(entity)).count() + "";
     }
 
     Vec2f getPY(Vec3d target1) {
@@ -67,26 +67,40 @@ public class Tracers extends Module {
         return new Vec2f(pitch, yaw);
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
-        if (Atomic.client.world == null || Atomic.client.player == null) return;
-        for (Entity entity : StreamSupport.stream(Atomic.client.world.getEntities().spliterator(), false).sorted(
-                Comparator.comparingDouble(value -> -value.distanceTo(Atomic.client.player))).collect(Collectors.toList())) {
-            if (entity.squaredDistanceTo(Atomic.client.player) > 4096) continue;
+    @Override public void onWorldRender(MatrixStack matrices) {
+        if (Atomic.client.world == null || Atomic.client.player == null) {
+            return;
+        }
+        for (Entity entity : StreamSupport.stream(Atomic.client.world.getEntities().spliterator(), false).sorted(Comparator.comparingDouble(value -> -value.distanceTo(Atomic.client.player)))
+                .collect(Collectors.toList())) {
+            if (entity.squaredDistanceTo(Atomic.client.player) > 4096) {
+                continue;
+            }
             double dc = entity.squaredDistanceTo(Atomic.client.player) / 4096;
             dc = Math.abs(1 - dc);
-            if (entity.getUuid().equals(Atomic.client.player.getUuid())) continue;
+            if (entity.getUuid().equals(Atomic.client.player.getUuid())) {
+                continue;
+            }
             Color c;
             if (entity instanceof PlayerEntity player) {
-                if (!Friends.isAFriend(player)) c = Color.RED;
-                else c = Color.GREEN;
-            } else if (entity instanceof ItemEntity) c = Color.CYAN;
-            else if (entity instanceof EndermanEntity enderman) {
+                if (!Friends.isAFriend(player)) {
+                    c = Color.RED;
+                } else {
+                    c = Color.GREEN;
+                }
+            } else if (entity instanceof ItemEntity) {
+                c = Color.CYAN;
+            } else if (entity instanceof EndermanEntity enderman) {
                 if (enderman.isProvoked()) {
                     c = Color.YELLOW;
-                } else c = Color.GREEN;
-            } else if (entity instanceof HostileEntity) c = Color.YELLOW;
-            else c = Color.GREEN;
+                } else {
+                    c = Color.GREEN;
+                }
+            } else if (entity instanceof HostileEntity) {
+                c = Color.YELLOW;
+            } else {
+                c = Color.GREEN;
+            }
             c = Renderer.Util.modify(c, -1, -1, -1, (int) Math.floor(dc * 255));
             if (isEntityApplicable(entity)) {
                 if (fancy.getValue()) {
@@ -103,8 +117,9 @@ public class Tracers extends Module {
                     Vec3d vv = Renderer.R3D.getCrosshairVector().add(-sin, -sin1, cos);
                     Vec3d vv2 = Renderer.R3D.getCrosshairVector().add(-sin / 4, -sin1 / 4, cos / 4);
                     Renderer.R3D.line(vv2, vv, c, matrices);
-                } else
+                } else {
                     Renderer.R3D.line(Renderer.R3D.getCrosshairVector(), entity.getPos().add(0, entity.getHeight() / 2, 0), c, matrices);
+                }
             }
         }
     }
@@ -113,8 +128,7 @@ public class Tracers extends Module {
         return (v instanceof PlayerEntity && players.getValue()) || entities.getValue();
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

@@ -20,13 +20,16 @@ import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
 import net.minecraft.util.math.Vec3d;
 
 public class Criticals extends Module {
+
     final MultiValue mode = (MultiValue) this.config.create("Mode", "packet", "packet", "tphop").description("The mode");
 
     public Criticals() {
         super("Criticals", "dont enable this on hypixel", ModuleType.COMBAT);
         Events.registerEventHandler(EventType.PACKET_SEND, event1 -> {
             PacketEvent event = (PacketEvent) event1;
-            if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) return;
+            if (Atomic.client.player == null || Atomic.client.getNetworkHandler() == null) {
+                return;
+            }
             if (event.getPacket() instanceof PlayerInteractEntityC2SPacket && this.isEnabled()) {
                 Vec3d ppos = Atomic.client.player.getPos();
                 ModuleRegistry.getByClass(NoFall.class).enabled = false; // disable nofall modifying packets when we send these
@@ -54,33 +57,27 @@ public class Criticals extends Module {
 
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

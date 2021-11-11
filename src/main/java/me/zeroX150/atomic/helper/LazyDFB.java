@@ -19,8 +19,7 @@ public class LazyDFB extends DataFixerBuilder {
         super(dataVersion);
     }
 
-    @Override
-    public DataFixer build(Executor executor) {
+    @Override public DataFixer build(Executor executor) {
         return super.build(NO_OP_EXECUTOR);
     }
 }

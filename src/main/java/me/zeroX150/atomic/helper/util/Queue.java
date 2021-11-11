@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Queue<T> {
+
     final List<T> queue = new ArrayList<>();
 
     public Queue(List<T> elements) {
@@ -24,7 +25,9 @@ public class Queue<T> {
     }
 
     public T poll() {
-        if (queue.size() == 0) return null;
+        if (queue.size() == 0) {
+            return null;
+        }
         T element = queue.get(0);
         queue.remove(0);
         return element;

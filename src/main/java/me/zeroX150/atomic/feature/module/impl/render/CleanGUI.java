@@ -11,6 +11,7 @@ import me.zeroX150.atomic.feature.module.config.MultiValue;
 import net.minecraft.client.util.math.MatrixStack;
 
 public class CleanGUI extends Module {
+
     public static MultiValue mode;
 
     public CleanGUI() {
@@ -18,33 +19,27 @@ public class CleanGUI extends Module {
         mode = (MultiValue) this.config.create("Mode", "Rgb 1", "Rgb 1", "Rgb 2", "Slightly dim", "Transparent").description("How to render the background");
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

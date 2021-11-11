@@ -19,12 +19,15 @@ import net.minecraft.util.registry.Registry;
 import java.util.List;
 
 public class XRAY extends Module {
+
     public static final List<Block> blocks = Lists.newArrayList();
 
     public XRAY() {
         super("XRAY", "\"yea hold on im going mining rq\"", ModuleType.WORLD);
         Registry.BLOCK.forEach(block -> {
-            if (blockApplicable(block)) blocks.add(block);
+            if (blockApplicable(block)) {
+                blocks.add(block);
+            }
         });
     }
 
@@ -34,33 +37,27 @@ public class XRAY extends Module {
         return c1 || c2;
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
         Atomic.client.worldRenderer.reload();
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
         Atomic.client.worldRenderer.reload();
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

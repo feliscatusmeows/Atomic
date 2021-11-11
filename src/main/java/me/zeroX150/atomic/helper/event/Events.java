@@ -14,10 +14,13 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class Events {
+
     static final Map<EventType, List<Consumer<Event>>> HANDLERS = new HashMap<>();
 
     public static void registerEventHandler(EventType event, Consumer<Event> handler) {
-        if (!HANDLERS.containsKey(event)) HANDLERS.put(event, new ArrayList<>());
+        if (!HANDLERS.containsKey(event)) {
+            HANDLERS.put(event, new ArrayList<>());
+        }
         HANDLERS.get(event).add(handler);
     }
 

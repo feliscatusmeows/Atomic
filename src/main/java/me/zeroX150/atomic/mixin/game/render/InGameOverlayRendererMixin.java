@@ -18,17 +18,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Objects;
 
-@Mixin(InGameOverlayRenderer.class)
-public class InGameOverlayRendererMixin {
+@Mixin(InGameOverlayRenderer.class) public class InGameOverlayRendererMixin {
+
     private static final Module noRender = ModuleRegistry.getByClass(NoRender.class);
 
-    @Inject(method = "renderUnderwaterOverlay", at = @At("HEAD"), cancellable = true)
-    private static void cancelRenderWater(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
-        if (Objects.requireNonNull(noRender).isEnabled() && NoRender.waterOverlay.getValue()) ci.cancel();
+    @Inject(method = "renderUnderwaterOverlay", at = @At("HEAD"), cancellable = true) private static void atomic_cancelWaterOverlay(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
+        if (Objects.requireNonNull(noRender).isEnabled() && NoRender.waterOverlay.getValue()) {
+            ci.cancel();
+        }
     }
 
-    @Inject(method = "renderFireOverlay", at = @At("HEAD"), cancellable = true)
-    private static void cancelRenderFireOverlay(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
-        if (Objects.requireNonNull(noRender).isEnabled() && NoRender.fire.getValue()) ci.cancel();
+    @Inject(method = "renderFireOverlay", at = @At("HEAD"), cancellable = true) private static void atomic_cancelFireOverlay(MinecraftClient client, MatrixStack matrices, CallbackInfo ci) {
+        if (Objects.requireNonNull(noRender).isEnabled() && NoRender.fire.getValue()) {
+            ci.cancel();
+        }
     }
 }

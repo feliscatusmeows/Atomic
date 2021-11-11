@@ -16,13 +16,15 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 
 public class EdgeSneak extends Module {
+
     public EdgeSneak() {
         super("Edge Sneak", "Sneaks automatically at the edges of blocks", ModuleType.MOVEMENT);
     }
 
-    @Override
-    public void tick() {
-        if (Atomic.client.player == null || Atomic.client.world == null) return;
+    @Override public void tick() {
+        if (Atomic.client.player == null || Atomic.client.world == null) {
+            return;
+        }
         Box bounding = Atomic.client.player.getBoundingBox();
         bounding = bounding.offset(0, -1, 0);
         bounding = bounding.expand(0.3);
@@ -41,31 +43,28 @@ public class EdgeSneak extends Module {
         }
         //STL.notifyUser(sneak+"");
         boolean previousState = InputUtil.isKeyPressed(Atomic.client.getWindow().getHandle(), Atomic.client.options.keySneak.getDefaultKey().getCode());
-        if (Atomic.client.player.isOnGround()) Atomic.client.options.keySneak.setPressed(sneak || previousState);
+        if (Atomic.client.player.isOnGround()) {
+            Atomic.client.options.keySneak.setPressed(sneak || previousState);
+        }
     }
 
-    @Override
-    public void enable() {
-
-    }
-
-    @Override
-    public void disable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public void disable() {
+
+    }
+
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

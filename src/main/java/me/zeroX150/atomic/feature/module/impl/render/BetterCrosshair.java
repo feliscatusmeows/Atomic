@@ -17,11 +17,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import java.awt.Color;
 
 public class BetterCrosshair extends Module {
-    static SliderValue inset;
-    static SliderValue length;
-    static ColorValue color;
+
+    static SliderValue  inset;
+    static SliderValue  length;
+    static ColorValue   color;
     static BooleanValue gradient;
-    static ColorValue gradientEnd;
+    static ColorValue   gradientEnd;
     static BooleanValue transparentEnd, transparentStart;
 
     public BetterCrosshair() {
@@ -59,33 +60,27 @@ public class BetterCrosshair extends Module {
         }
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
 
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }

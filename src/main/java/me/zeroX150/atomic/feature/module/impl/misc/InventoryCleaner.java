@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class InventoryCleaner extends Module {
+
     final DynamicValue<String> saved = this.config.create("_", "");
 
     public InventoryCleaner() {
@@ -29,8 +30,7 @@ public class InventoryCleaner extends Module {
         saved.showOnlyIf(() -> false);
     }
 
-    @Override
-    public void tick() {
+    @Override public void tick() {
         for (int i = 0; i < 36; i++) {
             ItemStack s = Objects.requireNonNull(Atomic.client.player).getInventory().getStack(i);
             if (getItems().stream().anyMatch(item -> item == s.getItem())) {
@@ -46,7 +46,9 @@ public class InventoryCleaner extends Module {
         String[] v = s.split(";");
         for (String s1 : v) {
             Item a = Registry.ITEM.get(new Identifier(s1));
-            if (a == Items.AIR) continue;
+            if (a == Items.AIR) {
+                continue;
+            }
             r.add(a);
         }
         return r;
@@ -67,28 +69,23 @@ public class InventoryCleaner extends Module {
         saved.setValue(String.join(";", a));
     }
 
-    @Override
-    public void enable() {
+    @Override public void enable() {
 
     }
 
-    @Override
-    public void disable() {
+    @Override public void disable() {
 
     }
 
-    @Override
-    public String getContext() {
+    @Override public String getContext() {
         return null;
     }
 
-    @Override
-    public void onWorldRender(MatrixStack matrices) {
+    @Override public void onWorldRender(MatrixStack matrices) {
 
     }
 
-    @Override
-    public void onHudRender() {
+    @Override public void onHudRender() {
 
     }
 }
