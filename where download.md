@@ -1,6 +1,6 @@
 # where download?
 
-https://github.com/cornos/Atomic/raw/master/builds/latest.jar
+in the builds folder
 
 dont ask for it again you retards
 
