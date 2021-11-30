@@ -12,7 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 public class NoPush extends Module {
 
     public NoPush() {
-        super("No Push", "be a rock", ModuleType.MOVEMENT);
+        super("NoPush", "be a rock", ModuleType.MOVEMENT);
     }
 
     @Override public void tick() {

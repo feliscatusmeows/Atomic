@@ -23,7 +23,7 @@ public class AutoWalk extends Module {
     Direction look     = null;
 
     public AutoWalk() {
-        super("Auto Walk", "Walks automatically for you, in one direction", ModuleType.MOVEMENT);
+        super("AutoWalk", "Walks automatically for you, in one direction", ModuleType.MOVEMENT);
         autoJump = (BooleanValue) this.config.create("Auto jump", true).description("Automatically jumps while module is active");
     }
 

@@ -38,19 +38,19 @@ import java.util.List;
 
 public class Hud extends Module {
 
-    public final SliderValue  smoothSelectTransition = config.create("Selection smooth", 10, 1, 30, 1);
-    public final BooleanValue betterHotbar           = (BooleanValue) config.create("Better hotbar", true).description("Makes the hotbar sexier");
-    final        BooleanValue fps                    = (BooleanValue) config.create("FPS", true).description("Whether or not to show FPS");
-    final        BooleanValue tps                    = (BooleanValue) config.create("TPS", true).description("Whether or not to show TPS");
-    final        BooleanValue coords                 = (BooleanValue) config.create("Coordinates", true).description("Whether or not to show coordinates");
-    final        BooleanValue time                   = (BooleanValue) config.create("Time", true).description("Whether or not to show the current IRL time");
-    final        BooleanValue ping                   = (BooleanValue) config.create("Ping", true).description("Whether or not to show your ping");
-    final        BooleanValue bps                    = (BooleanValue) config.create("Speed", true).description("Whether or not to show your speed in blocks per second");
-    final        BooleanValue modules                = (BooleanValue) config.create("Modules", true).description("Whether or not to show the enabled modules");
-    final        DateFormat   df                     = new SimpleDateFormat("h:mm aa");
-    final        DateFormat   minSec                 = new SimpleDateFormat("mm:ss");
+    public static double       currentTps             = 0;
+    public final  SliderValue  smoothSelectTransition = config.create("Selection smooth", 10, 1, 30, 1);
+    public final  BooleanValue betterHotbar           = (BooleanValue) config.create("Better hotbar", true).description("Makes the hotbar sexier");
+    final         BooleanValue fps                    = (BooleanValue) config.create("FPS", true).description("Whether or not to show FPS");
+    final         BooleanValue tps                    = (BooleanValue) config.create("TPS", true).description("Whether or not to show TPS");
+    final         BooleanValue coords                 = (BooleanValue) config.create("Coordinates", true).description("Whether or not to show coordinates");
+    final         BooleanValue time                   = (BooleanValue) config.create("Time", true).description("Whether or not to show the current IRL time");
+    final         BooleanValue ping                   = (BooleanValue) config.create("Ping", true).description("Whether or not to show your ping");
+    final         BooleanValue bps                    = (BooleanValue) config.create("Speed", true).description("Whether or not to show your speed in blocks per second");
+    final         BooleanValue modules                = (BooleanValue) config.create("Modules", true).description("Whether or not to show the enabled modules");
+    final         DateFormat   df                     = new SimpleDateFormat("h:mm aa");
+    final         DateFormat   minSec                 = new SimpleDateFormat("mm:ss");
     long         lastTimePacketReceived;
-    double       currentTps          = 0;
     double       rNoConnectionPosY   = -10d;
     Notification serverNotResponding = null;
 

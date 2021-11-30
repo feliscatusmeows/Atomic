@@ -44,7 +44,7 @@ public class TabGUI extends Module {
     Map<Module, Double[]>     bruh                  = new HashMap<>();
 
     public TabGUI() {
-        super("Tab GUI", "Renders a small module manager top left", ModuleType.RENDER);
+        super("TabGUI", "Renders a small module manager top left", ModuleType.RENDER);
         Events.registerEventHandler(EventType.KEYBOARD, event -> {
             if (!this.isEnabled()) {
                 return;

@@ -14,7 +14,7 @@ import net.minecraft.util.math.Box;
 public class EdgeJump extends Module {
 
     public EdgeJump() {
-        super("Edge Jump", "Jumps automatically at the edges of blocks", ModuleType.MOVEMENT);
+        super("EdgeJump", "Jumps automatically at the edges of blocks", ModuleType.MOVEMENT);
     }
 
     @Override public void tick() {
@@ -28,7 +28,7 @@ public class EdgeJump extends Module {
         Box bounding = Atomic.client.player.getBoundingBox();
         bounding = bounding.offset(0, -0.5, 0);
         bounding = bounding.expand(-0.001, 0, -0.001);
-        if (Atomic.client.world.getBlockCollisions(Atomic.client.player, bounding).findAny().isEmpty()) {
+        if (!Atomic.client.world.getBlockCollisions(Atomic.client.player, bounding).iterator().hasNext()) {
             Atomic.client.player.jump();
         }
     }

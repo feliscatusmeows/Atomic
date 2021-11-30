@@ -9,7 +9,6 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.feature.gui.clickgui.ClickGUIScreen;
-import me.zeroX150.atomic.feature.gui.overlay.WelcomeOverlay;
 import me.zeroX150.atomic.feature.gui.particles.FlowParticleManager;
 import me.zeroX150.atomic.feature.module.impl.client.ClientConfig;
 import me.zeroX150.atomic.helper.font.FontRenderers;
@@ -35,8 +34,7 @@ import java.util.Objects;
 
 public class HomeScreen extends Screen {
 
-    static boolean             shownWelcome = false;
-    final  FlowParticleManager pm           = new FlowParticleManager(100);
+    final FlowParticleManager pm = new FlowParticleManager(100);
     String  t;
     boolean isMeteorLoaded = false;
 
@@ -52,10 +50,6 @@ public class HomeScreen extends Screen {
     }
 
     @Override protected void init() {
-        if (!shownWelcome) {
-            shownWelcome = true;
-            Atomic.client.setOverlay(new WelcomeOverlay());
-        }
         addDrawableChild(createCentered("Singleplayer", height / 2 - 20 - 20 - 10, button -> Atomic.client.setScreen(new SelectWorldScreen(this))));
         addDrawableChild(createCentered("Multiplayer", height / 2 - 25, button -> Atomic.client.setScreen(new MultiplayerScreen(this))));
         addDrawableChild(createCentered("Realms", height / 2, button -> Atomic.client.setScreen(new RealmsMainScreen(this))));
@@ -94,7 +88,7 @@ public class HomeScreen extends Screen {
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
         GlStateManager._texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
         GlStateManager._texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-        drawTexture(matrices, (int) (width / 2 - (504 * logoSize / 2)), 10, 0, 0, 0, (int) (504 * logoSize), (int) (130 * logoSize), (int) (130 * logoSize), (int) (504 * logoSize));
+        drawTexture(matrices, (int) (width / 2 - (504 * logoSize / 2)), 10, 0, 0, 0, (int) (504 * logoSize), (int) (130 * logoSize), (int) (504 * logoSize), (int) (130 * logoSize));
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
         FontRenderers.normal.drawString(matrices, t, 1, height - FontRenderers.normal.getFontHeight(), 0xFFFFFF);

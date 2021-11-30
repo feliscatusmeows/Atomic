@@ -6,8 +6,8 @@
 package me.zeroX150.atomic.mixin.game.screen;
 
 import me.zeroX150.atomic.Atomic;
+import me.zeroX150.atomic.feature.gui.screen.ItemsScreen;
 import me.zeroX150.atomic.feature.gui.screen.NbtEditScreen;
-import me.zeroX150.atomic.feature.gui.screen.TestScreen;
 import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
@@ -36,7 +36,7 @@ import java.util.Objects;
             }
             Atomic.client.setScreen(new NbtEditScreen(hand.getOrCreateNbt()));
         });
-        ButtonWidget itemExploits = new ButtonWidget(5, 30, 100, 20, Text.of("Items"), button -> Atomic.client.setScreen(TestScreen.instance()));
+        ButtonWidget itemExploits = new ButtonWidget(5, 30, 100, 20, Text.of("Items"), button -> Atomic.client.setScreen(ItemsScreen.instance()));
         addDrawableChild(nbtEditor);
         addDrawableChild(itemExploits);
     }

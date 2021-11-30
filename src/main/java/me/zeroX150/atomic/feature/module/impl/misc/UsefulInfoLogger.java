@@ -59,7 +59,7 @@ public class UsefulInfoLogger extends Module {
     final BooleanValue                showWorldBorderCenterChange = (BooleanValue) this.config.create("World border update", true).description("Shows when the world border changes center");
 
     public UsefulInfoLogger() {
-        super("Server Logger", "Prints useful information about the server in chat, when it arrives", ModuleType.MISC);
+        super("ServerLogger", "Prints useful information about the server in chat, when it arrives", ModuleType.MISC);
         Events.registerEventHandler(EventType.PACKET_RECEIVE, event -> {
             if (!this.isEnabled()) {
                 return;

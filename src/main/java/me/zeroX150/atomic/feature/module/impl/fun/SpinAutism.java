@@ -24,7 +24,7 @@ public class SpinAutism extends Module {
     int timeout = 0;
 
     public SpinAutism() {
-        super("Spin Autism", "Spins around like a maniac and throws whatever you have", ModuleType.FUN);
+        super("SpinAutism", "Spins around like a maniac and throws whatever you have", ModuleType.FUN);
     }
 
     @Override public void tick() {

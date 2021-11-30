@@ -207,29 +207,33 @@ public class Killaura extends Module {
             if (entity.getPos().distanceTo(Atomic.client.player.getPos()) > getRange()) {
                 continue;
             }
-            boolean checked = false;
-            if (entity instanceof Angerable) {
-                checked = true;
-                if (attackNeutral.getValue()) {
-                    attacks.add(entity);
-                } else {
-                    continue;
-                }
-            }
-            if (entity instanceof PlayerEntity) {
-                if (attackPlayers.getValue()) {
-                    attacks.add(entity);
-                }
-            } else if (entity instanceof HostileEntity) {
-                if (attackHostile.getValue()) {
-                    attacks.add(entity);
-                }
-            } else if (entity instanceof PassiveEntity) {
-                if (attackPassive.getValue()) {
-                    attacks.add(entity);
-                }
-            } else if (attackEverything.getValue() && !checked) {
+
+            if (attackEverything.getValue()) {
                 attacks.add(entity);
+            } else {
+                if (entity instanceof Angerable) {
+                    if (((Angerable) entity).getAngryAt() == Atomic.client.player.getUuid()) {
+                        if (attackHostile.getValue()) {
+                            attacks.add(entity);
+                        } else if (attackNeutral.getValue()) {
+                            attacks.add(entity);
+                        }
+                    }
+                } else {
+                    if (entity instanceof PlayerEntity) {
+                        if (attackPlayers.getValue()) {
+                            attacks.add(entity);
+                        }
+                    } else if (entity instanceof HostileEntity) {
+                        if (attackHostile.getValue()) {
+                            attacks.add(entity);
+                        }
+                    } else if (entity instanceof PassiveEntity) {
+                        if (attackPassive.getValue()) {
+                            attacks.add(entity);
+                        }
+                    }
+                }
             }
         }
 

@@ -48,7 +48,7 @@ public class AimAssist extends Module {
     Entity le;
 
     public AimAssist() {
-        super("Aim Assist", "Assists in pvp", ModuleType.COMBAT);
+        super("AimAssist", "Assists in pvp", ModuleType.COMBAT);
         attackPlayers.showOnlyIf(() -> !aimAtCombatPartner.getValue());
         attackHostile.showOnlyIf(() -> !aimAtCombatPartner.getValue());
         attackNeutral.showOnlyIf(() -> !aimAtCombatPartner.getValue());

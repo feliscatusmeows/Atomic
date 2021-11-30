@@ -21,7 +21,7 @@ public class NWordCounter extends Module {
     int count = 0;
 
     public NWordCounter() {
-        super("N-Word Counter", "Counts the amount of n words in chat", ModuleType.FUN);
+        super("NWordCounter", "Counts the amount of n words in chat", ModuleType.FUN);
         Events.registerEventHandler(EventType.PACKET_RECEIVE, event -> {
             if (!this.isEnabled()) {
                 return;

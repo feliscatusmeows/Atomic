@@ -27,7 +27,7 @@ public class NoFall extends Module {
     public        boolean     enabled  = true;
 
     public NoFall() {
-        super("No Fall", "no fall damage", ModuleType.MOVEMENT);
+        super("NoFall", "no fall damage", ModuleType.MOVEMENT);
 
         mode = this.config.create("Mode", "OnGround", "OnGround", "Packet", "BreakFall");
         mode.description("The mode of the module");

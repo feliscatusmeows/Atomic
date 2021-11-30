@@ -31,7 +31,7 @@ public class BlockTagViewer extends Module {
     float       mw      = 0;
 
     public BlockTagViewer() {
-        super("Block Tag Viewer", "Shows data about the viewed block", ModuleType.WORLD);
+        super("BlockTagViewer", "Shows data about the viewed block", ModuleType.WORLD);
     }
 
     @Override public void tick() {

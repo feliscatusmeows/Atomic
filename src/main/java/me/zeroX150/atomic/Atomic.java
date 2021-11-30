@@ -14,6 +14,7 @@ import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.font.GlyphPageFontRenderer;
 import me.zeroX150.atomic.helper.keybind.KeybindManager;
+import me.zeroX150.atomic.helper.manager.CapeManager;
 import me.zeroX150.atomic.helper.util.ConfigManager;
 import me.zeroX150.atomic.helper.util.Rotations;
 import me.zeroX150.atomic.helper.util.Utils;
@@ -21,7 +22,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
@@ -31,33 +31,21 @@ import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 public class Atomic implements ModInitializer {
 
-    public static final String            MOD_NAME         = "Atomic client";
-    public static final MinecraftClient   client           = MinecraftClient.getInstance();
-    public static final Logger            LOGGER           = LogManager.getLogger();
-    public static final Map<UUID, String> capes            = new HashMap<>();
-    public static       Thread            MODULE_FTTICKER;
-    public static       Thread            FAST_TICKER;
-    public static       File              CONFIG_STORAGE;
-    public static       long              lastScreenChange = System.currentTimeMillis();
+    public static final String          MOD_NAME         = "Atomic client";
+    public static final MinecraftClient client           = MinecraftClient.getInstance();
+    public static final Logger          LOGGER           = LogManager.getLogger();
+    public static       Thread          MODULE_FTTICKER;
+    public static       Thread          FAST_TICKER;
+    public static       File            CONFIG_STORAGE;
+    public static       long            lastScreenChange = System.currentTimeMillis();
 
     public static Atomic INSTANCE;
 
 
-    public static ItemGroup ITEMS       = FabricItemGroupBuilder.create(new Identifier("atomic", "saveditems")).icon(() -> new ItemStack(Items.COMMAND_BLOCK)).appendItems(itemStacks -> {
-        //itemStacks.clear();
-        for (ItemStorage.ItemEntry item : ItemStorage.items) {
-            ItemStack s = new ItemStack(item.type());
-            s.setNbt(item.tag());
-            itemStacks.add(s);
-        }
-    }).build();
-    public        boolean   initialized = false;
+    public boolean initialized = false;
 
     public static void log(Level level, String message) {
         LOGGER.log(level, "[" + MOD_NAME + "] " + message);
@@ -69,10 +57,29 @@ public class Atomic implements ModInitializer {
         FontRenderers.mono = GlyphPageFontRenderer.createFromID("Mono.ttf", 17, false, false, false);
     }
 
+    void initGroups() {
+        FabricItemGroupBuilder.create(new Identifier("atomic", "saveditems")).icon(() -> new ItemStack(Items.COMMAND_BLOCK)).appendItems(itemStacks -> {
+            //itemStacks.clear();
+            for (ItemStorage.ItemEntry item : ItemStorage.items) {
+                ItemStack s = new ItemStack(item.type());
+                s.setNbt(item.tag());
+                itemStacks.add(s);
+            }
+        }).build();
+    }
+
+    void initCapes() {
+        CapeManager.init();
+    }
+
     @Override public void onInitialize() {
         INSTANCE = this;
         log(Level.INFO, "Initializing");
         Runtime.getRuntime().addShutdownHook(new Thread(ConfigManager::saveState));
+        initGroups();
+        log(Level.INFO, "Downloading capes in background");
+        initCapes();
+
     }
 
     public void postWindowInit() {

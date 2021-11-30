@@ -13,28 +13,42 @@ import me.zeroX150.atomic.feature.module.impl.render.ESP;
 import me.zeroX150.atomic.feature.module.impl.render.FreeLook;
 import me.zeroX150.atomic.helper.squake.QuakeClientPlayer;
 import net.minecraft.entity.Entity;
-import net.minecraft.util.collection.ReusableStream;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.world.World;
+import net.minecraft.world.border.WorldBorder;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
 import java.util.Objects;
-import java.util.stream.Stream;
 
-@Mixin(Entity.class) public class EntityMixin {
+@Mixin(Entity.class) public abstract class EntityMixin {
 
-    @Redirect(method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;",
-            at = @At(value = "NEW", target = "Lnet/minecraft/util/collection/ReusableStream;<init>")) private ReusableStream<VoxelShape> atomic_overwriteWBCollision(Stream<VoxelShape> stream) {
-        if (Objects.requireNonNull(ModuleRegistry.getByClass(IgnoreWorldBorder.class)).isEnabled()) {
-            return new ReusableStream<>(Stream.empty());
-        }
-        return new ReusableStream<>(stream);
+    @Shadow public static Vec3d adjustMovementForCollisions(@Nullable Entity entity, Vec3d movement, Box entityBoundingBox, World world, List<VoxelShape> collisions) {
+        return null;
     }
+
+    @Redirect(
+            method = "adjustMovementForCollisions(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/util/math/Box;Lnet/minecraft/world/World;Ljava/util/List;)Lnet/minecraft/util/math/Vec3d;",
+            at = @At(value = "INVOKE", target = "net/minecraft/world/border/WorldBorder.canCollide(Lnet/minecraft/entity/Entity;Lnet/minecraft/util/math/Box;)Z"))
+    private static boolean real(WorldBorder instance, Entity entity, Box box) {
+        return !ModuleRegistry.getByClass(IgnoreWorldBorder.class).isEnabled() && instance.canCollide(entity, box);
+    }
+    //    @Redirect(method = "adjustMovementForCollisions(Lnet/minecraft/util/math/Vec3d;)Lnet/minecraft/util/math/Vec3d;",
+    //            at = @At(value = "NEW", target = "Lnet/minecraft/util/collection/ReusableStream;<init>")) private ReusableStream<VoxelShape> atomic_overwriteWBCollision(Stream<VoxelShape> stream) {
+    //        if (Objects.requireNonNull(ModuleRegistry.getByClass(IgnoreWorldBorder.class)).isEnabled()) {
+    //            return new ReusableStream<>(Stream.empty());
+    //        }
+    //        return new ReusableStream<>(stream);
+    //    }
 
     @Inject(method = "isGlowing", at = @At("HEAD"), cancellable = true) void atomic_overwriteEspStats(CallbackInfoReturnable<Boolean> cir) {
         // this is a whole different layer of cursed

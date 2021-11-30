@@ -21,7 +21,7 @@ public class LongJump extends Module {
     boolean      jumped        = false;
 
     public LongJump() {
-        super("Long Jump", "Jumps a long distance", ModuleType.MOVEMENT);
+        super("LongJump", "Jumps a long distance", ModuleType.MOVEMENT);
         this.config.createPropGroup("Jump", xz, focus);
         this.config.createPropGroup("Post", glide, glideVelocity, keepApplying, applyStrength);
         glideVelocity.showOnlyIf(glide::getValue);

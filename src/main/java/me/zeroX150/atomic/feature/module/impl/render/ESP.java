@@ -111,7 +111,7 @@ public class ESP extends Module {
         float cos = (float) (Math.cos(r) * (e.getWidth() / 1.7));
         stack.push();
 
-        Matrix4f matrix = stack.peek().getModel();
+        Matrix4f matrix = stack.peek().getPositionMatrix();
         BufferBuilder buffer = Tessellator.getInstance().getBuffer();
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         GL11.glDepthFunc(GL11.GL_ALWAYS);

@@ -31,13 +31,9 @@ import java.util.List;
     static final  List<Module> toBeEnabled = new ArrayList<>();
     static final  File         CONFIG_FILE;
     static final  String       TOP_NOTE    = """
-            // !!! READ ME, BEFORE DOING ANYTHING IN HERE !!!
-            // UNLESS YOU 100% KNOW WHAT YOU ARE DOING, NEVER SHARE THIS FILE WITH SOMEONE ELSE.
-            // YOUR ALTS ARE SAVED IN HERE. UNLESS YOU KNOW HOW TO REMOVE THEM, DO NOT SHARE THIS FILE.
-            // IF SOMEONE TOLD YOU TO SEND THEM THIS FILE WITHOUT EXPLANATION, YOU HAVE A 12/10 CHANCE OF BEING SCAMMED.
-                        
-            // also uh, you could break stuff if you directly modify shit in here, so dont do that unless you know what you're doing.
-            // back this shit up before doing anything in case you do a major fuck
+            // You could break stuff by modifying things in here
+            // To make a safe copy of this file, use the .cu save <name> command. To load it, use .cu load <name>
+            // Also, only share the saved config using the command above in .minecraft/atomicConfigs
             """;
     public static boolean      loaded      = false;
     public static boolean      enabled     = false;
@@ -102,6 +98,7 @@ import java.util.List;
                     if (jsonElement.isJsonObject()) {
                         JsonObject jobj = jsonElement.getAsJsonObject();
                         String name = jobj.get("name").getAsString();
+                        name = name.replaceAll("-", "").replaceAll(" ", ""); // make sure we got the new names
                         Module j = ModuleRegistry.getByName(name);
                         if (j == null) {
                             continue;
@@ -127,7 +124,7 @@ import java.util.List;
 
             if (config.has("enabled") && config.get("enabled").isJsonArray()) {
                 for (JsonElement enabled : config.get("enabled").getAsJsonArray()) {
-                    String name = enabled.getAsString();
+                    String name = enabled.getAsString().replaceAll("-", "").replaceAll(" ", "");
                     Module m = ModuleRegistry.getByName(name);
                     if (m != null) {
                         toBeEnabled.add(m);

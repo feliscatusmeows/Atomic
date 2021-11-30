@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -196,7 +197,8 @@ public class NewAltManagerScreen extends Screen implements FastTickable {
             Atomic.client.setScreen(msc);
             return;
         }
-        Session newSession = new Session(selectedAlt.username, selectedAlt.uuid.toString(), selectedAlt.accessToken, "mojang");
+        //        Session newSession = new Session(selectedAlt.username, selectedAlt.uuid.toString(), selectedAlt.accessToken, "mojang");
+        Session newSession = new Session(selectedAlt.username, selectedAlt.uuid.toString(), selectedAlt.accessToken, Optional.empty(), Optional.empty(), Session.AccountType.MOJANG);
         ((IMinecraftClientAccessor) Atomic.client).setSession(newSession);
         selectedAlt.usedCount++;
     }

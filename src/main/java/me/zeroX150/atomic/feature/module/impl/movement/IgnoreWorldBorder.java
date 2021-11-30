@@ -12,7 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 public class IgnoreWorldBorder extends Module {
 
     public IgnoreWorldBorder() {
-        super("Ignore World Border", "fuck you worldborder", ModuleType.MOVEMENT);
+        super("IgnoreWorldBorder", "fuck you worldborder", ModuleType.MOVEMENT);
     }
 
     @Override public void tick() {

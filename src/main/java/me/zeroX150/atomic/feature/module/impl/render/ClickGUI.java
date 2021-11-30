@@ -30,7 +30,7 @@ public class ClickGUI extends Module {
     public static MultiValue theme;
 
     public ClickGUI() {
-        super("Click GUI", "Opens the click gui", ModuleType.RENDER);
+        super("ClickGUI", "Opens the click gui", ModuleType.RENDER);
         theme = (MultiValue) this.config.create("Theme", "Atomic", "Atomic", "Dark", "Custom").description("The theme of the clickgui");
         instant = (BooleanValue) this.config.create("Skip animation", false).description("Disables the animation and shows the clickgui instantly");
 

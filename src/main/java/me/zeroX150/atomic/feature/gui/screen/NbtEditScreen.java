@@ -63,7 +63,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
 
     @Override protected void init() {
         {
-            String v = NbtHelper.toPrettyPrintedString(source);
+            String v = NbtHelper.toNbtProviderString(source);
             //while(v.contains("§")) v = v.replace("§", "&");
             lines.clear();
             int maxWidth = width - 115;
@@ -93,7 +93,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
             try {
                 NbtCompound compound = StringNbtReader.parse(String.join("", lines));
 
-                String v = NbtHelper.toPrettyPrintedString(compound);
+                String v = NbtHelper.toNbtProviderString(compound);
                 lines.clear();
                 int maxWidth = width - 115;
                 for (String s : v.split("\n")) {
@@ -119,7 +119,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
                 //                while (t.contains("&")) t = t.replace("&", "§");*/
                 NbtCompound compound = StringNbtReader.parse(t);
                 {
-                    String v = NbtHelper.toPrettyPrintedString(compound);
+                    String v = NbtHelper.toNbtProviderString(compound);
                     lines.clear();
                     int maxWidth = width - 115;
                     for (String s : v.split("\n")) {
@@ -151,7 +151,7 @@ public class NbtEditScreen extends Screen implements FastTickable {
             String clip = Atomic.client.keyboard.getClipboard();
             try {
                 NbtCompound comp = StringNbtReader.parse(clip);
-                String v = NbtHelper.toPrettyPrintedString(comp);
+                String v = NbtHelper.toNbtProviderString(comp);
                 lines.clear();
                 int maxWidth = width - 115;
                 for (String s : v.split("\n")) {

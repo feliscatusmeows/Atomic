@@ -25,7 +25,7 @@ import java.util.Objects;
 public class WaterClutch extends Module {
 
     public WaterClutch() {
-        super("Water Clutch", "Places blocks below you when you are on water", ModuleType.WORLD);
+        super("WaterClutch", "Places blocks below you when you are on water", ModuleType.WORLD);
     }
 
     @Override public void tick() {

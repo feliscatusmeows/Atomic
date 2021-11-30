@@ -23,7 +23,7 @@ import java.util.Objects;
 public class MidAirPlace extends Module {
 
     public MidAirPlace() {
-        super("Mid Air Place", "magic", ModuleType.WORLD);
+        super("MidAirPlace", "magic", ModuleType.WORLD);
     }
 
     @Override public void tick() {

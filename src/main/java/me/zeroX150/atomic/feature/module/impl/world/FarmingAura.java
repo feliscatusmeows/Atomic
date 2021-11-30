@@ -34,7 +34,7 @@ public class FarmingAura extends Module {
     final BooleanValue greifing = (BooleanValue) this.config.create("Greifing mode", false).description("If enabled it will not replant");
 
     public FarmingAura() {
-        super("Farming Aura", "farms", ModuleType.WORLD);
+        super("FarmingAura", "farms", ModuleType.WORLD);
     }
 
     boolean blockValid(BlockState b, BlockPos bp) {

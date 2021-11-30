@@ -26,7 +26,7 @@ public class BetterCrosshair extends Module {
     static BooleanValue transparentEnd, transparentStart;
 
     public BetterCrosshair() {
-        super("Better Crosshair", "a better crosshair", ModuleType.RENDER);
+        super("BetterCrosshair", "a better crosshair", ModuleType.RENDER);
         inset = (SliderValue) this.config.create("Offset", 2, 0, 20, 1).description("How much to offset the segments");
         length = (SliderValue) this.config.create("Length", 10, 0, 50, 1).description("How long the segments are");
         color = (ColorValue) this.config.create("Color", Color.RED, false).description("Which color the segments are");

@@ -23,7 +23,7 @@ public class SlotSpammer extends Module {
     final         SliderValue amountPerTick = (SliderValue) this.config.create("Amount / tick", 5, 1, 100, 0).description("The amount of clicks per tick to simulate");
 
     public SlotSpammer() {
-        super("Slot Spammer", "Spams slots", ModuleType.MISC);
+        super("SlotSpammer", "Spams slots", ModuleType.MISC);
     }
 
     @Override public void tick() {

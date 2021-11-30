@@ -12,7 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 public class EntityFullbright extends Module {
 
     public EntityFullbright() {
-        super("Entity Fullbright", "Fullbright but only entities", ModuleType.RENDER);
+        super("EntityFullbright", "Fullbright but only entities", ModuleType.RENDER);
     }
 
     @Override public void tick() {

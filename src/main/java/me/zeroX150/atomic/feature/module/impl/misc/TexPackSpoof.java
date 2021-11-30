@@ -22,7 +22,7 @@ import java.util.Objects;
 public class TexPackSpoof extends Module {
 
     public TexPackSpoof() {
-        super("Tex Pack Spoof", "Tells the server you accepted their shitty resource pack", ModuleType.MISC);
+        super("TexPackSpoof", "Tells the server you accepted their shitty resource pack", ModuleType.MISC);
         Events.registerEventHandler(EventType.PACKET_RECEIVE, event1 -> {
             if (!this.isEnabled()) {
                 return;

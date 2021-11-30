@@ -37,7 +37,7 @@ public class FreeLook extends Module {
     int swayYaw     = 0;
 
     public FreeLook() {
-        super("Free Look", "looks around yourself without you looking", ModuleType.RENDER);
+        super("FreeLook", "looks around yourself without you looking", ModuleType.RENDER);
         aaMode.showOnlyIf(enableAA::getValue);
         aaSpeed.showOnlyIf(() -> !aaMode.getValue().equals("Jitter") && enableAA.getValue());
         jitterRange.showOnlyIf(() -> aaMode.getValue().equals("Jitter") && enableAA.getValue());

@@ -32,7 +32,7 @@ public class InstantBreak extends Module {
     final List<PlayerActionC2SPacket> whitelist = new ArrayList<>();
 
     public InstantBreak() {
-        super("Instant Break", "Sbeed", ModuleType.WORLD);
+        super("InstantBreak", "Sbeed", ModuleType.WORLD);
         Events.registerEventHandler(EventType.PACKET_SEND, event -> {
             if (!this.isEnabled()) {
                 return;

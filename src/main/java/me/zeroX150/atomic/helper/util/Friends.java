@@ -102,7 +102,7 @@ import java.util.UUID;
         return friends;
     }
 
-    static class Friend {
+    public static class Friend {
 
         final UUID uuid;
         PlayerEntity player;

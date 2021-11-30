@@ -32,7 +32,7 @@ public class AutoRepeater extends Module {
     final List<BlockPos> bps           = new ArrayList<>();
 
     public AutoRepeater() {
-        super("Auto Repeater", "Automatically sets delay of repeaters near you to n", ModuleType.WORLD);
+        super("AutoRepeater", "Automatically sets delay of repeaters near you to n", ModuleType.WORLD);
     }
 
     @Override public void tick() {

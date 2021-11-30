@@ -30,7 +30,7 @@ public class AutoEndermanAngry extends Module {
     int    t = 0;
 
     public AutoEndermanAngry() {
-        super("Auto Enderman Angry", "automatically makes the nearest enderman pissed", ModuleType.COMBAT);
+        super("AutoEndermanAngry", "automatically makes the nearest enderman pissed", ModuleType.COMBAT);
     }
 
     @Override public void tick() {

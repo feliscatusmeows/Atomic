@@ -27,7 +27,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.Heightmap;
 import net.minecraft.world.chunk.ChunkStatus;
-import net.minecraft.world.gen.ChunkRandom;
+import net.minecraft.world.gen.random.ChunkRandom;
 import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
@@ -252,8 +252,9 @@ public class OreSim extends Module {
         chunkX = chunkX << 4;
         chunkZ = chunkZ << 4;
 
-        ChunkRandom random = new ChunkRandom(0);
-        ChunkRandom helperRandom = new ChunkRandom(0);
+        // homie i have no idea if this will work
+        ChunkRandom random = new ChunkRandom(ChunkRandom.RandomProvider.LEGACY.create(0));
+        ChunkRandom helperRandom = new ChunkRandom(ChunkRandom.RandomProvider.LEGACY.create(0));
         HashMap<Ore.Type, HashSet<Vec3d>> h = new HashMap<>();
 
         long populationSeed = random.setPopulationSeed(worldSeed, chunkX, chunkZ);

@@ -6,7 +6,7 @@
 package me.zeroX150.atomic.mixin.game;
 
 import com.mojang.authlib.GameProfile;
-import me.zeroX150.atomic.Atomic;
+import me.zeroX150.atomic.helper.manager.CapeManager;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.Final;
@@ -22,9 +22,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
     @Inject(method = "getCapeTexture", at = @At("HEAD"), cancellable = true) public void atomic_overwriteCapes(CallbackInfoReturnable<Identifier> cir) {
         GameProfile context = this.profile;
-        boolean hasCape = Atomic.capes.containsKey(context.getId());
+        boolean hasCape = CapeManager.capes.stream().anyMatch(capeEntry -> capeEntry.owner().equals(context.getId()));
         if (hasCape) {
-            cir.setReturnValue(new Identifier("atomic", "capes/" + Atomic.capes.get(context.getId())));
+            cir.setReturnValue(new Identifier("atomic", "capes/" + context.getId().toString()));
         }
     }
 }

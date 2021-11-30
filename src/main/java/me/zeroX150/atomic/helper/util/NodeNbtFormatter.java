@@ -10,39 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NodeNbtFormatter {
-    public static class ObjectNode extends Node {
-        public Map<String, Node> children = new ConcurrentHashMap<>();
-
-        public ObjectNode(NbtElement parent) {
-            super(parent);
-        }
-
-        @Override public String toString() {
-            return "ObjectNode{" + "children=" + children + '}';
-        }
-    }
-    public static class ListNode extends Node {
-        public List<Node> children = new ArrayList<>();
-
-        public ListNode(NbtElement parent) {
-            super(parent);
-        }
-
-        @Override public String toString() {
-            return "ListNode{" + "children=" + children + '}';
-        }
-    }
-    public static class Node {
-        public Node(NbtElement parent) {
-            this.parent = parent;
-        }
-        public NbtElement parent;
-
-        @Override public String toString() {
-            return "Node{" + "parent=" + parent + '}';
-        }
-    }
-//    ObjectNode root = new ObjectNode(null);
+    //    ObjectNode root = new ObjectNode(null);
     public Node format(NbtCompound comp) {
         return visitCompound(comp);
     }
@@ -61,7 +29,9 @@ public class NodeNbtFormatter {
             return visitCompound(comp);
         } else if (element instanceof NbtList list) {
             return visitList(list);
-        } else return new Node(element);
+        } else {
+            return new Node(element);
+        }
     }
 
     ListNode visitList(NbtList list) {
@@ -70,5 +40,41 @@ public class NodeNbtFormatter {
             n.children.add(visit(nbtElement));
         }
         return n;
+    }
+
+    public static class ObjectNode extends Node {
+        public Map<String, Node> children = new ConcurrentHashMap<>();
+
+        public ObjectNode(NbtElement parent) {
+            super(parent);
+        }
+
+        @Override public String toString() {
+            return "ObjectNode{" + "children=" + children + '}';
+        }
+    }
+
+    public static class ListNode extends Node {
+        public List<Node> children = new ArrayList<>();
+
+        public ListNode(NbtElement parent) {
+            super(parent);
+        }
+
+        @Override public String toString() {
+            return "ListNode{" + "children=" + children + '}';
+        }
+    }
+
+    public static class Node {
+        public NbtElement parent;
+
+        public Node(NbtElement parent) {
+            this.parent = parent;
+        }
+
+        @Override public String toString() {
+            return "Node{" + "parent=" + parent + '}';
+        }
     }
 }

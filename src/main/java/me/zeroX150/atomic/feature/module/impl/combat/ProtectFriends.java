@@ -12,7 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 public class ProtectFriends extends Module {
 
     public ProtectFriends() {
-        super("Protect Friends", "Prevents you from hitting your friends in combat", ModuleType.COMBAT);
+        super("ProtectFriends", "Prevents you from hitting your friends in combat", ModuleType.COMBAT);
     }
 
     @Override public void tick() {

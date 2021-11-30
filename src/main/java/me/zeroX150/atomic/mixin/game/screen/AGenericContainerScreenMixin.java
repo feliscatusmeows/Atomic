@@ -6,11 +6,13 @@
 package me.zeroX150.atomic.mixin.game.screen;
 
 import me.zeroX150.atomic.Atomic;
+import me.zeroX150.atomic.feature.gui.screen.InfoScreen;
 import me.zeroX150.atomic.feature.gui.widget.HoverableExtenderWidget;
 import me.zeroX150.atomic.feature.gui.widget.SimpleTextWidget;
 import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.impl.misc.SlotSpammer;
 import me.zeroX150.atomic.feature.module.impl.movement.InventoryWalk;
+import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.gui.screen.Screen;
@@ -57,8 +59,7 @@ import java.util.Objects;
 
     @Inject(method = "init", at = @At("TAIL")) public void atomic_postInit(CallbackInfo ci) {
         int cw = 110;
-        int ch = 5 + 11 + 20 + 5;
-        slotSpammer = new ButtonWidget(cw / 2 - 100 / 2, 5 + 11, 100, 20, Text.of("Slot spammer"), button -> {
+        slotSpammer = new ButtonWidget(cw / 2 - 100 / 2, 5 + FontRenderers.normal.getFontHeight() + 2, 100, 20, Text.of("Slot spammer"), button -> {
             if (ModuleRegistry.getByClass(SlotSpammer.class).isEnabled()) {
                 ModuleRegistry.getByClass(SlotSpammer.class).setEnabled(false);
             } else {
@@ -67,10 +68,17 @@ import java.util.Objects;
         });
         tw = new SimpleTextWidget(cw / 2d, 5, "Slot spammer", 0xFFFFFF);
         tw.setCenter(true);
+        //        ButtonWidget serverInfo = new ButtonWidget(cw/2-100/2, slotSpammer.y+25,100,20,Text.of("Server info"),button -> {
+        //            Atomic.client.setScreen(new ServerInfoScreen());
+        //        });
+        ButtonWidget playerInfo = new ButtonWidget(Atomic.client.getWindow().getScaledWidth() - 105, 5, 100, 20, Text.of("Info"), button -> Atomic.client.setScreen(new InfoScreen()));
+        int ch = playerInfo.y + playerInfo.getHeight() + 5;
         HoverableExtenderWidget wd = new HoverableExtenderWidget(width, height - ch - 10, cw, ch, 20);
         wd.addChild(slotSpammer);
         wd.addChild(tw);
+        //        wd.addChild(playerInfo);
         addDrawableChild(wd);
+        addDrawableChild(playerInfo);
     }
 
 

@@ -1,7 +1,7 @@
 {
   "required": true,
   "package": "me.zeroX150.atomic.mixin",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_17",
   "mixins": [
     "game.DimensionTypeMixin",
     "game.GameOptionsMixin",
@@ -14,6 +14,8 @@
     "game.MinecraftClientMixin",
     "game.MouseMixin",
     "game.NamespaceResourceManagerMixin",
+    "game.NbtCompoundTypeMixin",
+    "game.NbtListTypeMixin",
     "game.PlayerListEntryMixin",
     "game.SchemasMixin",
     "game.SharedConstantsMixin",
@@ -42,7 +44,6 @@
     "game.render.LivingEntityRendererMixin",
     "game.render.TextVisitFactoryMixin",
     "game.render.WorldRendererMixin",
-    "game.screen.AAbstractInventoryScreenMixin",
     "game.screen.AChatScreenMixin",
     "game.screen.AGenericContainerScreenMixin",
     "game.screen.AMultiplayerScreenMixin",
@@ -51,7 +52,6 @@
     "game.screen.CreativeInventoryScreenMixin",
     "game.screen.CreditsScreenMixin",
     "game.screen.DisconnectedScreenMixin",
-    "game.screen.GameMenuScreenMixin",
     "game.screen.NarratorOptionsScreenMixin",
     "game.screen.ScreenMixin",
     "game.screen.TitleScreenMixin",

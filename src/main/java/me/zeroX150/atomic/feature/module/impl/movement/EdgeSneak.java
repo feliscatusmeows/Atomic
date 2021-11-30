@@ -18,7 +18,7 @@ import net.minecraft.util.math.Vec3d;
 public class EdgeSneak extends Module {
 
     public EdgeSneak() {
-        super("Edge Sneak", "Sneaks automatically at the edges of blocks", ModuleType.MOVEMENT);
+        super("EdgeSneak", "Sneaks automatically at the edges of blocks", ModuleType.MOVEMENT);
     }
 
     @Override public void tick() {

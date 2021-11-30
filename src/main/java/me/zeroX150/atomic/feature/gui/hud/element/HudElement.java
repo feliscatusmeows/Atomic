@@ -3,9 +3,10 @@ package me.zeroX150.atomic.feature.gui.hud.element;
 import me.zeroX150.atomic.Atomic;
 import me.zeroX150.atomic.helper.font.FontRenderers;
 import me.zeroX150.atomic.helper.render.Renderer;
-import me.zeroX150.atomic.helper.util.Utils;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.MathHelper;
+
+import java.awt.Color;
 
 public abstract class HudElement {
 
@@ -43,11 +44,23 @@ public abstract class HudElement {
         this.posY = posY;
     }
 
+    float timeOffset(double in) {
+        return (float) (((System.currentTimeMillis() % 4000) / 4000f + in) % 1);
+    }
+
     public void renderOutline() {
-        Renderer.R2D.lineScreenD(Utils.getCurrentRGB(), posX, posY, posX + width, posY);
-        Renderer.R2D.lineScreenD(Utils.getCurrentRGB(), posX + width, posY, posX + width, posY + height);
-        Renderer.R2D.lineScreenD(Utils.getCurrentRGB(), posX + width, posY + height, posX, posY + height);
-        Renderer.R2D.lineScreenD(Utils.getCurrentRGB(), posX, posY + height, posX, posY);
+
+        //        double timeOffset = (System.currentTimeMillis()%1000)/1000d;
+        Color v1 = Color.getHSBColor(timeOffset(0), 0.6f, 1f);
+        Color v2 = Color.getHSBColor(timeOffset(0.25), 0.6f, 1f);
+        Color v3 = Color.getHSBColor(timeOffset(0.5), 0.6f, 1f);
+        Color v4 = Color.getHSBColor(timeOffset(0.75), 0.6f, 1f);
+
+        Renderer.R2D.gradientLineScreen(v1, v2, posX, posY, posX + width, posY);
+        Renderer.R2D.gradientLineScreen(v2, v3, posX + width, posY, posX + width, posY + height);
+        Renderer.R2D.gradientLineScreen(v3, v4, posX + width, posY + height, posX, posY + height);
+        Renderer.R2D.gradientLineScreen(v4, v1, posX, posY + height, posX, posY);
+
         double rpoY = posY - FontRenderers.normal.getFontHeight();
         if (posY < FontRenderers.normal.getFontHeight()) { // too small to render text properly
             rpoY = posY + height;

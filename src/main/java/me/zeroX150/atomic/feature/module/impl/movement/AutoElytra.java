@@ -21,7 +21,7 @@ public class AutoElytra extends Module {
     final SliderValue fallDist = (SliderValue) this.config.create("Fall distance", 3, 2, 10, 1).description("How far to fall for the elytra to equip");
 
     public AutoElytra() {
-        super("Auto Elytra", "Automatically equips an elytra from your inventory if you fell long enough", ModuleType.MOVEMENT);
+        super("AutoElytra", "Automatically equips an elytra from your inventory if you fell long enough", ModuleType.MOVEMENT);
     }
 
     boolean equippedElytra() {

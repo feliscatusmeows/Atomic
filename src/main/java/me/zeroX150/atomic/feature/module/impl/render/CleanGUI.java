@@ -15,7 +15,7 @@ public class CleanGUI extends Module {
     public static MultiValue mode;
 
     public CleanGUI() {
-        super("Clean GUI", "Makes some parts of GUIs cleaner", ModuleType.RENDER);
+        super("CleanGUI", "Makes some parts of GUIs cleaner", ModuleType.RENDER);
         mode = (MultiValue) this.config.create("Mode", "Rgb 1", "Rgb 1", "Rgb 2", "Slightly dim", "Transparent").description("How to render the background");
     }
 

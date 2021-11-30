@@ -21,7 +21,7 @@ import java.util.Arrays;
 public class CommandBlockPreview extends Module {
 
     public CommandBlockPreview() {
-        super("Cmd Block Preview", "Shows you which command a command block runs", ModuleType.RENDER);
+        super("CmdBlockPreview", "Shows you which command a command block runs", ModuleType.RENDER);
         Events.registerEventHandler(EventType.LORE_QUERY, event -> {
             if (!this.isEnabled()) {
                 return;

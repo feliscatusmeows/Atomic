@@ -175,7 +175,25 @@ public class Utils {
     public static class Players {
 
         static final Map<String, UUID> UUID_CACHE = new HashMap<>();
+        static final Map<UUID, String> NAME_CACHE = new HashMap<>();
         static final HttpClient        client     = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(10)).build();
+
+        public static String getNameFromUUID(UUID uuid) {
+            if (NAME_CACHE.containsKey(uuid)) {
+                return NAME_CACHE.get(uuid);
+            }
+            try {
+                HttpRequest req = HttpRequest.newBuilder().GET().uri(URI.create("https://sessionserver.mojang.com/session/minecraft/profile/" + uuid)).build();
+                HttpResponse<String> response = client.send(req, HttpResponse.BodyHandlers.ofString());
+                if (response.statusCode() == 204 || response.statusCode() == 400) {
+                    return null; // no user / invalid username
+                }
+                JsonObject root = new JsonParser().parse(response.body()).getAsJsonObject();
+                return root.get("name").getAsString();
+            } catch (Exception ignored) {
+                return null;
+            }
+        }
 
         public static UUID getUUIDFromName(String name) {
             if (!isPlayerNameValid(name)) {

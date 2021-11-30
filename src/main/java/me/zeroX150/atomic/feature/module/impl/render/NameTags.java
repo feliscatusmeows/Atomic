@@ -23,7 +23,7 @@ import java.awt.Color;
 public class NameTags extends Module {
 
     public NameTags() {
-        super("Name Tags", "big nametag.mp4", ModuleType.RENDER);
+        super("NameTags", "big nametag.mp4", ModuleType.RENDER);
     }
 
     public boolean renderTag(Text text, Entity entity, MatrixStack stack) {

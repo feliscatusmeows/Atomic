@@ -34,6 +34,7 @@ import me.zeroX150.atomic.feature.module.impl.exploit.VerticalPhase;
 import me.zeroX150.atomic.feature.module.impl.fun.BHop;
 import me.zeroX150.atomic.feature.module.impl.fun.Deadmau5;
 import me.zeroX150.atomic.feature.module.impl.fun.NWordCounter;
+import me.zeroX150.atomic.feature.module.impl.fun.Physics;
 import me.zeroX150.atomic.feature.module.impl.fun.SpinAutism;
 import me.zeroX150.atomic.feature.module.impl.misc.AllowFormatCodes;
 import me.zeroX150.atomic.feature.module.impl.misc.AutoLogin;
@@ -50,6 +51,7 @@ import me.zeroX150.atomic.feature.module.impl.misc.TexPackSpoof;
 import me.zeroX150.atomic.feature.module.impl.misc.Timer;
 import me.zeroX150.atomic.feature.module.impl.misc.UsefulInfoLogger;
 import me.zeroX150.atomic.feature.module.impl.misc.WindowCustomization;
+import me.zeroX150.atomic.feature.module.impl.misc.XCarry;
 import me.zeroX150.atomic.feature.module.impl.movement.AirJump;
 import me.zeroX150.atomic.feature.module.impl.movement.AntiVoid;
 import me.zeroX150.atomic.feature.module.impl.movement.ArrowJuke;
@@ -88,6 +90,7 @@ import me.zeroX150.atomic.feature.module.impl.render.FreeLook;
 import me.zeroX150.atomic.feature.module.impl.render.Freecam;
 import me.zeroX150.atomic.feature.module.impl.render.Fullbright;
 import me.zeroX150.atomic.feature.module.impl.render.Hud;
+import me.zeroX150.atomic.feature.module.impl.render.ItemByteSize;
 import me.zeroX150.atomic.feature.module.impl.render.NameTags;
 import me.zeroX150.atomic.feature.module.impl.render.NoRender;
 import me.zeroX150.atomic.feature.module.impl.render.TabGUI;
@@ -244,6 +247,9 @@ public class ModuleRegistry {
         modules.add(new EdgeJump());
         modules.add(new LongJump());
         modules.add(new Flattener());
+        modules.add(new ItemByteSize());
+        modules.add(new Physics());
+        modules.add(new XCarry());
     }
 
     public static void sortModulesPostInit() {

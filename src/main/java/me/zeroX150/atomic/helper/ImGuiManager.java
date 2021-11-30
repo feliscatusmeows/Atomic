@@ -42,7 +42,7 @@ public class ImGuiManager {
         ImGui.getStyle().setItemInnerSpacing(4, 4);
         ImGui.getStyle().setTouchExtraPadding(0, 0);
         ImGui.getStyle().setIndentSpacing(21);
-        ImGui.getStyle().setScrollbarSize(9);
+        ImGui.getStyle().setScrollbarSize(10);
         ImGui.getStyle().setGrabMinSize(4);
 
         ImGui.getStyle().setWindowRounding(6);
@@ -117,6 +117,7 @@ public class ImGuiManager {
         implGlfw.init(win, true);
         implGl3.init();
         ImGui.getIO().setConfigWindowsMoveFromTitleBarOnly(true);
+        //        ImGui.getIO().addConfigFlags(ImGuiConfigFlags.ViewportsEnable);
         ImGui.getStyle().setWindowMenuButtonPosition(-1);
     }
 

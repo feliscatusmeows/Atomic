@@ -35,7 +35,7 @@ public class EntitySpawnInfo extends Module {
             Items.ZOGLIN_SPAWN_EGG, Items.ZOMBIE_SPAWN_EGG, Items.ZOMBIE_HORSE_SPAWN_EGG, Items.ZOMBIE_VILLAGER_SPAWN_EGG, Items.ZOMBIFIED_PIGLIN_SPAWN_EGG, Items.ARMOR_STAND};
 
     public EntitySpawnInfo() {
-        super("Entity Spawn Info", "Shows info about items that spawn entities (spawn eggs, armor stands, etc)", ModuleType.RENDER);
+        super("EntitySpawnInfo", "Shows info about items that spawn entities (spawn eggs, armor stands, etc)", ModuleType.RENDER);
         Events.registerEventHandler(EventType.LORE_QUERY, event -> {
             if (!this.isEnabled()) {
                 return;

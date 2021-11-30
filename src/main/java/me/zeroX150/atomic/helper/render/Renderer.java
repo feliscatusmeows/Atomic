@@ -50,7 +50,7 @@ public class Renderer {
             Vec3d camPos = c.getPos();
             start = start.subtract(camPos);
             Vec3d end = start.add(dimensions);
-            Matrix4f matrix = stack.peek().getModel();
+            Matrix4f matrix = stack.peek().getPositionMatrix();
             float x1 = (float) start.x;
             float y1 = (float) start.y;
             float z1 = (float) start.z;
@@ -143,7 +143,7 @@ public class Renderer {
             Vec3d camPos = c.getPos();
             start = start.subtract(camPos);
             Vec3d end = start.add(dimensions);
-            Matrix4f matrix = stack.peek().getModel();
+            Matrix4f matrix = stack.peek().getPositionMatrix();
             float x1 = (float) start.x;
             float y1 = (float) start.y;
             float z1 = (float) start.z;
@@ -205,7 +205,7 @@ public class Renderer {
             Vec3d camPos = c.getPos();
             start = start.subtract(camPos);
             end = end.subtract(camPos);
-            Matrix4f matrix = matrices.peek().getModel();
+            Matrix4f matrix = matrices.peek().getPositionMatrix();
             float x1 = (float) start.x;
             float y1 = (float) start.y;
             float z1 = (float) start.z;
@@ -316,7 +316,7 @@ public class Renderer {
 
         public static Vec3d getScreenSpaceCoordinate(Vec3d pos, MatrixStack stack) {
             Camera camera = Atomic.client.getEntityRenderDispatcher().camera;
-            Matrix4f matrix = stack.peek().getModel();
+            Matrix4f matrix = stack.peek().getPositionMatrix();
             double x = pos.x - camera.getPos().x;
             double y = pos.y - camera.getPos().y;
             double z = pos.z - camera.getPos().z;
@@ -345,7 +345,7 @@ public class Renderer {
             float h1 = end.getGreen() / 255f;
             float k1 = end.getBlue() / 255f;
             float f1 = end.getAlpha() / 255f;
-            Matrix4f m = R3D.getEmptyMatrixStack().peek().getModel();
+            Matrix4f m = R3D.getEmptyMatrixStack().peek().getPositionMatrix();
             BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableBlend();
@@ -375,7 +375,7 @@ public class Renderer {
                 y1 = y2;
                 y2 = j;
             }
-            Matrix4f matrix = matrices.peek().getModel();
+            Matrix4f matrix = matrices.peek().getPositionMatrix();
             float f = (float) (color >> 24 & 255) / 255.0F;
             float g = (float) (color >> 16 & 255) / 255.0F;
             float h = (float) (color >> 8 & 255) / 255.0F;
@@ -419,7 +419,7 @@ public class Renderer {
                 y1 = y2;
                 y2 = j;
             }
-            Matrix4f matrix = matrices.peek().getModel();
+            Matrix4f matrix = matrices.peek().getPositionMatrix();
             BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableBlend();
@@ -447,7 +447,7 @@ public class Renderer {
             float h = c.getGreen() / 255f;
             float k = c.getBlue() / 255f;
             float f = c.getAlpha() / 255f;
-            Matrix4f m = R3D.getEmptyMatrixStack().peek().getModel();
+            Matrix4f m = R3D.getEmptyMatrixStack().peek().getPositionMatrix();
             BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
             RenderSystem.defaultBlendFunc();
             RenderSystem.enableBlend();

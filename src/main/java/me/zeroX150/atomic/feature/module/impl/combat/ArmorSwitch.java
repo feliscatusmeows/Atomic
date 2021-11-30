@@ -24,7 +24,7 @@ import java.util.Objects;
 public class ArmorSwitch extends Module {
 
     public ArmorSwitch() {
-        super("Armor Switch", "Allows you to put armor on with right click even if you have armor on", ModuleType.COMBAT);
+        super("ArmorSwitch", "Allows you to put armor on with right click even if you have armor on", ModuleType.COMBAT);
         Events.registerEventHandler(EventType.MOUSE_EVENT, event -> {
             if (!this.isEnabled() || Atomic.client.currentScreen != null) {
                 return;

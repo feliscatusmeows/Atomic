@@ -164,7 +164,7 @@ public class ClickGUIScreen extends Screen implements FastTickable, NonClearingI
         RenderSystem.setShader(GameRenderer::getPositionColorShader);
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
         BufferBuilder bufferBuilder = Tessellator.getInstance().getBuffer();
-        Matrix4f matrices4 = matrices.peek().getModel();
+        Matrix4f matrices4 = matrices.peek().getPositionMatrix();
         int a = (int) Math.floor(Math.abs(animProgE) * 150);
         a *= Themes.currentActiveTheme.backgroundOpacity();
         float offset = (float) ((System.currentTimeMillis() % 3000) / 3000d);
@@ -193,7 +193,7 @@ public class ClickGUIScreen extends Screen implements FastTickable, NonClearingI
         RenderSystem.setShaderColor(1, 1, 1, 1);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1, 1, 1, 1);
-        drawTexture(matrices, 10, 10, 0, 0, 0, (int) (504 * 0.28), (int) (130 * 0.28), (int) (130 * 0.28), (int) (504 * 0.28));
+        drawTexture(matrices, 10, 10, 0, 0, 0, (int) (504 * 0.28), (int) (130 * 0.28), (int) (504 * 0.28), (int) (130 * 0.28));
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableBlend();
 

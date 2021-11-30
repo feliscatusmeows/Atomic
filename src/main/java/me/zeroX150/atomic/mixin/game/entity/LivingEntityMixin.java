@@ -57,7 +57,7 @@ import java.util.Objects;
         }
     }
 
-    @Redirect(method = "travel", require = 0, at = @At(value = "INVOKE", target = "net/minecraft/entity/LivingEntity.hasStatusEffect(Lnet/minecraft/entity/effect/StatusEffect;)Z"))
+    @Redirect(method = "travel", at = @At(value = "INVOKE", target = "net/minecraft/entity/LivingEntity.hasStatusEffect(Lnet/minecraft/entity/effect/StatusEffect;)Z"))
     boolean atomic_stopLevitationEffect(LivingEntity instance, StatusEffect effect) {
         if (instance.equals(Atomic.client.player) && ModuleRegistry.getByClass(NoLevitation.class).isEnabled() && effect == StatusEffects.LEVITATION) {
             return false;
@@ -66,7 +66,7 @@ import java.util.Objects;
         }
     }
 
-    @Redirect(method = "jump", require = 0, at = @At(value = "INVOKE", target = "net/minecraft/entity/LivingEntity.getYaw()F")) private float atomic_overwriteFreelookYaw(LivingEntity instance) {
+    @Redirect(method = "jump", at = @At(value = "INVOKE", target = "net/minecraft/entity/LivingEntity.getYaw()F")) private float atomic_overwriteFreelookYaw(LivingEntity instance) {
         if (instance.equals(Atomic.client.player) && ModuleRegistry.getByClass(FreeLook.class).isEnabled()) {
             return ModuleRegistry.getByClass(FreeLook.class).newyaw;
         }
