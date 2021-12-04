@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 
     @Redirect(method = "init",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/option/ControlsOptionsScreen;addDrawableChild(Lnet/minecraft/client/gui/Element;)Lnet/minecraft/client/gui/Element;",
-                    ordinal = 1)) private Element atomic_removeAutoJump(ControlsOptionsScreen instance, Element element) {
+                    ordinal = 4)) private Element atomic_removeAutoJump(ControlsOptionsScreen instance, Element element) {
         return null;
     }
 
