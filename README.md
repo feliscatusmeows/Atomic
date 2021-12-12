@@ -1,5 +1,7 @@
 ![image](https://media.discordapp.net/attachments/396663973006540802/886686297140363315/logo.png)
 
+![](https://komarev.com/ghpvc/?username=0x151Atomic&label=Views)
+
 A 1.18 ([1.17 version here](https://github.com/0x151/Atomic/tree/c58cad3209ea17ebff915c32a31bca8aa21c081f/builds)) fabric mod with useful features for enforcing the [Minecraft commercial use guidelines](https://account.mojang.com/documents/commercial_guidelines#:~:text=sell%20entitlements%20that%20affect%20gameplay)
 on certian Minecraft servers.
 
