@@ -90,30 +90,32 @@ public class FreeLook extends Module {
         if (!enableAA.getValue()) {
             return;
         }
-        if (aaMode.getValue().equals("Spin")) {
-            newyaw = (float) MathHelper.wrapDegrees(newyaw + aaSpeed.getValue());
-        } else if (aaMode.getValue().equals("Jitter")) {
-            int temp = (int) (jitterRange.getValue() + 0);
-            if (jittertimer == 1) {
-                temp *= -1;
+        switch (aaMode.getValue()) {
+            case "Spin" -> newyaw = (float) MathHelper.wrapDegrees(newyaw + aaSpeed.getValue());
+            case "Jitter" -> {
+                int temp = (int) (jitterRange.getValue() + 0);
+                if (jittertimer == 1) {
+                    temp *= -1;
+                }
+                if (jittertimer >= 1) {
+                    jittertimer = -1;
+                }
+                jittertimer++;
+                newyaw = MathHelper.wrapDegrees(Atomic.client.player.getYaw() + 180 + temp);
             }
-            if (jittertimer >= 1) {
-                jittertimer = -1;
+            case "Sway" -> {
+                int temp = swayYaw;
+                if (temp >= swayRange.getValue() * 2) {
+                    temp = (int) (swayRange.getValue() + 0) - (swayYaw - (int) (swayRange.getValue() * 2));
+                } else {
+                    temp = (int) (swayRange.getValue() * -1) + swayYaw;
+                }
+                if (swayYaw >= swayRange.getValue() * 4) {
+                    swayYaw = 0;
+                }
+                swayYaw += aaSpeed.getValue();
+                newyaw = MathHelper.wrapDegrees(Atomic.client.player.getYaw() + 180 + temp);
             }
-            jittertimer++;
-            newyaw = MathHelper.wrapDegrees(Atomic.client.player.getYaw() + 180 + temp);
-        } else if (aaMode.getValue().equals("Sway")) {
-            int temp = swayYaw;
-            if (temp >= swayRange.getValue() * 2) {
-                temp = (int) (swayRange.getValue() + 0) - (swayYaw - (int) (swayRange.getValue() * 2));
-            } else {
-                temp = (int) (swayRange.getValue() * -1) + swayYaw;
-            }
-            if (swayYaw >= swayRange.getValue() * 4) {
-                swayYaw = 0;
-            }
-            swayYaw += aaSpeed.getValue();
-            newyaw = MathHelper.wrapDegrees(Atomic.client.player.getYaw() + 180 + temp);
         }
         Objects.requireNonNull(Atomic.client.getNetworkHandler()).sendPacket(new PlayerMoveC2SPacket.LookAndOnGround(newyaw, newpitch, Objects.requireNonNull(Atomic.client.player).isOnGround()));
     }

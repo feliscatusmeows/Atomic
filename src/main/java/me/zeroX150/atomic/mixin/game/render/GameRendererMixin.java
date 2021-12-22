@@ -11,6 +11,7 @@ import me.zeroX150.atomic.feature.module.ModuleRegistry;
 import me.zeroX150.atomic.feature.module.impl.render.FreeLook;
 import me.zeroX150.atomic.feature.module.impl.render.NoRender;
 import me.zeroX150.atomic.feature.module.impl.render.Zoom;
+import me.zeroX150.atomic.helper.ImGuiManager;
 import me.zeroX150.atomic.helper.render.Renderer;
 import me.zeroX150.atomic.helper.util.Rotations;
 import me.zeroX150.atomic.helper.util.Utils;
@@ -49,6 +50,12 @@ import java.util.Objects;
             if (module.isEnabled()) {
                 module.onWorldRender(matrix);
             }
+        }
+    }
+
+    @Inject(method = "render", at = @At("HEAD")) void atomic_initShit(float tickDelta, long startTime, boolean tick, CallbackInfo ci) {
+        if (!ImGuiManager.isInitialized()) {
+            ImGuiManager.init();
         }
     }
 
